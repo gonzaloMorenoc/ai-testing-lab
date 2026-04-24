@@ -63,9 +63,9 @@ ai-testing-lab/
 | 04 | [multi-turn](modules/04-multi-turn/) | 10 | ✅ implementado | ConversationalTestCase · KnowledgeRetention · historial |
 | 05 | [prompt-regression](modules/05-prompt-regression/) | 11 | ✅ implementado | PromptRegistry · RegressionChecker · Promptfoo |
 | 06 | [hallucination-lab](modules/06-hallucination-lab/) | 9 | ✅ implementado | claim extraction · groundedness · RAG Triad |
-| 07 | [redteam-garak](modules/07-redteam-garak/) | — | 🔲 en desarrollo | DAN · encoding attacks · jailbreak · hit rate |
-| 08 | [redteam-deepteam](modules/08-redteam-deepteam/) | — | 🔲 en desarrollo | OWASP Top 10 LLM 2025 · prompt injection · agency |
-| 09 | [guardrails](modules/09-guardrails/) | — | 🔲 en desarrollo | PII detection · output validation · NeMo Guardrails |
+| 07 | [redteam-garak](modules/07-redteam-garak/) | 8 | ✅ implementado | DAN · encoding attacks · jailbreak · hit rate |
+| 08 | [redteam-deepteam](modules/08-redteam-deepteam/) | 8 | ✅ implementado | OWASP Top 10 LLM 2025 · prompt injection · agency |
+| 09 | [guardrails](modules/09-guardrails/) | 11 | ✅ implementado | PII detection · output validation · input/output pipeline |
 | 10 | [agent-testing](modules/10-agent-testing/) | — | 🔲 en desarrollo | tool selection · trajectory evaluation · AgentGoalAccuracy |
 | 11 | [playwright-streaming](modules/11-playwright-streaming/) | — | 🔲 en desarrollo | SSE streaming · E2E chatbot UI · FastAPI mock server |
 | 12 | [observability](modules/12-observability/) | — | 🔲 en desarrollo | OTel spans · @trace decorator · latency · error tracking |
@@ -74,13 +74,16 @@ ai-testing-lab/
 ## Ejecutar todos los módulos implementados
 
 ```bash
-# Módulos 01-06 juntos (51+ tests, ~0.2s, sin API key)
+# Módulos 01-09 juntos (82+ tests, ~0.1s, sin API key)
 pytest modules/01-primer-eval/tests/ \
        modules/02-ragas-basics/tests/ \
        modules/03-llm-as-judge/tests/ \
        modules/04-multi-turn/tests/ \
        modules/05-prompt-regression/tests/ \
        modules/06-hallucination-lab/tests/ \
+       modules/07-redteam-garak/tests/ \
+       modules/08-redteam-deepteam/tests/ \
+       modules/09-guardrails/tests/ \
        -m "not slow"
 ```
 
