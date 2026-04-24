@@ -27,50 +27,68 @@ Testing de LLMs y chatbots — de la pirámide de testing clásica a evaluación
 ```bash
 git clone https://github.com/gmc-code/ai-testing-lab.git
 cd ai-testing-lab
-make setup                          # uv sync --all-extras
-make test-module MODULE=01          # 7 tests, 0 llamadas LLM reales
+pip install deepeval pytest pytest-recording pyyaml   # dependencias mínimas
+pytest modules/01-primer-eval/tests/ -m "not slow"    # 8 tests, 0 llamadas LLM reales
+pytest modules/02-ragas-basics/tests/ -m "not slow"   # 10 tests, métricas RAGAS mock
 ```
 
-El módulo 01 no necesita API key — usa cassettes VCR pregrabados. Para módulos con LLM real, exporta `GROQ_API_KEY` (free tier) o `OLLAMA_BASE_URL` si tienes Ollama local.
+Ningún módulo requiere API key para sus tests rápidos. Para los tests marcados `@pytest.mark.slow` exporta `GROQ_API_KEY` (free tier) antes de ejecutar `pytest -m slow`.
 
 ## Mapa del repo
 
 ```
 ai-testing-lab/
-├── modules/            # 13 labs numerados e independientes
-│   ├── 01-primer-eval/ # ← empieza aquí (status: implementado ✅)
-│   ├── 02-ragas-basics/
-│   └── ...
-├── demos/              # sistemas bajo prueba (RAG, Streamlit, Rasa, bot vulnerable)
-├── docs/               # manual troceado por capítulos + glosario
-├── goldens/            # datasets de evaluación versionados
-├── exercises/          # ejercicios + soluciones
-└── docker/compose.yml  # Langfuse + Ollama + demos
+├── modules/                  # 13 labs numerados e independientes
+│   ├── 01-primer-eval/       # ← empieza aquí ✅
+│   ├── 02-ragas-basics/      # ✅
+│   ├── 03-llm-as-judge/      # ✅
+│   ├── 04-multi-turn/        # ✅
+│   ├── 05-prompt-regression/ # ✅
+│   ├── 06-hallucination-lab/ # ✅
+│   └── 07..13/               # en desarrollo
+├── demos/                    # sistemas bajo prueba (RAG, Streamlit, Rasa, bot vulnerable)
+├── docs/                     # manual troceado por capítulos + glosario
+├── goldens/                  # datasets de evaluación versionados
+├── exercises/solutions/      # soluciones de los ejercicios de cada módulo
+└── docker/compose.yml        # Langfuse + Ollama + demos
 ```
 
 ## Módulos
 
-| # | Módulo | Estado | Capítulo del manual |
-|---|--------|--------|---------------------|
-| 01 | [primer-eval](modules/01-primer-eval/) | ✅ implementado | [04 — Frameworks OSS: DeepEval](docs/04-frameworks-oss.md) |
-| 02 | [ragas-basics](modules/02-ragas-basics/) | 🔲 planned | [03 — Métricas](docs/03-metricas.md) |
-| 03 | [llm-as-judge](modules/03-llm-as-judge/) | 🔲 planned | [03 — Métricas: LLM-as-judge](docs/03-metricas.md) |
-| 04 | [multi-turn](modules/04-multi-turn/) | 🔲 planned | [02 — Tipos de testing](docs/02-tipos-de-testing.md) |
-| 05 | [prompt-regression](modules/05-prompt-regression/) | 🔲 planned | [04 — Frameworks OSS: Promptfoo](docs/04-frameworks-oss.md) |
-| 06 | [hallucination-lab](modules/06-hallucination-lab/) | 🔲 planned | [03 — Métricas: Faithfulness](docs/03-metricas.md) |
-| 07 | [redteam-garak](modules/07-redteam-garak/) | 🔲 planned | [06 — Red teaming y OWASP](docs/06-red-teaming-y-owasp.md) |
-| 08 | [redteam-deepteam](modules/08-redteam-deepteam/) | 🔲 planned | [06 — Red teaming y OWASP](docs/06-red-teaming-y-owasp.md) |
-| 09 | [guardrails](modules/09-guardrails/) | 🔲 planned | [06 — Red teaming y OWASP](docs/06-red-teaming-y-owasp.md) |
-| 10 | [agent-testing](modules/10-agent-testing/) | 🔲 planned | [12 — Tendencias: Agentic AI](docs/12-tendencias.md) |
-| 11 | [playwright-streaming](modules/11-playwright-streaming/) | 🔲 planned | [09 — Playwright UI](docs/09-playwright-ui.md) |
-| 12 | [observability](modules/12-observability/) | 🔲 planned | [12 — Tendencias: Observabilidad](docs/12-tendencias.md) |
-| 13 | [drift-monitoring](modules/13-drift-monitoring/) | 🔲 planned | [11 — Buenas prácticas](docs/11-buenas-practicas.md) |
+| # | Módulo | Tests | Estado | Concepto clave |
+|---|--------|-------|--------|----------------|
+| 01 | [primer-eval](modules/01-primer-eval/) | 8 | ✅ implementado | LLMTestCase · AnswerRelevancy · Faithfulness |
+| 02 | [ragas-basics](modules/02-ragas-basics/) | 10 | ✅ implementado | RAGAS · faithfulness · context_precision · context_recall |
+| 03 | [llm-as-judge](modules/03-llm-as-judge/) | 11 | ✅ implementado | G-Eval · DAG Metric · position bias · verbosity bias |
+| 04 | [multi-turn](modules/04-multi-turn/) | 10 | ✅ implementado | ConversationalTestCase · KnowledgeRetention · historial |
+| 05 | [prompt-regression](modules/05-prompt-regression/) | 11 | ✅ implementado | PromptRegistry · RegressionChecker · Promptfoo |
+| 06 | [hallucination-lab](modules/06-hallucination-lab/) | 9 | ✅ implementado | claim extraction · groundedness · RAG Triad |
+| 07 | [redteam-garak](modules/07-redteam-garak/) | — | 🔲 en desarrollo | DAN · encoding attacks · jailbreak · hit rate |
+| 08 | [redteam-deepteam](modules/08-redteam-deepteam/) | — | 🔲 en desarrollo | OWASP Top 10 LLM 2025 · prompt injection · agency |
+| 09 | [guardrails](modules/09-guardrails/) | — | 🔲 en desarrollo | PII detection · output validation · NeMo Guardrails |
+| 10 | [agent-testing](modules/10-agent-testing/) | — | 🔲 en desarrollo | tool selection · trajectory evaluation · AgentGoalAccuracy |
+| 11 | [playwright-streaming](modules/11-playwright-streaming/) | — | 🔲 en desarrollo | SSE streaming · E2E chatbot UI · FastAPI mock server |
+| 12 | [observability](modules/12-observability/) | — | 🔲 en desarrollo | OTel spans · @trace decorator · latency · error tracking |
+| 13 | [drift-monitoring](modules/13-drift-monitoring/) | — | 🔲 en desarrollo | PSI · semantic drift · alert rules |
+
+## Ejecutar todos los módulos implementados
+
+```bash
+# Módulos 01-06 juntos (51+ tests, ~0.2s, sin API key)
+pytest modules/01-primer-eval/tests/ \
+       modules/02-ragas-basics/tests/ \
+       modules/03-llm-as-judge/tests/ \
+       modules/04-multi-turn/tests/ \
+       modules/05-prompt-regression/tests/ \
+       modules/06-hallucination-lab/tests/ \
+       -m "not slow"
+```
 
 ## Cómo contribuir
 
 Tipos de contribución bienvenidos:
 
-- **Implementar un módulo planned**: abre un issue con el número de módulo y tu propuesta de diseño antes de empezar.
+- **Implementar un módulo en desarrollo**: abre un issue con el número de módulo y tu propuesta de diseño antes de empezar.
 - **Reportar sesgo en una rúbrica**: si los scores de un evaluador no se correlacionan con tu juicio humano, abre un issue con el caso concreto.
 - **Añadir un golden al dataset**: sigue el formato de `goldens/README.md` y abre un PR.
 - **Corregir el manual**: errores factuales o links rotos en `docs/`, PR directo.
