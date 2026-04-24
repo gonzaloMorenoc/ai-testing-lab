@@ -18,9 +18,18 @@ def compute_psi(
     current: list[float] | np.ndarray,
     n_bins: int = _N_BINS,
 ) -> float:
-    """Population Stability Index between reference and current distributions."""
+    """Population Stability Index between reference and current distributions.
+
+    PSI < 0.1: no drift. 0.1-0.2: moderate drift. > 0.2: significant drift.
+    """
+    if n_bins < 2:
+        raise ValueError(f"n_bins must be >= 2, got {n_bins}")
+
     ref = np.asarray(reference, dtype=float)
     cur = np.asarray(current, dtype=float)
+
+    if len(ref) == 0 or len(cur) == 0:
+        raise ValueError("reference and current must be non-empty")
 
     combined = np.concatenate([ref, cur])
     bins = np.linspace(combined.min(), combined.max() + _EPSILON, n_bins + 1)

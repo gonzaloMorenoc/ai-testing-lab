@@ -34,6 +34,15 @@ def mean_drop_alert(
     reference_mean: float,
     threshold_pct: float = 0.1,
 ) -> Callable[[list[float]], AlertResult]:
+    """Alert when the current mean drops more than threshold_pct below reference_mean.
+
+    Args:
+        reference_mean: Expected mean from baseline period. Must be > 0.
+        threshold_pct: Fractional drop to trigger alert (default 0.1 = 10%).
+
+    Note: Designed for positive metrics (scores, relevance, quality). If
+    reference_mean <= 0 the drop percentage is undefined and no alert fires.
+    """
     def check(current: list[float]) -> AlertResult:
         cur_mean = float(np.mean(current))
         drop_pct = (reference_mean - cur_mean) / reference_mean if reference_mean != 0 else 0.0
@@ -66,4 +75,10 @@ def evaluate_rules(
     rules: list[Callable],
     data: list[float],
 ) -> list[AlertResult]:
+    """Apply a list of score-level rules to data.
+
+    Each rule must be a callable that accepts list[float] and returns AlertResult.
+    Use mean_drop_alert and p95_alert here. Note: psi_alert accepts a float (PSI
+    value), not a list — invoke it separately: psi_alert(threshold)(compute_psi(...)).
+    """
     return [rule(data) for rule in rules]
