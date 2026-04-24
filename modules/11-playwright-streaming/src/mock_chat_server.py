@@ -103,4 +103,4 @@ def start_server(port: int) -> threading.Thread:
                 return thread
         time.sleep(0.1)
 
-    return thread
+    raise RuntimeError(f"Server did not start on port {port} after 3 seconds")
