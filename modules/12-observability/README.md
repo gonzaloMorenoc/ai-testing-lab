@@ -1,43 +1,24 @@
-# Módulo 12 — Observability
+# Módulo 12 — Observabilidad y Tracing
 
-**Status:** planned
+**Status:** implemented
 
 ## Objetivos
 
-- Instrumentar un pipeline RAG con Langfuse o Phoenix para tracing completo
-- Configurar OpenTelemetry para capturar spans de cada paso del pipeline
-- Implementar online evaluation sampling para evaluar respuestas en producción
+- Instrumentar funciones con `@trace(name)` sin cambiar su API
+- Capturar input, output, duración y errores como spans
+- Verificar trazas anidadas con relación padre-hijo
+- Exportar spans a un dict para assertions de estructura
 
-## Capítulo del manual
-
-Este módulo cubre los conceptos de la sección X del manual (`docs/12-tendencias.md`).
-
-## Conceptos clave
-
-- Langfuse: plataforma de observabilidad LLM con tracing, evaluaciones y datasets
-- Phoenix (Arize): alternativa open-source para tracing y evaluación de pipelines LLM
-- OpenTelemetry: estándar de observabilidad para instrumentar pipelines de forma portable
-- Online evaluation sampling: evaluar un porcentaje de respuestas en producción de forma continua
-
-## Cómo ejecutar (pendiente)
+## Cómo ejecutar
 
 ```bash
-# Disponible cuando el módulo esté implementado
 cd modules/12-observability
-uv sync --extra observability
-docker compose -f ../../docker/compose.yml up langfuse -d
-pytest tests/
+pytest tests/ -m "not slow" -v
+pytest tests/ -m slow -v   # requiere LANGFUSE_SECRET_KEY
 ```
 
-## Ejercicio propuesto (pendiente)
+## Ejercicio propuesto
 
-_Descripción del ejercicio que se añadirá cuando se implemente el módulo._
+Añade un atributo `token_count` al span contando las palabras en el output. Verifica que el span exportado incluye `token_count` en `attributes`.
 
-## Estructura
-
-```
-12-observability/
-├── README.md
-├── src/          # código del lab (pendiente)
-└── tests/        # tests del lab (pendiente)
-```
+Solución en `exercises/solutions/12-observability-solution.py`.
