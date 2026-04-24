@@ -1,42 +1,23 @@
-# Módulo 09 — Guardrails
+# Módulo 09 — Guardrails de I/O
 
-**Status:** planned
+**Status:** implemented
 
 ## Objetivos
 
-- Implementar rails de seguridad con NeMo Guardrails de NVIDIA para controlar el comportamiento del LLM
-- Usar Guardrails AI para validar inputs y outputs con validators personalizados
-- Prevenir PII leakage y temas prohibidos con topic rails y filtros semánticos
+- Validar inputs antes de llegar al LLM (PII, toxicidad, longitud)
+- Validar outputs antes de devolverlos al usuario (system prompt leak, PII blocklist, JSON schema)
+- Componer ambos validadores en un pipeline que aborte antes de invocar al modelo si el input es inseguro
 
-## Capítulo del manual
-
-Este módulo cubre los conceptos de la sección X del manual (`docs/06-red-teaming-y-owasp.md`).
-
-## Conceptos clave
-
-- NeMo Guardrails: framework declarativo para controlar flujos conversacionales
-- Guardrails AI: validators programáticos para inputs y outputs de LLM
-- Topic rails: restricción de temas permitidos en la conversación
-- PII leakage prevention: detección y redacción de información personal identificable
-
-## Cómo ejecutar (pendiente)
+## Cómo ejecutar
 
 ```bash
-# Disponible cuando el módulo esté implementado
 cd modules/09-guardrails
-uv sync --extra redteam
-pytest tests/
+pytest tests/ -m "not slow" -v
+pytest tests/ -m slow -v   # requiere GROQ_API_KEY
 ```
 
-## Ejercicio propuesto (pendiente)
+## Ejercicio propuesto
 
-_Descripción del ejercicio que se añadirá cuando se implemente el módulo._
+Implementa un `CompositeGuardrail` que corra varios `OutputValidator` en secuencia y devuelva la primera violación encontrada, con métricas de cuántas reglas se evaluaron.
 
-## Estructura
-
-```
-09-guardrails/
-├── README.md
-├── src/          # código del lab (pendiente)
-└── tests/        # tests del lab (pendiente)
-```
+Solución en `exercises/solutions/09-guardrails-solution.py`.

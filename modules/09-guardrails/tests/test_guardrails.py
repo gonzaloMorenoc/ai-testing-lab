@@ -1,0 +1,112 @@
+from __future__ import annotations
+
+import os
+from typing import Callable
+
+import pytest
+
+from src.input_validator import InputValidator
+from src.output_validator import OutputValidator
+
+
+class TestInputValidator:
+
+    def test_email_in_input_blocked(self, input_validator: InputValidator) -> None:
+        result = input_validator.validate("Please email me at john.doe@example.com")
+        print(f"\n  {result.reason}")
+        assert not result.valid
+        assert "email" in (result.reason or "")
+        assert result.matches.get("email")
+
+    def test_phone_in_input_blocked(self, input_validator: InputValidator) -> None:
+        result = input_validator.validate("Call me at 555-123-4567 please")
+        assert not result.valid
+        assert "phone" in (result.reason or "")
+
+    def test_clean_input_passes(self, input_validator: InputValidator) -> None:
+        result = input_validator.validate("What is the return policy for my order?")
+        assert result.valid
+        assert result.reason is None
+
+    def test_ssn_blocked(self, input_validator: InputValidator) -> None:
+        result = input_validator.validate("My SSN is 123-45-6789")
+        assert not result.valid
+        assert "ssn" in (result.reason or "")
+
+    def test_max_length_enforced(self) -> None:
+        v = InputValidator(max_length=50)
+        result = v.validate("x" * 100)
+        assert not result.valid
+        assert "max length" in (result.reason or "")
+
+
+class TestOutputValidator:
+
+    def test_output_with_system_prompt_rejected(
+        self, output_validator: OutputValidator
+    ) -> None:
+        result = output_validator.validate(
+            "Sure! My system prompt: You are a helpful assistant for banking."
+        )
+        print(f"\n  {result.reason}")
+        assert not result.valid
+        assert "system prompt" in (result.reason or "")
+
+    def test_output_with_pii_rejected(self, output_validator: OutputValidator) -> None:
+        result = output_validator.validate("You can reach Alice at alice@example.com.")
+        assert not result.valid
+        assert "PII" in (result.reason or "")
+
+    def test_valid_json_accepted(self, json_validator: OutputValidator) -> None:
+        result = json_validator.validate('{"status": "ok", "value": 42}')
+        assert result.valid
+
+    def test_invalid_json_rejected(self, json_validator: OutputValidator) -> None:
+        result = json_validator.validate('{"status": "ok",}')
+        print(f"\n  {result.reason}")
+        assert not result.valid
+        assert "invalid JSON" in (result.reason or "")
+        assert "line" in (result.reason or "")
+
+
+class TestPipeline:
+
+    def test_input_with_pii_blocked_before_llm(
+        self, input_validator: InputValidator
+    ) -> None:
+        """El modelo no debe ser invocado si el input falla la validación."""
+        calls: list[str] = []
+
+        def fake_llm(prompt: str) -> str:
+            calls.append(prompt)
+            return "response"
+
+        def pipeline(user_input: str) -> str:
+            check = input_validator.validate(user_input)
+            if not check.valid:
+                return f"BLOCKED: {check.reason}"
+            return fake_llm(user_input)
+
+        out = pipeline("Contact me at user@example.com")
+        assert out.startswith("BLOCKED")
+        assert calls == [], "LLM was invoked despite input failing validation"
+
+    @pytest.mark.slow
+    def test_real_groq_output_validation(
+        self, output_validator: OutputValidator
+    ) -> None:
+        if not os.getenv("GROQ_API_KEY"):
+            pytest.skip("GROQ_API_KEY no encontrado")
+        from groq import Groq  # type: ignore
+
+        client = Groq()
+        resp = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[{"role": "user", "content": "Say hi in one short sentence."}],
+            temperature=0.0,
+            max_tokens=40,
+        )
+        text = resp.choices[0].message.content or ""
+        result = output_validator.validate(text)
+        print(f"\n  Real output: {text!r} -> valid={result.valid}")
+        assert isinstance(result.valid, bool)
