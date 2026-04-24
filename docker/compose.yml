@@ -1,42 +1,135 @@
-# Implementado en Fase 3
-# Levanta: Langfuse + Ollama + los 4 demos
-# Uso: docker compose up langfuse ollama
+# Levanta el stack completo del lab:
+#   Observabilidad:  Langfuse + PostgreSQL
+#   Modelos locales: Ollama
+#   Demos:           simple-rag, streamlit-chat, rasa-intent-bot, vulnerable-bot
+#
+# Uso rápido:
+#   docker compose up langfuse ollama          # solo observabilidad + modelo
+#   docker compose up simple-rag streamlit-chat
+#   docker compose up                          # todo el stack
+
 version: "3.9"
 
-services:
-  # ── Observabilidad ──────────────────────────────────────
-  langfuse:
-    image: langfuse/langfuse:latest
-    ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=postgresql://langfuse:langfuse@postgres:5432/langfuse
-      - NEXTAUTH_SECRET=change-me-in-production
-      - SALT=change-me-in-production
-    depends_on:
-      - postgres
+# ── Variables comunes ───────────────────────────────────────────────────────
+x-langfuse-env: &langfuse-env
+  DATABASE_URL: postgresql://langfuse:langfuse@postgres:5432/langfuse
+  NEXTAUTH_URL: http://localhost:3000
+  NEXTAUTH_SECRET: changeme-dev-secret-not-for-production
+  SALT: changeme-dev-salt-not-for-production
+  TELEMETRY_ENABLED: "false"
 
+x-ollama-env: &ollama-env
+  OLLAMA_HOST: "0.0.0.0"
+
+services:
+
+  # ── Observabilidad ─────────────────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_USER: langfuse
       POSTGRES_PASSWORD: langfuse
       POSTGRES_DB: langfuse
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U langfuse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # ── Modelos locales ──────────────────────────────────────
+  langfuse:
+    image: langfuse/langfuse:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      <<: *langfuse-env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/public/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ── Modelos locales ────────────────────────────────────────────────────────
   ollama:
     image: ollama/ollama:latest
+    restart: unless-stopped
     ports:
       - "11434:11434"
+    environment:
+      <<: *ollama-env
     volumes:
       - ./volumes/ollama:/root/.ollama
+    # Para GPU: descomentar la sección deploy
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
 
-  # ── Demos (implementar en Fase 3) ────────────────────────
-  # simple-rag:
-  #   build: ../demos/simple-rag
-  #   ports: ["8000:8000"]
-  # streamlit-chat:
-  #   build: ../demos/streamlit-chat
-  #   ports: ["8501:8501"]
+  # ── Demo: Simple RAG ───────────────────────────────────────────────────────
+  simple-rag:
+    build:
+      context: ../demos/simple-rag
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      LANGFUSE_HOST: http://langfuse:3000
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+    depends_on:
+      - ollama
+      - langfuse
+    profiles:
+      - demos
+
+  # ── Demo: Streamlit Chat ───────────────────────────────────────────────────
+  streamlit-chat:
+    build:
+      context: ../demos/streamlit-chat
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      SIMPLE_RAG_URL: http://simple-rag:8000
+    depends_on:
+      - simple-rag
+    profiles:
+      - demos
+
+  # ── Demo: Rasa Intent Bot ──────────────────────────────────────────────────
+  rasa-intent-bot:
+    build:
+      context: ../demos/rasa-intent-bot
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "5005:5005"
+    profiles:
+      - demos
+
+  # ── Demo: Vulnerable Bot (CTF target) ─────────────────────────────────────
+  vulnerable-bot:
+    build:
+      context: ../demos/vulnerable-bot
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+    depends_on:
+      - ollama
+    profiles:
+      - redteam    # solo activo en perfil redteam para evitar exposición accidental

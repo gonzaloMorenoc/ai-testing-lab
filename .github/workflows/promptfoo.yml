@@ -1,13 +1,61 @@
-# Implementado en Fase 3 — matriz prompts × modelos con caché
 name: Promptfoo Eval
 
 on:
   workflow_dispatch:
+    inputs:
+      module:
+        description: "Módulo a evaluar (p.ej: 05)"
+        required: false
+        default: "05"
+  schedule:
+    - cron: "0 6 * * 1"   # Lunes 06:00 UTC
 
 jobs:
   promptfoo:
+    name: Promptfoo matriz prompts × modelos
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - name: Placeholder
-        run: echo "Promptfoo workflow — implementar en Fase 3"
+
+      - name: Cache Promptfoo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.promptfoo/cache
+            .promptfoo-cache
+          key: ${{ runner.os }}-promptfoo-${{ hashFiles('modules/05-prompt-regression/**') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-promptfoo-${{ hashFiles('modules/05-prompt-regression/**') }}-
+            ${{ runner.os }}-promptfoo-
+
+      - name: Install Node.js (para promptfoo CLI)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install promptfoo
+        run: npm install -g promptfoo
+
+      - name: Run Promptfoo eval
+        if: hashFiles('modules/05-prompt-regression/promptfooconfig.yaml') != ''
+        run: |
+          cd modules/05-prompt-regression
+          promptfoo eval --config promptfooconfig.yaml \
+            --output ../../reports/promptfoo-results.json \
+            --no-cache-write
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: Skip (módulo 05 no implementado aún)
+        if: hashFiles('modules/05-prompt-regression/promptfooconfig.yaml') == ''
+        run: echo "⏭ promptfooconfig.yaml no encontrado — módulo 05 pendiente de implementar"
+
+      - name: Upload results
+        if: always() && hashFiles('reports/promptfoo-results.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: promptfoo-results
+          path: reports/promptfoo-results.json
+          retention-days: 30

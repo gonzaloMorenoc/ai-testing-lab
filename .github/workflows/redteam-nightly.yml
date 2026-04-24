@@ -1,15 +1,77 @@
-# Implementado en Fase 3 — Garak + DeepTeam, solo nightly, nunca en PR
 name: Red Team Nightly
 
 on:
   schedule:
-    - cron: "0 2 * * *"   # 02:00 UTC nightly
-  workflow_dispatch:
+    - cron: "0 2 * * *"   # 02:00 UTC, cada noche
+  workflow_dispatch:       # ejecución manual bajo demanda
 
+# NUNCA añadir trigger pull_request aquí — red team solo nightly
 jobs:
-  redteam:
+  garak-scan:
+    name: Garak — scan modelos OSS
     runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+
     steps:
       - uses: actions/checkout@v4
-      - name: Placeholder
-        run: echo "Red team nightly — implementar en Fase 3"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install redteam dependencies
+        run: uv sync --extra redteam
+
+      - name: Run Garak scan (módulo 07)
+        if: hashFiles('modules/07-redteam-garak/src/garak_config.py') != ''
+        run: |
+          uv run pytest modules/07-redteam-garak/tests/ \
+            -m "redteam" -v --tb=long
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OLLAMA_BASE_URL: ${{ secrets.OLLAMA_BASE_URL }}
+        continue-on-error: true   # red team puede fallar — es informativo
+
+      - name: Skip (módulo 07 no implementado aún)
+        if: hashFiles('modules/07-redteam-garak/src/garak_config.py') == ''
+        run: echo "⏭ Módulo 07 pendiente de implementar"
+
+  deepteam-owasp:
+    name: DeepTeam — OWASP Top 10 LLM
+    runs-on: ubuntu-latest
+    needs: garak-scan
+    if: always()
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --extra redteam
+
+      - name: Run DeepTeam OWASP scan (módulo 08)
+        if: hashFiles('modules/08-redteam-deepteam/src/deepteam_scan.py') != ''
+        run: |
+          uv run pytest modules/08-redteam-deepteam/tests/ \
+            -m "redteam" -v --tb=long
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        continue-on-error: true
+
+      - name: Skip (módulo 08 no implementado aún)
+        if: hashFiles('modules/08-redteam-deepteam/src/deepteam_scan.py') == ''
+        run: echo "⏭ Módulo 08 pendiente de implementar"
+
+      - name: Upload red team report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: redteam-report-${{ github.run_id }}
+          path: reports/redteam/
+          retention-days: 90
+          if-no-files-found: ignore

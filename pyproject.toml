@@ -8,7 +8,7 @@ requires-python = ">=3.11"
 authors = [
     { name = "Gonzalo Moreno", email = "gmc_745@hotmail.com" }
 ]
-keywords = ["llm", "testing", "qa", "deepeval", "ragas", "red-team"]
+keywords = ["llm", "testing", "qa", "deepeval", "ragas", "red-team", "chatbot"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -16,83 +16,98 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Testing",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
-# Dependencias base (mínimas, sin LLM calls)
+# Dependencias mínimas comunes a todos los módulos
 dependencies = [
-    "pydantic>=2.0",
+    "pydantic>=2.7",
     "python-dotenv>=1.0",
+    "httpx>=0.27",
 ]
 
 [project.optional-dependencies]
-# Módulos 01, 02, 06: evaluación con DeepEval y RAGAS
+# Módulos 01, 02, 06 — evaluación con DeepEval y RAGAS
 eval = [
-    "deepeval>=1.0",
+    "deepeval>=1.4",
     "ragas>=0.2",
     "vcrpy>=6.0",
-    "pytest>=8.0",
+    "pytest>=8.2",
     "pytest-asyncio>=0.23",
     "pytest-recording>=0.13",
+    "pytest-xdist>=3.5",
+    "openai>=1.30",           # requerido por DeepEval como juez por defecto
+    "groq>=0.9",              # proveedor free-tier alternativo
 ]
 
-# Módulo 03: LLM-as-judge y métricas NLP clásicas
+# Módulo 03 — LLM-as-judge y métricas NLP clásicas
 judge = [
-    "deepeval>=1.0",
+    "deepeval>=1.4",
     "evaluate>=0.4",
     "bert-score>=0.3",
     "rouge-score>=0.1",
-    "sacrebleu>=2.0",
+    "sacrebleu>=2.4",
+    "nltk>=3.8",
 ]
 
-# Módulos 04, 05: multi-turn y prompt regression
+# Módulos 04, 05 — multi-turn y prompt regression
 regression = [
-    "deepeval>=1.0",
-    "promptfoo>=0.1",    # CLI; instalar con npm si se prefiere
+    "deepeval>=1.4",
     "vcrpy>=6.0",
+    "pytest>=8.2",
+    "pytest-asyncio>=0.23",
 ]
 
-# Módulos 07, 08, 09: red team y guardrails
+# Módulos 07, 08, 09 — red team y guardrails
 redteam = [
     "garak>=0.9",
-    "deepeval>=1.0",     # DeepTeam incluido
+    "deepeval>=1.4",          # DeepTeam incluido en deepeval desde 1.x
     "guardrails-ai>=0.5",
-    "nemoguardrails>=0.9",
+    "nemoguardrails>=0.10",
+    "pytest>=8.2",
 ]
 
-# Módulo 10: agent testing
+# Módulo 10 — agent testing
 agents = [
-    "deepeval>=1.0",
+    "deepeval>=1.4",
     "ragas>=0.2",
-    "langgraph>=0.1",
+    "pytest>=8.2",
+    "pytest-asyncio>=0.23",
 ]
 
-# Módulo 11: Playwright UI testing
+# Módulo 11 — Playwright UI testing
 ui = [
     "playwright>=1.44",
     "pytest-playwright>=0.5",
-    "deepeval>=1.0",
+    "deepeval>=1.4",
+    "pytest>=8.2",
 ]
 
-# Módulo 12: observabilidad
+# Módulo 12 — observabilidad
 observability = [
     "langfuse>=3.0",
-    "arize-phoenix>=4.0",
+    "arize-phoenix[llm]>=4.5",
     "opentelemetry-sdk>=1.24",
+    "opentelemetry-exporter-otlp-proto-http>=1.24",
+    "openinference-instrumentation-openai>=0.1",
 ]
 
-# Módulo 13: drift monitoring
+# Módulo 13 — drift monitoring
 monitoring = [
     "evidently>=0.4",
-    "arize-phoenix>=4.0",
+    "arize-phoenix[llm]>=4.5",
     "scikit-learn>=1.4",
     "numpy>=1.26",
+    "pandas>=2.2",
 ]
 
-# Desarrollo (lint, format)
+# Desarrollo completo — lint, format, type checking
 dev = [
     "ruff>=0.4",
-    "mypy>=1.9",
+    "mypy>=1.10",
     "pre-commit>=3.7",
+    "pytest>=8.2",
+    "pytest-cov>=5.0",
 ]
 
 [build-system]
@@ -103,15 +118,26 @@ build-backend = "hatchling.build"
 asyncio_mode = "auto"
 testpaths = ["modules"]
 markers = [
-    "slow: tests que hacen llamadas LLM reales",
-    "redteam: tests de red team (solo nightly)",
-    "smoke: tests de humo rápidos",
+    "slow: tests que hacen llamadas LLM reales (omitidos en CI sin API key)",
+    "redteam: tests de red team, solo en workflow nightly",
+    "smoke: tests de humo rápidos, siempre corren",
+    "cassette: tests que usan cassettes VCR pregrabados",
 ]
+addopts = "-v --tb=short"
 
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+src = ["modules", "demos", "scripts"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
-ignore = ["E501"]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501", "B008"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+ignore_missing_imports = true
