@@ -45,7 +45,13 @@ ai-testing-lab/
 │   ├── 04-multi-turn/        # ✅
 │   ├── 05-prompt-regression/ # ✅
 │   ├── 06-hallucination-lab/ # ✅
-│   └── 07..13/               # en desarrollo
+│   ├── 07-redteam-garak/     # ✅
+│   ├── 08-redteam-deepteam/  # ✅
+│   ├── 09-guardrails/        # ✅
+│   ├── 10-agent-testing/     # ✅
+│   ├── 11-playwright-streaming/ # ✅
+│   ├── 12-observability/     # ✅
+│   └── 13-drift-monitoring/  # ✅
 ├── demos/                    # sistemas bajo prueba (RAG, Streamlit, Rasa, bot vulnerable)
 ├── docs/                     # manual troceado por capítulos + glosario
 ├── goldens/                  # datasets de evaluación versionados
@@ -66,15 +72,15 @@ ai-testing-lab/
 | 07 | [redteam-garak](modules/07-redteam-garak/) | 8 | ✅ implementado | DAN · encoding attacks · jailbreak · hit rate |
 | 08 | [redteam-deepteam](modules/08-redteam-deepteam/) | 8 | ✅ implementado | OWASP Top 10 LLM 2025 · prompt injection · agency |
 | 09 | [guardrails](modules/09-guardrails/) | 11 | ✅ implementado | PII detection · output validation · input/output pipeline |
-| 10 | [agent-testing](modules/10-agent-testing/) | — | 🔲 en desarrollo | tool selection · trajectory evaluation · AgentGoalAccuracy |
-| 11 | [playwright-streaming](modules/11-playwright-streaming/) | — | 🔲 en desarrollo | SSE streaming · E2E chatbot UI · FastAPI mock server |
-| 12 | [observability](modules/12-observability/) | — | 🔲 en desarrollo | OTel spans · @trace decorator · latency · error tracking |
-| 13 | [drift-monitoring](modules/13-drift-monitoring/) | — | 🔲 en desarrollo | PSI · semantic drift · alert rules |
+| 10 | [agent-testing](modules/10-agent-testing/) | 9 | ✅ implementado | tool selection · trajectory evaluation · AgentGoalAccuracy |
+| 11 | [playwright-streaming](modules/11-playwright-streaming/) | 8 | ✅ implementado | SSE streaming · E2E chatbot UI · FastAPI mock server |
+| 12 | [observability](modules/12-observability/) | 8 | ✅ implementado | OTel spans · @trace decorator · latency · error tracking |
+| 13 | [drift-monitoring](modules/13-drift-monitoring/) | 9 | ✅ implementado | PSI · semantic drift · alert rules |
 
 ## Ejecutar todos los módulos implementados
 
 ```bash
-# Módulos 01-09 juntos (82+ tests, ~0.1s, sin API key)
+# Módulos 01-13 juntos (107+ tests, ~0.1s, sin API key)
 pytest modules/01-primer-eval/tests/ \
        modules/02-ragas-basics/tests/ \
        modules/03-llm-as-judge/tests/ \
@@ -84,7 +90,12 @@ pytest modules/01-primer-eval/tests/ \
        modules/07-redteam-garak/tests/ \
        modules/08-redteam-deepteam/tests/ \
        modules/09-guardrails/tests/ \
+       modules/10-agent-testing/tests/ \
+       modules/11-playwright-streaming/tests/ \
+       modules/12-observability/tests/ \
+       modules/13-drift-monitoring/tests/ \
        -m "not slow"
+# El módulo 11 requiere playwright+fastapi instalados; sin ellos se omite automáticamente.
 ```
 
 ## Cómo contribuir
