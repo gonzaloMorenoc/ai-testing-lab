@@ -100,7 +100,7 @@ class TestTracer:
         exported = collector.export()
         assert len(exported) == 1
         d = exported[0]
-        required_keys = {"name", "input", "output", "duration_ms", "status", "error", "parent_id", "span_id"}
+        required_keys = {"name", "attributes", "input", "output", "duration_ms", "status", "error", "parent_id", "span_id"}
         assert set(d.keys()) == required_keys
         assert d["name"] == "export_test"
 

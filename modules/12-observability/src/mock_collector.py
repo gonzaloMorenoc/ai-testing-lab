@@ -25,6 +25,7 @@ class MockCollector:
         return [
             {
                 "name": s.name,
+                "attributes": dict(s.attributes),
                 "input": s.input,
                 "output": s.output,
                 "duration_ms": s.duration_ms,
