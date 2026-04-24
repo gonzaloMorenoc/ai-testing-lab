@@ -1,43 +1,31 @@
-# Módulo 11 — Playwright Streaming
+# Módulo 11 — Playwright + Streaming SSE
 
-**Status:** planned
+**Status:** implemented
+
+## Prerrequisitos
+
+```bash
+pip install fastapi uvicorn playwright pytest-playwright
+playwright install chromium
+```
 
 ## Objetivos
 
-- Escribir tests E2E con Playwright para chatbots con respuestas en streaming (SSE)
-- Hacer assertions sobre fragmentos de texto parciales y el estado del stream
-- Integrar LLM-as-judge dentro de un test E2E para evaluar calidad de respuesta en UI
+- Levantar un servidor FastAPI con SSE streaming como fixture de pytest
+- Verificar que el texto aparece incrementalmente en el DOM con Playwright
+- Usar `data-complete="true"` como señal de fin de stream
+- Guardar screenshots como artefactos de test
 
-## Capítulo del manual
-
-Este módulo cubre los conceptos de la sección X del manual (`docs/09-playwright-ui.md`).
-
-## Conceptos clave
-
-- Playwright para testing de UIs de chatbot con streaming SSE
-- Assertions sobre streaming: verificar que el texto aparece progresivamente
-- LLM-as-judge integrado en E2E: evaluar calidad sin código de evaluación separado
-- Técnicas para lidiar con shadow DOM e iframes en chatbots embebidos
-
-## Cómo ejecutar (pendiente)
+## Cómo ejecutar
 
 ```bash
-# Disponible cuando el módulo esté implementado
 cd modules/11-playwright-streaming
-uv sync --extra ui
-playwright install chromium
-pytest tests/
+pytest tests/ -m "not slow" -v
+# Sin playwright/fastapi instalados: 0 tests collected (skipped gracefully)
 ```
 
-## Ejercicio propuesto (pendiente)
+## Ejercicio propuesto
 
-_Descripción del ejercicio que se añadirá cuando se implemente el módulo._
+Añade un indicador visual (spinner CSS) que aparezca mientras el streaming está en curso y desaparezca cuando `data-complete="true"`. Escribe un test Playwright que verifique el ciclo aparecer → desaparecer.
 
-## Estructura
-
-```
-11-playwright-streaming/
-├── README.md
-├── src/          # código del lab (pendiente)
-└── tests/        # tests del lab (pendiente)
-```
+Solución en `exercises/solutions/11-playwright-streaming-solution.py`.
