@@ -2,7 +2,7 @@
 
 Testing de LLMs y chatbots — de la pirámide de testing clásica a evaluación semántica, red teaming y observabilidad.
 
-[![CI](https://github.com/gmc-code/ai-testing-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/gmc-code/ai-testing-lab/actions/workflows/ci.yml)
+[![CI](https://github.com/gonzaloMorenoc/ai-testing-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/gonzaloMorenoc/ai-testing-lab/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
 
@@ -25,7 +25,7 @@ Testing de LLMs y chatbots — de la pirámide de testing clásica a evaluación
 ## Quickstart
 
 ```bash
-git clone https://github.com/gmc-code/ai-testing-lab.git
+git clone https://github.com/gonzaloMorenoc/ai-testing-lab.git
 cd ai-testing-lab
 pip install deepeval pytest pytest-recording pyyaml   # dependencias mínimas
 pytest modules/01-primer-eval/tests/ -m "not slow"    # 8 tests, 0 llamadas LLM reales
@@ -102,9 +102,9 @@ pytest modules/01-primer-eval/tests/ \
 
 Tipos de contribución bienvenidos:
 
-- **Implementar un módulo en desarrollo**: abre un issue con el número de módulo y tu propuesta de diseño antes de empezar.
 - **Reportar sesgo en una rúbrica**: si los scores de un evaluador no se correlacionan con tu juicio humano, abre un issue con el caso concreto.
 - **Añadir un golden al dataset**: sigue el formato de `goldens/README.md` y abre un PR.
+- **Proponer un módulo nuevo**: abre un issue con el concepto y el módulo más próximo como referencia.
 - **Corregir el manual**: errores factuales o links rotos en `docs/`, PR directo.
 
 No hay plantilla de PR obligatoria. Describir qué cambió y por qué es suficiente.
