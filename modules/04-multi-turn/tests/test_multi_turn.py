@@ -38,6 +38,15 @@ class TestConversation:
         assert conversation.contains_info("30 days")
         assert not conversation.contains_info("365 days")
 
+    def test_detect_contradiction_found(self, conversation: Conversation) -> None:
+        conversation.add_turn("How long?", "Returns allowed within 30 days.")
+        conversation.add_turn("Really?", "Actually it's 60 days for premium.")
+        assert conversation.detect_contradiction("days", "30", "60")
+
+    def test_detect_contradiction_not_found(self, conversation: Conversation) -> None:
+        conversation.add_turn("How long?", "Returns allowed within 30 days.")
+        assert not conversation.detect_contradiction("days", "30", "60")
+
     def test_deepeval_format_structure(self, conversation: Conversation) -> None:
         conversation.add_turn("Q", "A")
         fmt = conversation.to_deepeval_format()
