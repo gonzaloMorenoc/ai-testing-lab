@@ -1,0 +1,32 @@
+description: "Regression test: support_response v1 vs v2"
+
+prompts:
+  - id: v1
+    raw: "You are a support agent. Answer the following question: {{question}}"
+  - id: v2
+    raw: >
+      You are a helpful customer support agent.
+      Answer the following question concisely and accurately,
+      citing specific policy details when relevant: {{question}}
+
+providers:
+  - id: groq:llama3-8b-8192
+    config:
+      temperature: 0
+
+tests:
+  - vars:
+      question: "What is the return policy?"
+    assert:
+      - type: llm-rubric
+        value: "The response should mention 30 days and refund"
+      - type: contains-any
+        value: ["30 days", "thirty days", "return"]
+
+  - vars:
+      question: "How long does shipping take?"
+    assert:
+      - type: llm-rubric
+        value: "The response should mention shipping timeframes"
+      - type: contains-any
+        value: ["days", "shipping", "delivery"]
