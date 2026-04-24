@@ -1,42 +1,27 @@
 # Módulo 07 — Red Team con Garak
 
-**Status:** planned
+**Status:** implemented
 
 ## Objetivos
 
-- Usar la CLI de Garak para ejecutar probes de seguridad sobre modelos LLM
-- Aplicar probes de DAN, encoding y toxicity para detectar vulnerabilidades
-- Ejecutar red teaming sobre modelos de HuggingFace con NVIDIA Garak
+- Ejecutar una colección de prompts de ataque reales contra un `model_fn`
+- Medir `hit_rate` global y por categoría (DAN, encoding, roleplay, crescendo, indirect injection)
+- Producir reportes estructurados con veredicto por intento
 
-## Capítulo del manual
-
-Este módulo cubre los conceptos de la sección X del manual (`docs/06-red-teaming-y-owasp.md`).
-
-## Conceptos clave
-
-- Garak CLI: framework de red teaming automático para LLMs
-- Probes de seguridad: DAN (Do Anything Now), encoding bypasses, toxicity injection
-- NVIDIA Garak: versión extendida con soporte para modelos empresariales
-- Red teaming de modelos HuggingFace y APIs locales con Ollama
-
-## Cómo ejecutar (pendiente)
+## Cómo ejecutar
 
 ```bash
-# Disponible cuando el módulo esté implementado
 cd modules/07-redteam-garak
-uv sync --extra redteam
-pytest tests/
+pytest tests/ -m "not slow" -v
+# Scan real contra Groq (requiere GROQ_API_KEY)
+pytest tests/ -m slow -v
 ```
 
-## Ejercicio propuesto (pendiente)
+## Ejercicio propuesto
 
-_Descripción del ejercicio que se añadirá cuando se implemente el módulo._
+Implementa un detector de "cede" más robusto que combine:
+- Keyword matching (ya dado)
+- Presencia de secuencias instructivas ("step 1", "first,")
+- Longitud sospechosa (respuestas largas tras prompt de ataque)
 
-## Estructura
-
-```
-07-redteam-garak/
-├── README.md
-├── src/          # código del lab (pendiente)
-└── tests/        # tests del lab (pendiente)
-```
+Solución en `exercises/solutions/07-redteam-garak-solution.py`.
