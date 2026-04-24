@@ -1,0 +1,13 @@
+# Implementado en Fase 3 — matriz prompts × modelos con caché
+name: Promptfoo Eval
+
+on:
+  workflow_dispatch:
+
+jobs:
+  promptfoo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder
+        run: echo "Promptfoo workflow — implementar en Fase 3"

@@ -1,0 +1,42 @@
+# Implementado en Fase 3
+# Levanta: Langfuse + Ollama + los 4 demos
+# Uso: docker compose up langfuse ollama
+version: "3.9"
+
+services:
+  # ── Observabilidad ──────────────────────────────────────
+  langfuse:
+    image: langfuse/langfuse:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://langfuse:langfuse@postgres:5432/langfuse
+      - NEXTAUTH_SECRET=change-me-in-production
+      - SALT=change-me-in-production
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: langfuse
+      POSTGRES_PASSWORD: langfuse
+      POSTGRES_DB: langfuse
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+
+  # ── Modelos locales ──────────────────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./volumes/ollama:/root/.ollama
+
+  # ── Demos (implementar en Fase 3) ────────────────────────
+  # simple-rag:
+  #   build: ../demos/simple-rag
+  #   ports: ["8000:8000"]
+  # streamlit-chat:
+  #   build: ../demos/streamlit-chat
+  #   ports: ["8501:8501"]

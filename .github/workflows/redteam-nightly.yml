@@ -1,0 +1,15 @@
+# Implementado en Fase 3 — Garak + DeepTeam, solo nightly, nunca en PR
+name: Red Team Nightly
+
+on:
+  schedule:
+    - cron: "0 2 * * *"   # 02:00 UTC nightly
+  workflow_dispatch:
+
+jobs:
+  redteam:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder
+        run: echo "Red team nightly — implementar en Fase 3"

@@ -1,0 +1,15 @@
+# Implementado en Fase 3 — se activa en PRs sobre módulos modificados
+name: LLM Evals
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    # TODO Fase 3: añadir dorny/paths-filter + DeepEval + RAGAS
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder
+        run: echo "Evals workflow — implementar en Fase 3"

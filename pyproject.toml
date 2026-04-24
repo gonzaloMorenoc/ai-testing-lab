@@ -1,0 +1,117 @@
+[project]
+name = "ai-testing-lab"
+version = "0.1.0"
+description = "Laboratorio didáctico de testing de LLMs y chatbots"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [
+    { name = "Gonzalo Moreno", email = "gmc_745@hotmail.com" }
+]
+keywords = ["llm", "testing", "qa", "deepeval", "ragas", "red-team"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Testing",
+]
+
+# Dependencias base (mínimas, sin LLM calls)
+dependencies = [
+    "pydantic>=2.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+# Módulos 01, 02, 06: evaluación con DeepEval y RAGAS
+eval = [
+    "deepeval>=1.0",
+    "ragas>=0.2",
+    "vcrpy>=6.0",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-recording>=0.13",
+]
+
+# Módulo 03: LLM-as-judge y métricas NLP clásicas
+judge = [
+    "deepeval>=1.0",
+    "evaluate>=0.4",
+    "bert-score>=0.3",
+    "rouge-score>=0.1",
+    "sacrebleu>=2.0",
+]
+
+# Módulos 04, 05: multi-turn y prompt regression
+regression = [
+    "deepeval>=1.0",
+    "promptfoo>=0.1",    # CLI; instalar con npm si se prefiere
+    "vcrpy>=6.0",
+]
+
+# Módulos 07, 08, 09: red team y guardrails
+redteam = [
+    "garak>=0.9",
+    "deepeval>=1.0",     # DeepTeam incluido
+    "guardrails-ai>=0.5",
+    "nemoguardrails>=0.9",
+]
+
+# Módulo 10: agent testing
+agents = [
+    "deepeval>=1.0",
+    "ragas>=0.2",
+    "langgraph>=0.1",
+]
+
+# Módulo 11: Playwright UI testing
+ui = [
+    "playwright>=1.44",
+    "pytest-playwright>=0.5",
+    "deepeval>=1.0",
+]
+
+# Módulo 12: observabilidad
+observability = [
+    "langfuse>=3.0",
+    "arize-phoenix>=4.0",
+    "opentelemetry-sdk>=1.24",
+]
+
+# Módulo 13: drift monitoring
+monitoring = [
+    "evidently>=0.4",
+    "arize-phoenix>=4.0",
+    "scikit-learn>=1.4",
+    "numpy>=1.26",
+]
+
+# Desarrollo (lint, format)
+dev = [
+    "ruff>=0.4",
+    "mypy>=1.9",
+    "pre-commit>=3.7",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["modules"]
+markers = [
+    "slow: tests que hacen llamadas LLM reales",
+    "redteam: tests de red team (solo nightly)",
+    "smoke: tests de humo rápidos",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
