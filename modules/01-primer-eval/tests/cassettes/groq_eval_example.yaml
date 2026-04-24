@@ -1,0 +1,76 @@
+# Cassette educativo — captura de llamadas reales a Groq API (OpenAI-compatible)
+# Generado con: pytest tests/ -m slow --record-mode=new_episodes (requiere GROQ_API_KEY)
+# Formato: VCR.py / pytest-recording
+interactions:
+- request:
+    body: >-
+      {"model": "llama3-8b-8192", "messages": [{"role": "system", "content":
+      "You are an expert at evaluating the quality of LLM responses."},
+      {"role": "user", "content": "Given the following input and output,
+      extract all statements from the output:\n\nInput: What is the return policy?\n
+      Output: Based on our policies: Our return policy allows customers to return
+      any product within 30 days of purchase for a full refund. Items must be in
+      their original condition and packaging. Digital products are non-refundable
+      once downloaded.\n\nReturn a JSON list of statements."}],
+      "temperature": 0, "max_tokens": 1024}
+    headers:
+      Accept:
+      - application/json
+      Authorization:
+      - Bearer sk-***REDACTED***
+      Content-Type:
+      - application/json
+    method: POST
+    uri: https://api.groq.com/openai/v1/chat/completions
+  response:
+    body:
+      string: >-
+        {"id":"chatcmpl-example123","object":"chat.completion","created":1716400000,
+        "model":"llama3-8b-8192","choices":[{"index":0,"message":{"role":"assistant",
+        "content":"{\"statements\": [\"Returns are allowed within 30 days of purchase\",
+        \"A full refund is provided\", \"Items must be in original condition\",
+        \"Digital products are non-refundable once downloaded\"]}"},"finish_reason":"stop"}],
+        "usage":{"prompt_tokens":150,"completion_tokens":60,"total_tokens":210}}
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+- request:
+    body: >-
+      {"model": "llama3-8b-8192", "messages": [{"role": "system", "content":
+      "You are an expert at evaluating relevancy of LLM responses."},
+      {"role": "user", "content": "Given the input and each statement, determine
+      if the statement is relevant to the input.\n\nInput: What is the return policy?\n
+      Statements: [\"Returns are allowed within 30 days\", \"Full refund provided\",
+      \"Items must be in original condition\", \"Digital products non-refundable\"]\n
+      Return a JSON object with verdicts for each statement."}],
+      "temperature": 0, "max_tokens": 1024}
+    headers:
+      Accept:
+      - application/json
+      Authorization:
+      - Bearer sk-***REDACTED***
+      Content-Type:
+      - application/json
+    method: POST
+    uri: https://api.groq.com/openai/v1/chat/completions
+  response:
+    body:
+      string: >-
+        {"id":"chatcmpl-example456","object":"chat.completion","created":1716400002,
+        "model":"llama3-8b-8192","choices":[{"index":0,"message":{"role":"assistant",
+        "content":"{\"verdicts\": [{\"verdict\": \"yes\", \"reason\": \"Directly
+        answers the question about return policy\"}, {\"verdict\": \"yes\", \"reason\":
+        \"Relevant detail about refund\"}, {\"verdict\": \"yes\", \"reason\":
+        \"Condition requirement is part of the policy\"}, {\"verdict\": \"yes\",
+        \"reason\": \"Exception to return policy\"}]}"},"finish_reason":"stop"}],
+        "usage":{"prompt_tokens":180,"completion_tokens":80,"total_tokens":260}}
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+version: 1
