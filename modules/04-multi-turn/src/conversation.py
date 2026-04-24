@@ -41,8 +41,6 @@ class Conversation:
 
     def detect_contradiction(self, keyword: str, value_a: str, value_b: str) -> bool:
         turns = self.get_assistant_turns()
-        found_a = any(f"{keyword}.*{value_a}" in t or f"{value_a}.*{keyword}" in t
-                      for t in turns)
-        found_b = any(f"{keyword}.*{value_b}" in t or f"{value_b}.*{keyword}" in t
-                      for t in turns)
+        found_a = any(keyword.lower() in t.lower() and value_a.lower() in t.lower() for t in turns)
+        found_b = any(keyword.lower() in t.lower() and value_b.lower() in t.lower() for t in turns)
         return found_a and found_b

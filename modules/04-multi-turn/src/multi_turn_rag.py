@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from src.conversation import Conversation
 
+_CONTEXT_HISTORY_SIZE = 2
+
 KNOWLEDGE_BASE: dict[str, str] = {
     "returns": "Returns allowed within 30 days for a full refund. Original condition required.",
     "shipping": "Free shipping over $50. Standard 3-5 days. Express $9.99 for 1-2 days.",
@@ -30,7 +32,7 @@ class MultiTurnRAG:
         return chunks or [KNOWLEDGE_BASE["returns"]]
 
     def _build_context_summary(self) -> str:
-        prior = self.conversation.get_assistant_turns()[-2:]
+        prior = self.conversation.get_assistant_turns()[-_CONTEXT_HISTORY_SIZE:]
         return " Previously discussed: " + " ".join(prior) if prior else ""
 
     def respond(self, user_input: str) -> str:
