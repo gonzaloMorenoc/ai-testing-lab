@@ -3,6 +3,9 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+# Minimum token length for tokenization
+_MIN_TOKEN_LENGTH = 3
+
 # Synonym clusters for topic-aware relevance matching in context_precision.
 # Words within the same cluster are treated as semantically equivalent.
 _SYNONYM_CLUSTERS: list[frozenset[str]] = [
@@ -47,7 +50,7 @@ class RAGASEvaluator:
         tokens = set()
         for word in text.split():
             cleaned = re.sub(r"[^a-z0-9]", "", word.lower())
-            if len(cleaned) > 3:
+            if len(cleaned) > _MIN_TOKEN_LENGTH:
                 tokens.add(cleaned)
         return tokens
 
