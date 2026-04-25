@@ -8,6 +8,10 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/gonzaloMorenoc/ai-testing-lab)
 
+<p align="center">
+  <img src="assets/demo.svg" alt="142 LLM tests passing in 0.16s — zero API calls">
+</p>
+
 ---
 
 ## Why this exists
