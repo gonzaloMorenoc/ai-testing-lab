@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ast
+import operator
 import re
 from dataclasses import dataclass, field
 
@@ -14,6 +16,35 @@ _CALC_KEYWORDS: tuple[str, ...] = (
 )
 _FORMAT_KEYWORDS: tuple[str, ...] = ("format", "report", "summarize", "structure")
 _SAFE_EXPR_RE = re.compile(r"[^0-9\+\-\*/\.\s\(\)]+")
+
+_AST_OPS: dict = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+    ast.Pow: operator.pow,
+    ast.USub: operator.neg,
+    ast.UAdd: operator.pos,
+}
+
+
+def _eval_ast_node(node: ast.expr) -> float:
+    if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+        return float(node.value)
+    if isinstance(node, ast.BinOp) and type(node.op) in _AST_OPS:
+        return _AST_OPS[type(node.op)](_eval_ast_node(node.left), _eval_ast_node(node.right))
+    if isinstance(node, ast.UnaryOp) and type(node.op) in _AST_OPS:
+        return _AST_OPS[type(node.op)](_eval_ast_node(node.operand))
+    raise ValueError(f"Unsupported expression node: {ast.dump(node)}")
+
+
+def _safe_eval(expr: str) -> float:
+    """Evaluate a numeric expression via AST — no eval(), no builtins access."""
+    try:
+        tree = ast.parse(expr.strip(), mode="eval")
+        return _eval_ast_node(tree.body)
+    except Exception:
+        return 0.0
 
 
 @dataclass(frozen=True)
@@ -39,11 +70,8 @@ class SimpleAgent:
         safe = _SAFE_EXPR_RE.sub("", expr).strip()
         if not safe:
             return "0"
-        try:
-            result = eval(safe, {"__builtins__": {}}, {})  # noqa: S307
-            return str(result)
-        except Exception:
-            return "0"
+        result = _safe_eval(safe)
+        return str(int(result)) if result == int(result) else str(result)
 
     def format_response(self, data: str) -> str:
         return f"Report:\n{data}"

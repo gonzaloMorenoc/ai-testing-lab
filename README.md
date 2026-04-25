@@ -40,7 +40,7 @@ Ningún módulo requiere API key para sus tests rápidos. Para los tests marcado
 
 ```
 ai-testing-lab/
-├── modules/                  # 13 labs numerados e independientes
+├── modules/                  # 14 labs numerados e independientes
 │   ├── 01-primer-eval/       # ← empieza aquí ✅
 │   ├── 02-ragas-basics/      # ✅
 │   ├── 03-llm-as-judge/      # ✅
@@ -53,7 +53,8 @@ ai-testing-lab/
 │   ├── 10-agent-testing/     # ✅
 │   ├── 11-playwright-streaming/ # ✅
 │   ├── 12-observability/     # ✅
-│   └── 13-drift-monitoring/  # ✅
+│   ├── 13-drift-monitoring/  # ✅
+│   └── 14-embedding-eval/    # ✅
 ├── demos/                    # sistemas bajo prueba (RAG, Streamlit, Rasa, bot vulnerable)
 ├── docs/                     # manual troceado por capítulos + glosario
 ├── goldens/                  # datasets de evaluación versionados
@@ -78,11 +79,12 @@ ai-testing-lab/
 | 11 | [playwright-streaming](modules/11-playwright-streaming/) | 8 | ✅ implementado | SSE streaming · E2E chatbot UI · FastAPI mock server |
 | 12 | [observability](modules/12-observability/) | 8 | ✅ implementado | OTel spans · @trace decorator · latency · error tracking |
 | 13 | [drift-monitoring](modules/13-drift-monitoring/) | 9 | ✅ implementado | PSI · semantic drift · alert rules |
+| 14 | [embedding-eval](modules/14-embedding-eval/) | 13 | ✅ implementado | cosine similarity · centroid shift · semantic regression |
 
 ## Ejecutar todos los módulos implementados
 
 ```bash
-# Módulos 01-13 juntos (107+ tests, ~0.1s, sin API key)
+# Módulos 01-14 juntos (120+ tests, ~0.1s, sin API key)
 pytest modules/01-primer-eval/tests/ \
        modules/02-ragas-basics/tests/ \
        modules/03-llm-as-judge/tests/ \
@@ -96,6 +98,7 @@ pytest modules/01-primer-eval/tests/ \
        modules/11-playwright-streaming/tests/ \
        modules/12-observability/tests/ \
        modules/13-drift-monitoring/tests/ \
+       modules/14-embedding-eval/tests/ \
        -m "not slow"
 # El módulo 11 requiere playwright+fastapi instalados; sin ellos se omite automáticamente.
 ```

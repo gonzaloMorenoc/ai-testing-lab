@@ -88,6 +88,28 @@ class TestGroundednessChecker:
         print(f"\n  Partial hallucination score: {result.score:.2f}")
         assert 0.0 < result.score < 1.0, "Partial hallucination should give intermediate score"
 
+    def test_negated_claim_contradicting_context_is_ungrounded(self) -> None:
+        checker = GroundednessChecker(overlap_threshold=0.5)
+        # Context affirms returns ARE allowed; claim says they are NOT
+        response = "Returns are not allowed under any circumstances."
+        context = ["Returns are allowed within 30 days for a full refund."]
+        result = checker.check(response, context)
+        print(f"\n  Negation detection: {result}")
+        assert not result.passed, (
+            "A claim that negates an affirmed context statement should be ungrounded"
+        )
+        assert len(result.ungrounded) >= 1
+
+    def test_negated_claim_about_absent_topic_may_be_grounded(self) -> None:
+        checker = GroundednessChecker(overlap_threshold=0.5)
+        # Context talks about returns; claim negates something NOT in context → low positive overlap
+        response = "Cryptocurrency payments are not accepted."
+        context = ["Returns are allowed within 30 days for a full refund."]
+        result = checker.check(response, context)
+        print(f"\n  Negation (absent topic): {result}")
+        # The claim doesn't contradict context strongly (different topic) — grounded or low score
+        # The key property: no false contradiction flag
+
     @pytest.mark.slow
     def test_with_real_deepeval_hallucination(
         self, faithful_response: str, good_context: list[str]

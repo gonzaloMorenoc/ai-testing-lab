@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
+
+# z-scores for common significance levels (two-tailed)
+_Z_CRITICAL: dict[float, float] = {0.10: 1.645, 0.05: 1.960, 0.01: 2.576}
 
 
 @dataclass
@@ -26,6 +30,37 @@ class RegressionReport:
             f"{self.candidate_version}={self.candidate_score:.2f} "
             f"({direction}{abs(self.delta):.2f})"
         )
+
+
+def is_significant(
+    delta: float,
+    n_samples: int,
+    baseline_score: float,
+    alpha: float = 0.05,
+) -> bool:
+    """Test whether a score delta is statistically significant.
+
+    Uses a one-proportion z-test. A delta of 0.03 with 10 samples is
+    likely noise; the same delta with 1000 samples is a real signal.
+
+    Args:
+        delta: Observed score change (negative = regression).
+        n_samples: Number of test cases the scores are averaged over.
+        baseline_score: Reference proportion in [0.0, 1.0].
+        alpha: Significance level (0.05 → 95 % confidence).
+
+    Returns:
+        True if the change is statistically significant at ``alpha`` level.
+    """
+    if n_samples <= 0:
+        return False
+    p = max(1e-6, min(1.0 - 1e-6, baseline_score))
+    se = math.sqrt(p * (1.0 - p) / n_samples)
+    if se < 1e-12:
+        return False
+    z = abs(delta) / se
+    z_crit = _Z_CRITICAL.get(alpha, 1.960)
+    return z >= z_crit
 
 
 class RegressionChecker:

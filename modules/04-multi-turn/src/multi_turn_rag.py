@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from src.conversation import Conversation
 
-_CONTEXT_HISTORY_SIZE = 2
+_CONTEXT_HISTORY_SIZE = 8
 
 KNOWLEDGE_BASE: dict[str, str] = {
     "returns": "Returns allowed within 30 days for a full refund. Original condition required.",

@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from src.alert_rules import (
+    AlertHistory,
     AlertResult,
     evaluate_rules,
     mean_drop_alert,
@@ -107,6 +108,67 @@ class TestAlertRules:
         lenient = psi_alert(threshold=10.0)(psi)
         assert strict.triggered is True
         assert lenient.triggered is False
+
+class TestAlertHistory:
+
+    def test_insufficient_data_below_three(self) -> None:
+        history = AlertHistory("psi_alert")
+        history.add(AlertResult(triggered=True, rule_name="psi_alert",
+                                observed_value=0.3, threshold=0.2, message="psi high"))
+        history.add(AlertResult(triggered=True, rule_name="psi_alert",
+                                observed_value=0.35, threshold=0.2, message="psi high"))
+        assert history.trend == "insufficient_data"
+
+    def test_two_of_three_recent_triggered_is_degrading(self) -> None:
+        history = AlertHistory("psi_alert")
+        for triggered, val in [(False, 0.1), (True, 0.25), (True, 0.3)]:
+            history.add(AlertResult(
+                triggered=triggered, rule_name="psi_alert",
+                observed_value=val, threshold=0.2, message="",
+            ))
+        print(f"\n  Trend: {history.trend}")
+        assert history.trend == "degrading"
+
+    def test_zero_of_three_recent_triggered_is_recovering(self) -> None:
+        history = AlertHistory("psi_alert")
+        for triggered, val in [(True, 0.25), (False, 0.15), (False, 0.05)]:
+            history.add(AlertResult(
+                triggered=triggered, rule_name="psi_alert",
+                observed_value=val, threshold=0.2, message="",
+            ))
+        assert history.trend == "recovering"
+
+    def test_one_of_three_recent_triggered_is_stable(self) -> None:
+        history = AlertHistory("psi_alert")
+        for triggered, val in [(False, 0.05), (True, 0.25), (False, 0.15)]:
+            history.add(AlertResult(
+                triggered=triggered, rule_name="psi_alert",
+                observed_value=val, threshold=0.2, message="",
+            ))
+        assert history.trend == "stable"
+
+    def test_trigger_rate_computed_correctly(self) -> None:
+        history = AlertHistory("mean_drop")
+        history.add(AlertResult(triggered=True, rule_name="mean_drop",
+                                observed_value=0.6, threshold=0.7, message=""))
+        history.add(AlertResult(triggered=False, rule_name="mean_drop",
+                                observed_value=0.75, threshold=0.7, message=""))
+        history.add(AlertResult(triggered=True, rule_name="mean_drop",
+                                observed_value=0.65, threshold=0.7, message=""))
+        history.add(AlertResult(triggered=False, rule_name="mean_drop",
+                                observed_value=0.8, threshold=0.7, message=""))
+        assert history.trigger_rate == pytest.approx(0.5, abs=0.01)
+
+    def test_summary_contains_required_fields(self) -> None:
+        history = AlertHistory("psi_alert")
+        for _ in range(3):
+            history.add(AlertResult(triggered=False, rule_name="psi_alert",
+                                    observed_value=0.05, threshold=0.2, message="ok"))
+        summary = history.summary()
+        print(f"\n  {summary}")
+        assert "psi_alert" in summary
+        assert "trend=" in summary
+        assert "trigger_rate=" in summary
 
     @pytest.mark.slow
     def test_real_langfuse_scores(self) -> None:

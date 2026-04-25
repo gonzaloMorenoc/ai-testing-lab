@@ -61,7 +61,7 @@ jobs:
       - name: Install CI dependencies
         run: uv sync --extra ci
 
-      - name: Run tests (módulos 01-13, sin API key)
+      - name: Run tests (módulos 01-14, sin API key)
         run: |
           uv run pytest \
             modules/01-primer-eval/tests/ \
@@ -77,12 +77,14 @@ jobs:
             modules/11-playwright-streaming/tests/ \
             modules/12-observability/tests/ \
             modules/13-drift-monitoring/tests/ \
+            modules/14-embedding-eval/tests/ \
             -m "not slow and not redteam" \
             --tb=short \
             -q \
             --cov=modules \
             --cov-report=xml:coverage.xml \
-            --cov-report=term-missing
+            --cov-report=term-missing \
+            --cov-fail-under=75
         env:
           DEEPEVAL_TELEMETRY_OPT_OUT: "YES"
 

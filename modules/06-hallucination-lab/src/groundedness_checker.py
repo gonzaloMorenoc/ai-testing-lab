@@ -7,6 +7,13 @@ from src.claim_extractor import extract_claims
 
 _MIN_TOKEN_LENGTH = 3
 
+# Tokens that indicate negation — used to detect claim-context contradictions.
+_NEGATION_MARKERS: frozenset[str] = frozenset({
+    "not", "never", "no", "none", "neither", "nor",
+    "cannot", "cant", "doesnt", "isnt", "arent", "wont", "didnt",
+    "nothing", "nowhere", "nobody",
+})
+
 
 @dataclass
 class GroundednessResult:
@@ -37,10 +44,25 @@ class GroundednessChecker:
         cleaned = (re.sub(r'[^a-zA-Z0-9]', '', w) for w in text.split())
         return {w.lower() for w in cleaned if len(w) > _MIN_TOKEN_LENGTH}
 
+    def _has_negation(self, text: str) -> bool:
+        raw_words = {re.sub(r"[^a-z]", "", w) for w in text.lower().split()}
+        return bool(raw_words & _NEGATION_MARKERS)
+
     def _is_grounded(self, claim: str, context_tokens: set[str]) -> bool:
         claim_tokens = self._tokenize(claim)
         if not claim_tokens:
             return True
+
+        # Negation guard: if the claim negates a statement the context affirms,
+        # it is a contradiction and should be marked ungrounded.
+        if self._has_negation(claim.lower()):
+            positive_tokens = claim_tokens - _NEGATION_MARKERS
+            if positive_tokens:
+                pos_overlap = positive_tokens & context_tokens
+                pos_ratio = len(pos_overlap) / len(positive_tokens)
+                if pos_ratio >= self.overlap_threshold:
+                    return False  # claim negates something context affirms
+
         overlap = claim_tokens & context_tokens
         return len(overlap) / len(claim_tokens) >= self.overlap_threshold
 

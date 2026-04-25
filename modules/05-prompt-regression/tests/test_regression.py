@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from src.prompt_registry import PromptRegistry
-from src.regression_checker import RegressionChecker
+from src.regression_checker import RegressionChecker, is_significant
 
 
 class TestPromptRegistry:
@@ -81,6 +81,37 @@ class TestRegressionChecker:
         assert "providers" in config
         assert "tests" in config
         assert len(config["prompts"]) >= 2
+
+    def test_summary_format(self, checker: RegressionChecker) -> None:
+        report = checker.check("support_response", "v1", 0.85, "v2", 0.70)
+        summary = report.summary()
+        assert "REGRESSION" in summary
+        assert "v1" in summary
+        assert "v2" in summary
+
+
+class TestSignificance:
+
+    def test_large_delta_many_samples_is_significant(self) -> None:
+        # Delta of 0.15 with 200 samples is a real signal
+        assert is_significant(delta=-0.15, n_samples=200, baseline_score=0.80)
+
+    def test_small_delta_few_samples_not_significant(self) -> None:
+        # Delta of 0.03 with 10 samples is noise
+        assert not is_significant(delta=-0.03, n_samples=10, baseline_score=0.80)
+
+    def test_same_delta_more_samples_becomes_significant(self) -> None:
+        delta, baseline = -0.05, 0.80
+        assert not is_significant(delta=delta, n_samples=20, baseline_score=baseline)
+        assert is_significant(delta=delta, n_samples=500, baseline_score=baseline)
+
+    def test_zero_samples_always_not_significant(self) -> None:
+        assert not is_significant(delta=-0.5, n_samples=0, baseline_score=0.80)
+
+    def test_strict_alpha_harder_to_reach(self) -> None:
+        # Delta that passes at 0.05 but not at 0.01
+        assert is_significant(delta=-0.10, n_samples=100, baseline_score=0.80, alpha=0.05)
+        assert not is_significant(delta=-0.03, n_samples=50, baseline_score=0.80, alpha=0.01)
 
     @pytest.mark.slow
     def test_with_promptfoo_cli(self) -> None:

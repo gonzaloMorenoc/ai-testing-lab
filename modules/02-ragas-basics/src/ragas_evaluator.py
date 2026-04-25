@@ -8,12 +8,45 @@ _MIN_TOKEN_LENGTH = 3
 
 # Synonym clusters for topic-aware relevance matching in context_precision.
 # Words within the same cluster are treated as semantically equivalent.
-_SYNONYM_CLUSTERS: list[frozenset[str]] = [
+_DEFAULT_SYNONYM_CLUSTERS: list[frozenset[str]] = [
     frozenset({"return", "refund", "returns", "refunds", "reimburs"}),
     frozenset({"ship", "deliver", "shipping", "delivery", "shipment"}),
     frozenset({"warrant", "warranty", "guarantee", "guaranty"}),
     frozenset({"pay", "payment", "paying", "paid", "credit", "debit"}),
 ]
+
+# Keep legacy name for backwards compat
+_SYNONYM_CLUSTERS = _DEFAULT_SYNONYM_CLUSTERS
+
+
+def build_synonym_clusters(
+    custom_clusters: list[list[str]] | None = None,
+    *,
+    include_defaults: bool = True,
+) -> list[frozenset[str]]:
+    """Build a synonym cluster list for a specific domain.
+
+    Args:
+        custom_clusters: Domain-specific synonym groups, e.g.
+            [["diagnose", "diagnosis", "diagnoses"],
+             ["prescribe", "prescription", "prescribed"]]
+        include_defaults: Whether to include the built-in e-commerce clusters.
+
+    Returns:
+        Combined list of frozensets ready to pass to RAGASEvaluator.
+
+    Example::
+
+        medical_clusters = build_synonym_clusters(
+            [["diagnose", "diagnosis"], ["treat", "treatment", "therapy"]],
+            include_defaults=False,
+        )
+        evaluator = RAGASEvaluator(synonym_clusters=medical_clusters)
+    """
+    clusters: list[frozenset[str]] = list(_DEFAULT_SYNONYM_CLUSTERS) if include_defaults else []
+    if custom_clusters:
+        clusters.extend(frozenset(group) for group in custom_clusters)
+    return clusters
 
 
 @dataclass
@@ -45,6 +78,12 @@ class RAGASScores:
 
 
 class RAGASEvaluator:
+    def __init__(
+        self,
+        synonym_clusters: list[frozenset[str]] | None = None,
+    ) -> None:
+        self._clusters = synonym_clusters if synonym_clusters is not None else _DEFAULT_SYNONYM_CLUSTERS
+
     def _tokenize(self, text: str) -> set[str]:
         """Return cleaned lowercase tokens with length > 3, punctuation stripped."""
         tokens = set()
@@ -55,9 +94,8 @@ class RAGASEvaluator:
         return tokens
 
     def _expand_synonyms(self, tokens: set[str]) -> set[str]:
-        """Expand a token set with synonyms from pre-defined clusters."""
         expanded = set(tokens)
-        for cluster in _SYNONYM_CLUSTERS:
+        for cluster in self._clusters:
             if tokens & cluster:
                 expanded |= cluster
         return expanded

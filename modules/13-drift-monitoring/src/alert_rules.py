@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from typing import Literal
 
 import numpy as np
 
@@ -69,6 +70,62 @@ def p95_alert(limit: float) -> Callable[[list[float]], AlertResult]:
             message=f"p95={p95:.4f} {'>' if triggered else '<='} {limit}",
         )
     return check
+
+
+Trend = Literal["stable", "degrading", "recovering", "insufficient_data"]
+
+
+class AlertHistory:
+    """Tracks consecutive AlertResult entries for a single rule and computes trend.
+
+    A minimum of 3 entries is required for trend analysis.  With fewer entries
+    ``trend`` returns ``"insufficient_data"``.
+
+    Trend logic:
+    - ``degrading``  — ≥ 2 of the 3 most recent results are triggered.
+    - ``recovering`` — 0 of the 3 most recent results are triggered (after prior alerts).
+    - ``stable``     — 1 of the 3 most recent results is triggered.
+    """
+
+    def __init__(self, rule_name: str) -> None:
+        self.rule_name = rule_name
+        self._results: list[AlertResult] = []
+
+    def add(self, result: AlertResult) -> None:
+        self._results.append(result)
+
+    @property
+    def results(self) -> list[AlertResult]:
+        return list(self._results)
+
+    @property
+    def trend(self) -> Trend:
+        if len(self._results) < 3:
+            return "insufficient_data"
+        recent = self._results[-3:]
+        triggered_count = sum(1 for r in recent if r.triggered)
+        if triggered_count >= 2:
+            return "degrading"
+        if triggered_count == 0:
+            return "recovering"
+        # Single trigger: recovering if it was the oldest entry (last two are clean)
+        if recent[0].triggered and not recent[1].triggered and not recent[2].triggered:
+            return "recovering"
+        return "stable"
+
+    @property
+    def trigger_rate(self) -> float:
+        if not self._results:
+            return 0.0
+        return round(sum(1 for r in self._results if r.triggered) / len(self._results), 4)
+
+    def summary(self) -> str:
+        return (
+            f"AlertHistory[{self.rule_name}]: "
+            f"{len(self._results)} checks, "
+            f"trigger_rate={self.trigger_rate:.1%}, "
+            f"trend={self.trend}"
+        )
 
 
 def evaluate_rules(

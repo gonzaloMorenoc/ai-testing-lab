@@ -101,7 +101,13 @@ monitoring = [
     "pandas>=2.2",
 ]
 
-# CI — dependencias ligeras para correr los 13 módulos sin API key ni heavy deps
+# Módulo 14 — embedding-based evaluation
+embeddings = [
+    "sentence-transformers>=2.7",
+    "numpy>=1.26",
+]
+
+# CI — dependencias ligeras para correr los 14 módulos sin API key ni heavy deps
 ci = [
     "deepeval>=1.4",
     "ragas>=0.2",
@@ -115,7 +121,7 @@ ci = [
     "rouge-score>=0.1",
     "sacrebleu>=2.4",
     "nltk>=3.8",
-    "numpy>=1.26",              # módulo 13 (drift-monitoring)
+    "numpy>=1.26",              # módulos 13, 14
 ]
 
 # Desarrollo completo — lint, format, type checking

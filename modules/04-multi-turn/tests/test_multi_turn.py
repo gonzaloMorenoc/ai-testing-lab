@@ -5,7 +5,7 @@ import os
 import pytest
 
 from src.conversation import Conversation
-from src.multi_turn_rag import MultiTurnRAG
+from src.multi_turn_rag import _CONTEXT_HISTORY_SIZE, MultiTurnRAG
 
 
 class TestConversation:
@@ -99,3 +99,42 @@ class TestConversation:
         metric.measure(tc)
         print(f"\n  KnowledgeRetention: {metric.score}")
         assert metric.is_successful()
+
+
+class TestContextWindow:
+
+    def test_context_window_size_at_least_six(self) -> None:
+        assert _CONTEXT_HISTORY_SIZE >= 6, (
+            f"Context window ({_CONTEXT_HISTORY_SIZE}) too small; "
+            "real conversational systems need at least 6-8 turns of history."
+        )
+
+    def test_long_conversation_retains_early_info(self) -> None:
+        rag = MultiTurnRAG()
+        # Turn 1: introduce "return" topic — this info must survive a long chat
+        first_response = rag.respond("What is the return policy?")
+        assert "30 days" in first_response or "return" in first_response.lower()
+
+        # Turns 2-8: flood with shipping questions to push turn-1 out of a small window
+        for _ in range(7):
+            rag.respond("What about shipping costs?")
+
+        # Turn 9: ask about returns — should still be in context window
+        response_9 = rag.respond("Remind me what you said about returns?")
+        assert "return" in response_9.lower(), (
+            "Return info from turn 1 should still be accessible at turn 9 "
+            f"(context_history_size={_CONTEXT_HISTORY_SIZE})"
+        )
+
+    def test_all_knowledge_base_topics_retrievable(self) -> None:
+        rag = MultiTurnRAG()
+        topic_queries = {
+            "returns": "What is the return policy?",
+            "shipping": "How long does shipping take?",
+            "warranty": "Do you offer a warranty?",
+            "payment": "What payment methods do you accept?",
+        }
+        for topic, query in topic_queries.items():
+            response = rag.respond(query)
+            assert len(response) > 0, f"Empty response for topic '{topic}'"
+            rag.reset()
