@@ -80,3 +80,5 @@ reports/
 # Logs
 *.log
 logs/
+.DS_Store
+doc.md
