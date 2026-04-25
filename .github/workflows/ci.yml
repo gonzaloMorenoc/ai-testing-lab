@@ -17,13 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
+      - uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
@@ -37,38 +35,48 @@ jobs:
         run: uv run ruff format --check .
 
   test:
-    name: Tests deterministas (sin API keys)
+    name: Tests módulos 01-13 (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     needs: lint
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.11", "3.12"]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
+      - uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install eval dependencies
-        run: uv sync --extra eval
+      - name: Install CI dependencies
+        run: uv sync --extra ci
 
-      - name: Run tests with cassettes (no real LLM calls)
+      - name: Run tests (módulos 01-13, sin API key)
         run: |
-          uv run pytest modules/01-primer-eval/tests/ \
-            -v \
-            --record-mode=none \
+          uv run pytest \
+            modules/01-primer-eval/tests/ \
+            modules/02-ragas-basics/tests/ \
+            modules/03-llm-as-judge/tests/ \
+            modules/04-multi-turn/tests/ \
+            modules/05-prompt-regression/tests/ \
+            modules/06-hallucination-lab/tests/ \
+            modules/07-redteam-garak/tests/ \
+            modules/08-redteam-deepteam/tests/ \
+            modules/09-guardrails/tests/ \
+            modules/10-agent-testing/tests/ \
+            modules/11-playwright-streaming/tests/ \
+            modules/12-observability/tests/ \
+            modules/13-drift-monitoring/tests/ \
             -m "not slow and not redteam" \
-            --tb=short
+            --tb=short \
+            -q
         env:
-          # Sin API keys reales — los cassettes cubren todas las llamadas
           DEEPEVAL_TELEMETRY_OPT_OUT: "YES"
 
       - name: Upload test results
@@ -76,6 +84,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-py${{ matrix.python-version }}
-          path: |
-            .pytest_cache/
+          path: .pytest_cache/
           retention-days: 7

@@ -1,9 +1,9 @@
 name: Red Team Nightly
 
 on:
-  schedule:
-    - cron: "0 2 * * *"   # 02:00 UTC, cada noche
   workflow_dispatch:       # ejecución manual bajo demanda
+  # schedule:
+  #   - cron: "0 2 * * *"   # 02:00 UTC, cada noche — desactivado temporalmente
 
 # NUNCA añadir trigger pull_request aquí — red team solo nightly
 jobs:

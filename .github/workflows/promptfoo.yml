@@ -7,8 +7,8 @@ on:
         description: "Módulo a evaluar (p.ej: 05)"
         required: false
         default: "05"
-  schedule:
-    - cron: "0 6 * * 1"   # Lunes 06:00 UTC
+  # schedule:
+  #   - cron: "0 6 * * 1"   # Lunes 06:00 UTC — desactivado temporalmente
 
 jobs:
   promptfoo:

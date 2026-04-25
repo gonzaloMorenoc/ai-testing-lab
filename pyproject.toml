@@ -101,6 +101,22 @@ monitoring = [
     "pandas>=2.2",
 ]
 
+# CI — dependencias ligeras para correr los 13 módulos sin API key ni heavy deps
+ci = [
+    "deepeval>=1.4",
+    "ragas>=0.2",
+    "vcrpy>=6.0",
+    "pytest>=8.2",
+    "pytest-asyncio>=0.23",
+    "pytest-recording>=0.13",
+    "evaluate>=0.4",
+    "bert-score>=0.3",
+    "rouge-score>=0.1",
+    "sacrebleu>=2.4",
+    "nltk>=3.8",
+    "numpy>=1.26",              # módulo 13 (drift-monitoring)
+]
+
 # Desarrollo completo — lint, format, type checking
 dev = [
     "ruff>=0.4",

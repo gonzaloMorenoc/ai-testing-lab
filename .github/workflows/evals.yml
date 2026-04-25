@@ -3,6 +3,7 @@ name: LLM Evals
 on:
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -13,13 +14,7 @@ jobs:
     name: Detectar módulos modificados
     runs-on: ubuntu-latest
     outputs:
-      modules: ${{ steps.filter.outputs.changes }}
-      module-01: ${{ steps.filter.outputs.module-01 }}
-      module-02: ${{ steps.filter.outputs.module-02 }}
-      module-03: ${{ steps.filter.outputs.module-03 }}
-      module-04: ${{ steps.filter.outputs.module-04 }}
-      module-05: ${{ steps.filter.outputs.module-05 }}
-      module-06: ${{ steps.filter.outputs.module-06 }}
+      changes: ${{ steps.filter.outputs.changes }}
     steps:
       - uses: actions/checkout@v4
 
@@ -27,83 +22,73 @@ jobs:
         id: filter
         with:
           filters: |
-            module-01:
+            01-primer-eval:
               - 'modules/01-primer-eval/**'
-            module-02:
+            02-ragas-basics:
               - 'modules/02-ragas-basics/**'
-            module-03:
+            03-llm-as-judge:
               - 'modules/03-llm-as-judge/**'
-            module-04:
+            04-multi-turn:
               - 'modules/04-multi-turn/**'
-            module-05:
+            05-prompt-regression:
               - 'modules/05-prompt-regression/**'
-            module-06:
+            06-hallucination-lab:
               - 'modules/06-hallucination-lab/**'
+            07-redteam-garak:
+              - 'modules/07-redteam-garak/**'
+            08-redteam-deepteam:
+              - 'modules/08-redteam-deepteam/**'
+            09-guardrails:
+              - 'modules/09-guardrails/**'
+            10-agent-testing:
+              - 'modules/10-agent-testing/**'
+            11-playwright-streaming:
+              - 'modules/11-playwright-streaming/**'
+            12-observability:
+              - 'modules/12-observability/**'
+            13-drift-monitoring:
+              - 'modules/13-drift-monitoring/**'
 
-  eval-module-01:
-    name: "Eval: 01-primer-eval"
+  eval:
+    name: "Eval: ${{ matrix.module }}"
     runs-on: ubuntu-latest
     needs: detect-changes
-    if: needs.detect-changes.outputs.module-01 == 'true'
+    if: ${{ needs.detect-changes.outputs.changes != '[]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJSON(needs.detect-changes.outputs.changes) }}
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install eval dependencies
-        run: uv sync --extra eval
+      - name: Install CI dependencies
+        run: uv sync --extra ci
 
-      - name: Cache Promptfoo
-        uses: actions/cache@v4
-        with:
-          path: ~/.promptfoo/cache
-          key: ${{ runner.os }}-promptfoo-${{ hashFiles('modules/01-primer-eval/**') }}
-          restore-keys: |
-            ${{ runner.os }}-promptfoo-
-
-      - name: Run DeepEval evals (con cassettes)
+      - name: Run evals (módulo ${{ matrix.module }})
         run: |
-          uv run pytest modules/01-primer-eval/tests/ \
+          uv run pytest modules/${{ matrix.module }}/tests/ \
             -v \
             --record-mode=none \
-            -m "not redteam" \
+            -m "not slow and not redteam" \
             --tb=long
         env:
           DEEPEVAL_TELEMETRY_OPT_OUT: "YES"
-          # Con Groq si hay secret configurado; si no, usa cassettes
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
 
       - name: Upload eval results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: eval-results-module-01
+          name: eval-results-${{ matrix.module }}
           path: reports/
           retention-days: 14
-
-  eval-module-02:
-    name: "Eval: 02-ragas-basics"
-    runs-on: ubuntu-latest
-    needs: detect-changes
-    if: needs.detect-changes.outputs.module-02 == 'true'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: uv sync --extra eval
-      - name: Run RAGAS evals
-        run: |
-          uv run pytest modules/02-ragas-basics/tests/ \
-            -v --record-mode=none -m "not redteam" --tb=long
-        env:
-          DEEPEVAL_TELEMETRY_OPT_OUT: "YES"
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          if-no-files-found: ignore
