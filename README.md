@@ -1,137 +1,158 @@
-# ai-testing-lab
+# LLM Testing Lab
 
-Testing de LLMs y chatbots — de la pirámide de testing clásica a evaluación semántica, red teaming y observabilidad.
+**14 pytest modules covering every layer of LLM quality assurance — RAG evaluation, red teaming, guardrails, observability, and drift monitoring. Zero API calls needed to run the full suite.**
 
 [![CI](https://github.com/gonzaloMorenoc/ai-testing-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/gonzaloMorenoc/ai-testing-lab/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/gonzaloMorenoc/ai-testing-lab/branch/main/graph/badge.svg)](https://codecov.io/gh/gonzaloMorenoc/ai-testing-lab)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%20|%203.12-blue)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/gonzaloMorenoc/ai-testing-lab)
 
-## Qué aprenderás
+---
 
-- Escribir tu primer `LLMTestCase` con DeepEval y ejecutarlo con pytest
-- Evaluar un pipeline RAG con las 9 métricas de RAGAS (faithfulness, context recall, answer relevancy…)
-- Construir un juez LLM (G-Eval, DAG Metric) con rúbricas custom
-- Probar conversaciones multi-turno con `ConversationalTestCase`
-- Detectar regresiones de prompts con Promptfoo: matrices YAML de prompts × modelos
-- Detectar alucinaciones con `HallucinationMetric` y el RAG Triad de TruLens
-- Escanear vulnerabilidades LLM con Garak (DAN, encoding, toxicity)
-- Atacar y defender con DeepTeam y el OWASP Top 10 LLM 2025
-- Añadir guardrails de I/O con NeMo Guardrails y Guardrails AI
-- Evaluar agentes: `ToolCallAccuracy`, `AgentGoalAccuracy`, trajectory evaluation
-- Escribir tests E2E de streaming en Playwright contra UIs de chatbot
-- Instrumentar un pipeline con Langfuse/Phoenix y medir en producción (OTel)
-- Detectar drift semántico con Evidently AI y alertar antes de que los usuarios lo noten
+## Why this exists
+
+Most LLM quality guides stop at "use DeepEval" or "use RAGAS". This lab goes further: it shows you **how** each evaluation technique works under the hood, where it breaks, and how to combine them into a real QA pipeline.
+
+Every module is self-contained, runs in milliseconds with deterministic mocks, and teaches one specific concept — from writing your first `LLMTestCase` to detecting semantic drift in production.
+
+---
 
 ## Quickstart
 
 ```bash
 git clone https://github.com/gonzaloMorenoc/ai-testing-lab.git
 cd ai-testing-lab
-pip install deepeval pytest pytest-recording pyyaml   # dependencias mínimas
-pytest modules/01-primer-eval/tests/ -m "not slow"    # 8 tests, 0 llamadas LLM reales
-pytest modules/02-ragas-basics/tests/ -m "not slow"   # 10 tests, métricas RAGAS mock
+pip install deepeval pytest pytest-cov numpy
+pytest modules/01-primer-eval/tests/ -m "not slow" -q
 ```
 
-Ningún módulo requiere API key para sus tests rápidos. Para los tests marcados `@pytest.mark.slow` exporta `GROQ_API_KEY` (free tier) antes de ejecutar `pytest -m slow`.
+Expected output:
 
-## Mapa del repo
+```
+........ 8 passed in 0.12s
+```
+
+No API key. No paid account. No internet connection required.
+
+> For modules marked `@pytest.mark.slow`, export a free `GROQ_API_KEY` before running `pytest -m slow`.
+
+---
+
+## Run the full suite
+
+```bash
+pytest modules/ -m "not slow and not redteam" -q
+```
+
+```
+142 passed, 1 skipped in 0.16s
+```
+
+142 tests across 14 modules in under 200ms.
+
+---
+
+## Modules
+
+| # | Module | Tests | Key concept |
+|---|--------|:-----:|-------------|
+| 01 | [primer-eval](modules/01-primer-eval/) | 8 | First `LLMTestCase` · AnswerRelevancy · Faithfulness |
+| 02 | [ragas-basics](modules/02-ragas-basics/) | 10 | RAGAS pipeline · faithfulness · context\_precision · recall |
+| 03 | [llm-as-judge](modules/03-llm-as-judge/) | 11 | G-Eval · DAG Metric · position bias · verbosity bias |
+| 04 | [multi-turn](modules/04-multi-turn/) | 10 | ConversationalTestCase · KnowledgeRetention · 8-turn context |
+| 05 | [prompt-regression](modules/05-prompt-regression/) | 11 | PromptRegistry · RegressionChecker · statistical significance |
+| 06 | [hallucination-lab](modules/06-hallucination-lab/) | 9 | Claim extraction · groundedness · negation detection |
+| 07 | [redteam-garak](modules/07-redteam-garak/) | 10 | 42 attack prompts · DAN · many-shot · token manipulation |
+| 08 | [redteam-deepteam](modules/08-redteam-deepteam/) | 8 | OWASP Top 10 LLM 2025 · prompt injection · agency risks |
+| 09 | [guardrails](modules/09-guardrails/) | 11 | PII detection · output validation · I/O pipeline |
+| 10 | [agent-testing](modules/10-agent-testing/) | 9 | Tool selection · trajectory evaluation · AST-safe eval |
+| 11 | [playwright-streaming](modules/11-playwright-streaming/) | 8 | SSE streaming · E2E chatbot UI · FastAPI mock server |
+| 12 | [observability](modules/12-observability/) | 8 | OTel spans · `@trace` decorator · latency · error tracking |
+| 13 | [drift-monitoring](modules/13-drift-monitoring/) | 13 | PSI · AlertHistory · trend detection · alert rules |
+| 14 | [embedding-eval](modules/14-embedding-eval/) | 15 | Cosine similarity · centroid shift · semantic regression |
+
+---
+
+## What you'll learn
+
+```
+Evaluation pyramid for LLMs
+│
+├── Unit-level metrics
+│   ├── 01  LLMTestCase, AnswerRelevancy, Faithfulness
+│   ├── 02  RAGAS: faithfulness, context_precision, context_recall
+│   ├── 03  LLM-as-judge: G-Eval, position bias calibration
+│   └── 14  Embedding cosine similarity, regression checker
+│
+├── Conversation & regression
+│   ├── 04  Multi-turn: ConversationalTestCase, 8-turn memory
+│   ├── 05  Prompt regression: PromptRegistry, z-test significance
+│   └── 06  Hallucination: claim extraction, negation-aware groundedness
+│
+├── Security & safety
+│   ├── 07  Red teaming: 42 attack prompts, hit rate by category
+│   ├── 08  DeepTeam: OWASP Top 10 LLM 2025, agency risks
+│   └── 09  Guardrails: PII detection, I/O validation pipeline
+│
+└── Production monitoring
+    ├── 10  Agent evaluation: tool accuracy, trajectory scoring
+    ├── 11  E2E streaming: Playwright + SSE + FastAPI
+    ├── 12  Observability: OTel, Langfuse, Phoenix
+    └── 13  Drift monitoring: PSI, AlertHistory, trend analysis
+```
+
+---
+
+## Repo layout
 
 ```
 ai-testing-lab/
-├── modules/                  # 14 labs numerados e independientes
-│   ├── 01-primer-eval/       # ← empieza aquí ✅
-│   ├── 02-ragas-basics/      # ✅
-│   ├── 03-llm-as-judge/      # ✅
-│   ├── 04-multi-turn/        # ✅
-│   ├── 05-prompt-regression/ # ✅
-│   ├── 06-hallucination-lab/ # ✅
-│   ├── 07-redteam-garak/     # ✅
-│   ├── 08-redteam-deepteam/  # ✅
-│   ├── 09-guardrails/        # ✅
-│   ├── 10-agent-testing/     # ✅
-│   ├── 11-playwright-streaming/ # ✅
-│   ├── 12-observability/     # ✅
-│   ├── 13-drift-monitoring/  # ✅
-│   └── 14-embedding-eval/    # ✅
-├── demos/                    # sistemas bajo prueba (RAG, Streamlit, Rasa, bot vulnerable)
-├── docs/                     # manual troceado por capítulos + glosario
-├── goldens/                  # datasets de evaluación versionados
-├── exercises/solutions/      # soluciones de los ejercicios de cada módulo
-└── docker/compose.yml        # Langfuse + Ollama + demos
+├── modules/          # 14 independent labs (start anywhere)
+├── demos/            # live systems to test against (RAG, Streamlit, Rasa)
+├── goldens/          # versioned evaluation datasets
+├── docs/             # chapter-by-chapter manual + glossary
+├── exercises/        # solutions per module
+└── docker/           # Langfuse + Ollama + demo stack
 ```
 
-## Módulos
+---
 
-| # | Módulo | Tests | Estado | Concepto clave |
-|---|--------|-------|--------|----------------|
-| 01 | [primer-eval](modules/01-primer-eval/) | 8 | ✅ implementado | LLMTestCase · AnswerRelevancy · Faithfulness |
-| 02 | [ragas-basics](modules/02-ragas-basics/) | 10 | ✅ implementado | RAGAS · faithfulness · context_precision · context_recall |
-| 03 | [llm-as-judge](modules/03-llm-as-judge/) | 11 | ✅ implementado | G-Eval · DAG Metric · position bias · verbosity bias |
-| 04 | [multi-turn](modules/04-multi-turn/) | 10 | ✅ implementado | ConversationalTestCase · KnowledgeRetention · historial |
-| 05 | [prompt-regression](modules/05-prompt-regression/) | 11 | ✅ implementado | PromptRegistry · RegressionChecker · Promptfoo |
-| 06 | [hallucination-lab](modules/06-hallucination-lab/) | 9 | ✅ implementado | claim extraction · groundedness · RAG Triad |
-| 07 | [redteam-garak](modules/07-redteam-garak/) | 8 | ✅ implementado | DAN · encoding attacks · jailbreak · hit rate |
-| 08 | [redteam-deepteam](modules/08-redteam-deepteam/) | 8 | ✅ implementado | OWASP Top 10 LLM 2025 · prompt injection · agency |
-| 09 | [guardrails](modules/09-guardrails/) | 11 | ✅ implementado | PII detection · output validation · input/output pipeline |
-| 10 | [agent-testing](modules/10-agent-testing/) | 9 | ✅ implementado | tool selection · trajectory evaluation · AgentGoalAccuracy |
-| 11 | [playwright-streaming](modules/11-playwright-streaming/) | 8 | ✅ implementado | SSE streaming · E2E chatbot UI · FastAPI mock server |
-| 12 | [observability](modules/12-observability/) | 8 | ✅ implementado | OTel spans · @trace decorator · latency · error tracking |
-| 13 | [drift-monitoring](modules/13-drift-monitoring/) | 9 | ✅ implementado | PSI · semantic drift · alert rules |
-| 14 | [embedding-eval](modules/14-embedding-eval/) | 13 | ✅ implementado | cosine similarity · centroid shift · semantic regression |
+## Design principles
 
-## Ejecutar todos los módulos implementados
+- **No API calls in fast tests.** Every module runs offline with deterministic mocks. Real LLM calls are gated behind `@pytest.mark.slow`.
+- **One concept per module.** Each lab teaches exactly one evaluation technique. You can read and run them in any order.
+- **Production patterns, not toy examples.** AlertHistory, PSI drift detection, position-bias calibration, and AST-safe evaluation are patterns you'd actually ship.
+- **pytest-native.** If you know pytest, you already know how to run this.
 
-```bash
-# Módulos 01-14 juntos (120+ tests, ~0.1s, sin API key)
-pytest modules/01-primer-eval/tests/ \
-       modules/02-ragas-basics/tests/ \
-       modules/03-llm-as-judge/tests/ \
-       modules/04-multi-turn/tests/ \
-       modules/05-prompt-regression/tests/ \
-       modules/06-hallucination-lab/tests/ \
-       modules/07-redteam-garak/tests/ \
-       modules/08-redteam-deepteam/tests/ \
-       modules/09-guardrails/tests/ \
-       modules/10-agent-testing/tests/ \
-       modules/11-playwright-streaming/tests/ \
-       modules/12-observability/tests/ \
-       modules/13-drift-monitoring/tests/ \
-       modules/14-embedding-eval/tests/ \
-       -m "not slow"
-# El módulo 11 requiere playwright+fastapi instalados; sin ellos se omite automáticamente.
-```
+---
 
-## Cómo contribuir
+## Stack
 
-Tipos de contribución bienvenidos:
+| Tool | Used for |
+|------|----------|
+| [DeepEval](https://deepeval.com) | pytest-native evaluation, 50+ metrics, LLM-as-judge |
+| [RAGAS](https://docs.ragas.io) | Reference-free RAG metrics |
+| [Promptfoo](https://promptfoo.dev) | Prompt regression, YAML test matrices |
+| [Garak](https://github.com/NVIDIA/garak) | LLM vulnerability scanner (NVIDIA) |
+| [Guardrails AI](https://guardrailsai.com) | I/O validation for LLMs |
+| [NeMo Guardrails](https://github.com/NVIDIA/NeMo-Guardrails) | Conversational rails (Colang DSL) |
+| [Langfuse](https://langfuse.com) | Tracing, online evaluation (MIT, self-hostable) |
+| [Phoenix](https://github.com/Arize-ai/phoenix) | OSS observability (OTel, auto-instrumentation) |
 
-- **Reportar sesgo en una rúbrica**: si los scores de un evaluador no se correlacionan con tu juicio humano, abre un issue con el caso concreto.
-- **Añadir un golden al dataset**: sigue el formato de `goldens/README.md` y abre un PR.
-- **Proponer un módulo nuevo**: abre un issue con el concepto y el módulo más próximo como referencia.
-- **Corregir el manual**: errores factuales o links rotos en `docs/`, PR directo.
+---
 
-No hay plantilla de PR obligatoria. Describir qué cambió y por qué es suficiente.
+## Contributing
 
-## Créditos
+- **Found a metric that doesn't correlate with human judgment?** Open an issue with the specific case.
+- **Have a golden example to add?** Follow the format in `goldens/README.md` and open a PR.
+- **Proposing a new module?** Open an issue with the concept and the nearest existing module as reference.
+- **Fixing the manual?** Factual errors or broken links in `docs/` — direct PR is fine.
 
-| Herramienta | Para qué |
-|------------|---------|
-| [DeepEval](https://deepeval.com) | Evaluación pytest-native, 50+ métricas, LLM-as-judge |
-| [RAGAS](https://docs.ragas.io) | Métricas RAG reference-free (faithfulness, context recall…) |
-| [Promptfoo](https://promptfoo.dev) | Regression testing de prompts, matrices YAML |
-| [Garak](https://github.com/NVIDIA/garak) | Scanner de vulnerabilidades LLM (NVIDIA, Apache 2.0) |
-| [PyRIT](https://github.com/Azure/PyRIT) | Red teaming framework (Microsoft, MIT) |
-| [Botium](https://botium-docs.readthedocs.io) | Testing de chatbots conversacionales |
-| [TruLens](https://www.trulens.org) | RAG Triad + OpenTelemetry |
-| [Phoenix](https://github.com/Arize-ai/phoenix) | Observabilidad OSS (OTel, auto-instrumentation) |
-| [Langfuse](https://langfuse.com) | Trazas, evaluación online, self-host (MIT) |
-| [Guardrails AI](https://guardrailsai.com) | Validación de I/O de LLMs |
-| [NeMo Guardrails](https://github.com/NVIDIA/NeMo-Guardrails) | Rails conversacionales (Colang DSL) |
+No PR template required. Describe what changed and why.
 
-## Licencia
+---
 
-```
+## License
+
 MIT © 2026 Gonzalo Moreno
-```
