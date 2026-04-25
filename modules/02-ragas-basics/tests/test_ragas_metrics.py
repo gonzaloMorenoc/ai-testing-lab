@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import os
+
 import pytest
+
 from src.rag_pipeline import RAGPipeline
 from src.ragas_evaluator import RAGASEvaluator, RAGASScores
 
@@ -111,9 +113,9 @@ class TestEvaluatePipeline:
         if not os.getenv("GROQ_API_KEY"):
             pytest.skip("GROQ_API_KEY no encontrado")
         try:
-            from ragas.metrics import faithfulness, answer_relevancy
-            from ragas import evaluate
             from datasets import Dataset
+            from ragas import evaluate
+            from ragas.metrics import answer_relevancy, faithfulness
         except ImportError:
             pytest.skip("ragas o datasets no instalados")
 

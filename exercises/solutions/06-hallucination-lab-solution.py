@@ -3,8 +3,10 @@ Solución módulo 06: implementa un RAG Triad simplificado combinando
 context_relevance + groundedness + answer_relevance en un score compuesto.
 """
 from __future__ import annotations
+
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "modules" / "06-hallucination-lab"))
 from src.groundedness_checker import GroundednessChecker
 

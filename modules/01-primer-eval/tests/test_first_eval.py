@@ -24,7 +24,6 @@ from deepeval.test_case import LLMTestCase
 from src.metrics import SimpleAnswerRelevancyMetric, SimpleFaithfulnessMetric
 from src.simple_rag import SimpleRAG
 
-
 # ── Helpers ────────────────────────────────────────────────────────────────
 
 

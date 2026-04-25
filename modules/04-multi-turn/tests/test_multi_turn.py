@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import os
+
 import pytest
-from src.conversation import Conversation, Message
+
+from src.conversation import Conversation
 from src.multi_turn_rag import MultiTurnRAG
 
 
@@ -79,8 +81,8 @@ class TestConversation:
     def test_with_real_deepeval_conversational(self, rag: MultiTurnRAG) -> None:
         if not os.getenv("GROQ_API_KEY"):
             pytest.skip("GROQ_API_KEY no encontrado")
-        from deepeval.test_case import ConversationalTestCase, LLMTestCase
         from deepeval.metrics import KnowledgeRetentionMetric
+        from deepeval.test_case import ConversationalTestCase, LLMTestCase
 
         rag.respond("What is the return policy?")
         rag.respond("And shipping?")

@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "modules" / "10-agent-testing"))
 
-from src.simple_agent import AgentResult, SimpleAgent, ToolCall, _CALC_KEYWORDS, _FORMAT_KEYWORDS
+from src.simple_agent import SimpleAgent, ToolCall
 from src.trajectory_evaluator import TrajectoryEvaluator
 
 _TRANSLATE_KEYWORDS: tuple[str, ...] = ("translate", "in french", "in spanish", "en español")

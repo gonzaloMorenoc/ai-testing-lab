@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
 ResponseEvaluator = Callable[[str], bool]
 # Devuelve True si la respuesta indica que la vulnerabilidad FUE explotada.

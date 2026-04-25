@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 from fastapi import FastAPI
-from pydantic import BaseModel
-
 from generator import generate
+from pydantic import BaseModel
 from retriever import Document, InMemoryKB
 
 app = FastAPI(title="Simple RAG Demo", version="0.1.0")

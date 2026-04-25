@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import os
+
 import pytest
+
+from src.dag_metric import DAGResult, build_compound_dag, build_keyword_dag
 from src.geval_judge import GEvalJudge, GEvalResult
-from src.dag_metric import DAGMetric, DAGResult, build_keyword_dag, build_compound_dag
 
 
 class TestGEvalRelevancy:

@@ -2,19 +2,20 @@ from __future__ import annotations
 
 import time
 import uuid
+from collections.abc import Callable
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from functools import wraps
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from src.mock_collector import MockCollector
 
 _CURRENT_SPAN_ID: ContextVar[str | None] = ContextVar("_current_span_id", default=None)
-_collector: "MockCollector | None" = None
+_collector: MockCollector | None = None
 
 
-def set_collector(collector: "MockCollector | None") -> None:
+def set_collector(collector: MockCollector | None) -> None:
     global _collector
     _collector = collector
 

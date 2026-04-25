@@ -1,6 +1,6 @@
 import pytest
+
 from src.geval_judge import GEvalJudge
-from src.dag_metric import DAGMetric, build_keyword_dag, build_compound_dag
 
 
 @pytest.fixture(scope="module")

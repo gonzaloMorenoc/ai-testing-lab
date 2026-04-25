@@ -5,15 +5,15 @@ from __future__ import annotations
 
 import sys
 import time
-import uuid
+from collections.abc import Callable
 from functools import wraps
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "modules" / "12-observability"))
 
 from src.mock_collector import MockCollector
-from src.tracer import Span, set_collector, _CURRENT_SPAN_ID
+from src.tracer import _CURRENT_SPAN_ID, Span, set_collector
 
 
 def trace_with_token_count(name: str, collector: MockCollector, **extra: Any) -> Callable:

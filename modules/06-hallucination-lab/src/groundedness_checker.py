@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+
 from src.claim_extractor import extract_claims
 
 _MIN_TOKEN_LENGTH = 3

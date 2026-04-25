@@ -3,8 +3,10 @@ Solución módulo 03: añade una rúbrica de 'completeness' al GEvalJudge
 que verifique que la respuesta cubre todos los aspectos de la política.
 """
 from __future__ import annotations
+
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "modules" / "03-llm-as-judge"))
 
 from src.geval_judge import GEvalJudge, GEvalResult

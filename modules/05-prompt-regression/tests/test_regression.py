@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+
 import pytest
-from src.prompt_registry import PromptRegistry, build_default_registry
-from src.regression_checker import RegressionChecker, RegressionReport
+
+from src.prompt_registry import PromptRegistry
+from src.regression_checker import RegressionChecker
 
 
 class TestPromptRegistry:

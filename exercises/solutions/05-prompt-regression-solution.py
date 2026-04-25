@@ -3,8 +3,10 @@ Solución módulo 05: añade versionado semántico (semver) al PromptRegistry
 y detecta breaking changes entre versiones major.
 """
 from __future__ import annotations
+
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "modules" / "05-prompt-regression"))
 from src.prompt_registry import PromptRegistry, PromptVersion
 

@@ -4,7 +4,7 @@ import os
 
 import pytest
 
-from src.simple_agent import AgentResult, SimpleAgent, ToolCall
+from src.simple_agent import SimpleAgent, ToolCall
 from src.trajectory_evaluator import TrajectoryEvaluator
 
 

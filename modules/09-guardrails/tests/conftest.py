@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pytest
+
 from src.input_validator import InputValidator
 from src.output_validator import OutputValidator
 

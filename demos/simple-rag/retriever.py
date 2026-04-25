@@ -33,7 +33,7 @@ class InMemoryKB:
             return []
         q_vec = self._tf_idf_vec(query)
         scored = sorted(
-            ((self._cosine(q_vec, dv), doc) for doc, dv in zip(self._docs, self._tf_vecs)),
+            ((self._cosine(q_vec, dv), doc) for doc, dv in zip(self._docs, self._tf_vecs, strict=False)),
             key=lambda t: t[0],
             reverse=True,
         )

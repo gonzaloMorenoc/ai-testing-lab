@@ -6,7 +6,7 @@ import time
 import pytest
 
 from src.mock_collector import MockCollector
-from src.tracer import Span, trace
+from src.tracer import trace
 
 
 class TestTracer:

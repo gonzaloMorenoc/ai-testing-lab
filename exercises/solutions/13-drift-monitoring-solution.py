@@ -4,10 +4,11 @@ Solución módulo 13: DriftReport con PSI + reglas + timestamp.
 from __future__ import annotations
 
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import numpy as np
 
@@ -21,7 +22,7 @@ from src.drift_detector import compute_psi
 class DriftReport:
     psi: float
     alerts: list[AlertResult]
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     @property
     def any_triggered(self) -> bool:

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Callable
+from datetime import UTC, datetime
 
 import numpy as np
 
@@ -14,7 +14,7 @@ class AlertResult:
     observed_value: float
     threshold: float
     message: str
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 def psi_alert(threshold: float = 0.2) -> Callable[[float], AlertResult]:

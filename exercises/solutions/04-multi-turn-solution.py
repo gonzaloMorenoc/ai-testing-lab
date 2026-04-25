@@ -4,8 +4,11 @@ Si el asistente dice "30 days" en el turno 1 y "60 days" en el turno 3,
 la conversación tiene una contradicción.
 """
 from __future__ import annotations
-import sys, re
+
+import re
+import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "modules" / "04-multi-turn"))
 from src.conversation import Conversation
 

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from itertools import zip_longest
-from typing import Callable
 
 from src.simple_agent import ToolCall
 

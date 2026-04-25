@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import os
+
 import pytest
+
 from src.claim_extractor import extract_claims
 from src.groundedness_checker import GroundednessChecker, GroundednessResult
 
