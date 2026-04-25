@@ -1,6 +1,6 @@
 # LLM Testing Lab
 
-**14 pytest modules covering every layer of LLM quality assurance — RAG evaluation, red teaming, guardrails, observability, and drift monitoring. Zero API calls needed to run the full suite.**
+**14 módulos pytest que cubren todas las capas de calidad en LLMs — evaluación RAG, red teaming, guardrails, observabilidad y drift monitoring. Sin llamadas a APIs para ejecutar la suite completa.**
 
 [![CI](https://github.com/gonzaloMorenoc/ai-testing-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/gonzaloMorenoc/ai-testing-lab/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/gonzaloMorenoc/ai-testing-lab/branch/main/graph/badge.svg)](https://codecov.io/gh/gonzaloMorenoc/ai-testing-lab)
@@ -9,16 +9,16 @@
 [![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/gonzaloMorenoc/ai-testing-lab)
 
 <p align="center">
-  <img src="assets/demo.svg" alt="142 LLM tests passing in 0.16s — zero API calls">
+  <img src="assets/demo.svg" alt="142 tests de LLMs pasando en 0.16s — sin API key">
 </p>
 
 ---
 
-## Why this exists
+## Por qué existe esto
 
-Most LLM quality guides stop at "use DeepEval" or "use RAGAS". This lab goes further: it shows you **how** each evaluation technique works under the hood, where it breaks, and how to combine them into a real QA pipeline.
+La mayoría de guías de calidad para LLMs se quedan en "usa DeepEval" o "usa RAGAS". Este laboratorio va más lejos: muestra **cómo** funciona cada técnica de evaluación por dentro, dónde falla, y cómo combinarlas en un pipeline de QA real.
 
-Every module is self-contained, runs in milliseconds with deterministic mocks, and teaches one specific concept — from writing your first `LLMTestCase` to detecting semantic drift in production.
+Cada módulo es independiente, se ejecuta en milisegundos con mocks deterministas y enseña un concepto concreto — desde escribir tu primer `LLMTestCase` hasta detectar drift semántico en producción.
 
 ---
 
@@ -31,19 +31,19 @@ pip install deepeval pytest pytest-cov numpy
 pytest modules/01-primer-eval/tests/ -m "not slow" -q
 ```
 
-Expected output:
+Resultado esperado:
 
 ```
 ........ 8 passed in 0.12s
 ```
 
-No API key. No paid account. No internet connection required.
+Sin API key. Sin cuenta de pago. Sin conexión a internet.
 
-> For modules marked `@pytest.mark.slow`, export a free `GROQ_API_KEY` before running `pytest -m slow`.
+> Para los módulos marcados con `@pytest.mark.slow`, exporta un `GROQ_API_KEY` gratuito antes de ejecutar `pytest -m slow`.
 
 ---
 
-## Run the full suite
+## Ejecutar la suite completa
 
 ```bash
 pytest modules/ -m "not slow and not redteam" -q
@@ -53,110 +53,110 @@ pytest modules/ -m "not slow and not redteam" -q
 142 passed, 1 skipped in 0.16s
 ```
 
-142 tests across 14 modules in under 200ms.
+142 tests en 14 módulos en menos de 200ms.
 
 ---
 
-## Modules
+## Módulos
 
-| # | Module | Tests | Key concept |
-|---|--------|:-----:|-------------|
-| 01 | [primer-eval](modules/01-primer-eval/) | 8 | First `LLMTestCase` · AnswerRelevancy · Faithfulness |
-| 02 | [ragas-basics](modules/02-ragas-basics/) | 10 | RAGAS pipeline · faithfulness · context\_precision · recall |
+| # | Módulo | Tests | Concepto clave |
+|---|--------|:-----:|----------------|
+| 01 | [primer-eval](modules/01-primer-eval/) | 8 | Primer `LLMTestCase` · AnswerRelevancy · Faithfulness |
+| 02 | [ragas-basics](modules/02-ragas-basics/) | 10 | Pipeline RAGAS · faithfulness · context\_precision · recall |
 | 03 | [llm-as-judge](modules/03-llm-as-judge/) | 11 | G-Eval · DAG Metric · position bias · verbosity bias |
-| 04 | [multi-turn](modules/04-multi-turn/) | 10 | ConversationalTestCase · KnowledgeRetention · 8-turn context |
-| 05 | [prompt-regression](modules/05-prompt-regression/) | 11 | PromptRegistry · RegressionChecker · statistical significance |
-| 06 | [hallucination-lab](modules/06-hallucination-lab/) | 9 | Claim extraction · groundedness · negation detection |
+| 04 | [multi-turn](modules/04-multi-turn/) | 10 | ConversationalTestCase · KnowledgeRetention · contexto de 8 turnos |
+| 05 | [prompt-regression](modules/05-prompt-regression/) | 11 | PromptRegistry · RegressionChecker · significación estadística |
+| 06 | [hallucination-lab](modules/06-hallucination-lab/) | 9 | Extracción de claims · groundedness · detección de negaciones |
 | 07 | [redteam-garak](modules/07-redteam-garak/) | 10 | 42 attack prompts · DAN · many-shot · token manipulation |
-| 08 | [redteam-deepteam](modules/08-redteam-deepteam/) | 8 | OWASP Top 10 LLM 2025 · prompt injection · agency risks |
-| 09 | [guardrails](modules/09-guardrails/) | 11 | PII detection · output validation · I/O pipeline |
-| 10 | [agent-testing](modules/10-agent-testing/) | 9 | Tool selection · trajectory evaluation · AST-safe eval |
-| 11 | [playwright-streaming](modules/11-playwright-streaming/) | 8 | SSE streaming · E2E chatbot UI · FastAPI mock server |
-| 12 | [observability](modules/12-observability/) | 8 | OTel spans · `@trace` decorator · latency · error tracking |
-| 13 | [drift-monitoring](modules/13-drift-monitoring/) | 13 | PSI · AlertHistory · trend detection · alert rules |
-| 14 | [embedding-eval](modules/14-embedding-eval/) | 15 | Cosine similarity · centroid shift · semantic regression |
+| 08 | [redteam-deepteam](modules/08-redteam-deepteam/) | 8 | OWASP Top 10 LLM 2025 · prompt injection · riesgos de agencia |
+| 09 | [guardrails](modules/09-guardrails/) | 11 | Detección de PII · validación de output · pipeline I/O |
+| 10 | [agent-testing](modules/10-agent-testing/) | 9 | Selección de herramientas · evaluación de trayectorias · eval AST-safe |
+| 11 | [playwright-streaming](modules/11-playwright-streaming/) | 8 | SSE streaming · E2E chatbot UI · servidor mock FastAPI |
+| 12 | [observability](modules/12-observability/) | 8 | OTel spans · decorador `@trace` · latencia · error tracking |
+| 13 | [drift-monitoring](modules/13-drift-monitoring/) | 13 | PSI · AlertHistory · detección de tendencias · alert rules |
+| 14 | [embedding-eval](modules/14-embedding-eval/) | 15 | Similitud coseno · centroid shift · regresión semántica |
 
 ---
 
-## What you'll learn
+## Qué aprenderás
 
 ```
-Evaluation pyramid for LLMs
+Pirámide de evaluación para LLMs
 │
-├── Unit-level metrics
+├── Métricas unitarias
 │   ├── 01  LLMTestCase, AnswerRelevancy, Faithfulness
 │   ├── 02  RAGAS: faithfulness, context_precision, context_recall
-│   ├── 03  LLM-as-judge: G-Eval, position bias calibration
-│   └── 14  Embedding cosine similarity, regression checker
+│   ├── 03  LLM-as-judge: G-Eval, calibración de position bias
+│   └── 14  Similitud coseno con embeddings, regression checker
 │
-├── Conversation & regression
-│   ├── 04  Multi-turn: ConversationalTestCase, 8-turn memory
-│   ├── 05  Prompt regression: PromptRegistry, z-test significance
-│   └── 06  Hallucination: claim extraction, negation-aware groundedness
+├── Conversación y regresión
+│   ├── 04  Multi-turn: ConversationalTestCase, memoria de 8 turnos
+│   ├── 05  Regresión de prompts: PromptRegistry, z-test de significación
+│   └── 06  Alucinaciones: extracción de claims, groundedness con negaciones
 │
-├── Security & safety
-│   ├── 07  Red teaming: 42 attack prompts, hit rate by category
-│   ├── 08  DeepTeam: OWASP Top 10 LLM 2025, agency risks
-│   └── 09  Guardrails: PII detection, I/O validation pipeline
+├── Seguridad y safety
+│   ├── 07  Red teaming: 42 attack prompts, hit rate por categoría
+│   ├── 08  DeepTeam: OWASP Top 10 LLM 2025, riesgos de agencia
+│   └── 09  Guardrails: detección de PII, pipeline de validación I/O
 │
-└── Production monitoring
-    ├── 10  Agent evaluation: tool accuracy, trajectory scoring
+└── Monitorización en producción
+    ├── 10  Evaluación de agentes: tool accuracy, puntuación de trayectorias
     ├── 11  E2E streaming: Playwright + SSE + FastAPI
-    ├── 12  Observability: OTel, Langfuse, Phoenix
-    └── 13  Drift monitoring: PSI, AlertHistory, trend analysis
+    ├── 12  Observabilidad: OTel, Langfuse, Phoenix
+    └── 13  Drift monitoring: PSI, AlertHistory, análisis de tendencias
 ```
 
 ---
 
-## Repo layout
+## Estructura del repo
 
 ```
 ai-testing-lab/
-├── modules/          # 14 independent labs (start anywhere)
-├── demos/            # live systems to test against (RAG, Streamlit, Rasa)
-├── goldens/          # versioned evaluation datasets
-├── docs/             # chapter-by-chapter manual + glossary
-├── exercises/        # solutions per module
-└── docker/           # Langfuse + Ollama + demo stack
+├── modules/          # 14 labs independientes (empieza por cualquiera)
+├── demos/            # sistemas reales sobre los que testear (RAG, Streamlit, Rasa)
+├── goldens/          # datasets de evaluación versionados
+├── docs/             # manual por capítulos + glosario
+├── exercises/        # soluciones por módulo
+└── docker/           # Langfuse + Ollama + stack de demos
 ```
 
 ---
 
-## Design principles
+## Principios de diseño
 
-- **No API calls in fast tests.** Every module runs offline with deterministic mocks. Real LLM calls are gated behind `@pytest.mark.slow`.
-- **One concept per module.** Each lab teaches exactly one evaluation technique. You can read and run them in any order.
-- **Production patterns, not toy examples.** AlertHistory, PSI drift detection, position-bias calibration, and AST-safe evaluation are patterns you'd actually ship.
-- **pytest-native.** If you know pytest, you already know how to run this.
+- **Sin llamadas a APIs en los tests rápidos.** Cada módulo corre offline con mocks deterministas. Las llamadas LLM reales están detrás de `@pytest.mark.slow`.
+- **Un concepto por módulo.** Cada lab enseña exactamente una técnica de evaluación. Puedes leerlos y ejecutarlos en cualquier orden.
+- **Patrones de producción, no juguetes.** AlertHistory, detección de drift con PSI, calibración de position bias y evaluación AST-safe son patrones que usarías en producción.
+- **pytest-nativo.** Si sabes pytest, ya sabes cómo ejecutar esto.
 
 ---
 
 ## Stack
 
-| Tool | Used for |
-|------|----------|
-| [DeepEval](https://deepeval.com) | pytest-native evaluation, 50+ metrics, LLM-as-judge |
-| [RAGAS](https://docs.ragas.io) | Reference-free RAG metrics |
-| [Promptfoo](https://promptfoo.dev) | Prompt regression, YAML test matrices |
-| [Garak](https://github.com/NVIDIA/garak) | LLM vulnerability scanner (NVIDIA) |
-| [Guardrails AI](https://guardrailsai.com) | I/O validation for LLMs |
-| [NeMo Guardrails](https://github.com/NVIDIA/NeMo-Guardrails) | Conversational rails (Colang DSL) |
-| [Langfuse](https://langfuse.com) | Tracing, online evaluation (MIT, self-hostable) |
-| [Phoenix](https://github.com/Arize-ai/phoenix) | OSS observability (OTel, auto-instrumentation) |
+| Herramienta | Para qué |
+|-------------|----------|
+| [DeepEval](https://deepeval.com) | Evaluación pytest-nativa, 50+ métricas, LLM-as-judge |
+| [RAGAS](https://docs.ragas.io) | Métricas RAG sin referencia |
+| [Promptfoo](https://promptfoo.dev) | Regresión de prompts, matrices YAML |
+| [Garak](https://github.com/NVIDIA/garak) | Escáner de vulnerabilidades LLM (NVIDIA) |
+| [Guardrails AI](https://guardrailsai.com) | Validación de I/O para LLMs |
+| [NeMo Guardrails](https://github.com/NVIDIA/NeMo-Guardrails) | Rails conversacionales (Colang DSL) |
+| [Langfuse](https://langfuse.com) | Trazas, evaluación online (MIT, self-hostable) |
+| [Phoenix](https://github.com/Arize-ai/phoenix) | Observabilidad OSS (OTel, auto-instrumentación) |
 
 ---
 
-## Contributing
+## Cómo contribuir
 
-- **Found a metric that doesn't correlate with human judgment?** Open an issue with the specific case.
-- **Have a golden example to add?** Follow the format in `goldens/README.md` and open a PR.
-- **Proposing a new module?** Open an issue with the concept and the nearest existing module as reference.
-- **Fixing the manual?** Factual errors or broken links in `docs/` — direct PR is fine.
+- **¿Una métrica no correlaciona con tu juicio humano?** Abre un issue con el caso concreto.
+- **¿Tienes un ejemplo golden para añadir?** Sigue el formato de `goldens/README.md` y abre un PR.
+- **¿Propones un módulo nuevo?** Abre un issue con el concepto y el módulo más cercano como referencia.
+- **¿Corriges el manual?** Errores factuales o links rotos en `docs/` — PR directo.
 
-No PR template required. Describe what changed and why.
+No hay plantilla de PR obligatoria. Describir qué cambió y por qué es suficiente.
 
 ---
 
-## License
+## Licencia
 
 MIT © 2026 Gonzalo Moreno
