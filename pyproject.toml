@@ -109,6 +109,7 @@ ci = [
     "pytest>=8.2",
     "pytest-asyncio>=0.23",
     "pytest-recording>=0.13",
+    "pytest-cov>=5.0",
     "evaluate>=0.4",
     "bert-score>=0.3",
     "rouge-score>=0.1",
@@ -124,6 +125,17 @@ dev = [
     "pre-commit>=3.7",
     "pytest>=8.2",
     "pytest-cov>=5.0",
+]
+
+[tool.coverage.run]
+source = ["modules"]
+omit = ["*/tests/*", "*/conftest.py", "exercises/*", "scripts/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "pytest.skip",
 ]
 
 [build-system]

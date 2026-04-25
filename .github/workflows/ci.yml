@@ -75,14 +75,26 @@ jobs:
             modules/13-drift-monitoring/tests/ \
             -m "not slow and not redteam" \
             --tb=short \
-            -q
+            -q \
+            --cov=modules \
+            --cov-report=xml:coverage.xml \
+            --cov-report=term-missing
         env:
           DEEPEVAL_TELEMETRY_OPT_OUT: "YES"
+
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.12'
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
+          fail_ci_if_error: false
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-py${{ matrix.python-version }}
-          path: .pytest_cache/
+          path: |
+            coverage.xml
+            .pytest_cache/
           retention-days: 7
