@@ -4,19 +4,19 @@ layout: home
 hero:
   name: "LLM Testing Lab"
   text: "Testa tus LLMs como un profesional"
-  tagline: 14 módulos pytest que cubren evaluación RAG, red teaming, guardrails, observabilidad y drift monitoring. 142 tests, 0.16s, sin API key.
+  tagline: "14 módulos pytest · RAG · red teaming · guardrails · observabilidad · drift. Sin API key. Sin conexión."
   image:
     src: /demo.svg
-    alt: 142 tests pasando en 0.16s
+    alt: "142 tests pasando en 0.16s"
   actions:
     - theme: brand
       text: Empezar →
-      link: /guia/
+      link: /guia/instalacion
     - theme: alt
       text: Ver módulos
       link: /modulos/
     - theme: alt
-      text: GitHub
+      text: GitHub ↗
       link: https://github.com/gonzaloMorenoc/ai-testing-lab
 
 features:
@@ -44,6 +44,8 @@ features:
     title: pytest-nativo
     details: Si sabes pytest, ya sabes cómo ejecutar esto. Sin frameworks propietarios, sin CLIs especiales. Solo pytest y las librerías que ya conoces.
 ---
+
+<div class="hero-badge">✓ 142 tests · 0.16s · sin API key</div>
 
 ## Quickstart
 
