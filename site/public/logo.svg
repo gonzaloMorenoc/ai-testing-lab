@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Ocular -->
+  <rect x="12" y="2" width="8" height="5" rx="2" fill="#16a34a"/>
+  <!-- Tubo del microscopio -->
+  <rect x="14" y="7" width="4" height="10" rx="1" fill="#15803d"/>
+  <!-- Brazo -->
+  <rect x="8" y="14" width="12" height="3" rx="1.5" fill="#16a34a"/>
+  <!-- Lente -->
+  <circle cx="16" cy="20" r="4" fill="#4ade80" stroke="#16a34a" stroke-width="1.5"/>
+  <!-- Base -->
+  <rect x="6" y="26" width="20" height="3" rx="1.5" fill="#14532d"/>
+  <!-- Pie del tubo -->
+  <rect x="15" y="23" width="2" height="3" fill="#15803d"/>
+</svg>
