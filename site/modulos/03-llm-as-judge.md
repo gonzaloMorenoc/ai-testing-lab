@@ -1,8 +1,13 @@
+---
+title: "03 — llm-as-judge"
+---
+
 # 03 — llm-as-judge
 
-**Concepto:** Usar un LLM como juez con G-Eval y DAG Metric. Detectar y mitigar position bias.
+Usar un LLM como juez con G-Eval y DAG Metric. Detectar y mitigar position bias.
 
-**Tests:** 11 · **Tiempo:** ~0.05s · **API key:** no necesaria
+<div class="module-layout">
+<div class="module-main">
 
 ## Qué aprenderás
 
@@ -10,12 +15,6 @@
 - DAG Metric: lógica de evaluación compuesta (AND, OR) sin LLM juez
 - Position bias: por qué el juez puntúa más alto la respuesta que aparece primero
 - Cómo calibrar el position bias evaluando en ambos órdenes y promediando
-
-## Ejecutar
-
-```bash
-pytest modules/03-llm-as-judge/tests/ -m "not slow" -q
-```
 
 ## Código de ejemplo
 
@@ -36,4 +35,40 @@ print(result["calibrated_winner"]) # "A", "B" o "tie"
 
 ## Por qué importa
 
-Sin calibración, el 60-70% de las comparaciones A/B con LLM-as-judge están sesgadas hacia la posición. Esto invalida completamente los resultados de evaluación comparativa.
+> Sin calibración, el 60-70% de las comparaciones A/B con LLM-as-judge están sesgadas hacia la posición. Esto invalida completamente los resultados de evaluación comparativa.
+
+</div>
+<div class="module-sidebar">
+
+<div class="stat-card">
+  <div class="stat-number">12</div>
+  <div class="stat-label">tests</div>
+</div>
+
+<div class="stat-card">
+  <div class="stat-number">0.07s</div>
+  <div class="stat-label">duración</div>
+</div>
+
+<div class="stat-card stat-ok">
+  <div class="stat-number">✓</div>
+  <div class="stat-label">sin API key</div>
+</div>
+
+<div class="stat-card">
+  <div class="stat-number level">Intermedio</div>
+  <div class="stat-label">nivel</div>
+</div>
+
+```bash
+pytest modules/03-llm-as-judge/tests/ \
+  -m "not slow" -q
+```
+
+<div class="module-next">
+  <div class="next-label">Siguiente →</div>
+  <a href="/modulos/14-embedding-eval">14 — embedding-eval</a>
+</div>
+
+</div>
+</div>

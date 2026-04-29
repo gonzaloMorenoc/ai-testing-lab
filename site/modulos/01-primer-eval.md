@@ -1,8 +1,13 @@
+---
+title: "01 — primer-eval"
+---
+
 # 01 — primer-eval
 
-**Concepto:** Tu primer `LLMTestCase` con DeepEval. Métricas AnswerRelevancy y Faithfulness con mocks deterministas.
+Tu primer `LLMTestCase` con DeepEval. Métricas AnswerRelevancy y Faithfulness con mocks deterministas.
 
-**Tests:** 8 · **Tiempo:** ~0.05s · **API key:** no necesaria
+<div class="module-layout">
+<div class="module-main">
 
 ## Qué aprenderás
 
@@ -10,12 +15,6 @@
 - Cómo funciona `AnswerRelevancy` por dentro (word overlap con la query)
 - Cómo funciona `Faithfulness` (¿la respuesta se puede inferir del contexto?)
 - Cuándo un test de evaluación debe pasar y cuándo debe fallar
-
-## Ejecutar
-
-```bash
-pytest modules/01-primer-eval/tests/ -m "not slow" -q
-```
 
 ## Código de ejemplo
 
@@ -38,4 +37,40 @@ def test_respuesta_relevante_y_fiel():
 
 ## Por qué importa
 
-Sin métricas, la única forma de saber si un cambio en el prompt mejoró o empeoró el sistema es comparar manualmente. Con `LLMTestCase` puedes detectar regresiones automáticamente en CI.
+> Sin métricas, detectar regresiones en el prompt requiere revisión manual. Con `LLMTestCase` puedes automatizarlo en CI.
+
+</div>
+<div class="module-sidebar">
+
+<div class="stat-card">
+  <div class="stat-number">8</div>
+  <div class="stat-label">tests</div>
+</div>
+
+<div class="stat-card">
+  <div class="stat-number">0.05s</div>
+  <div class="stat-label">duración</div>
+</div>
+
+<div class="stat-card stat-ok">
+  <div class="stat-number">✓</div>
+  <div class="stat-label">sin API key</div>
+</div>
+
+<div class="stat-card">
+  <div class="stat-number level">Básico</div>
+  <div class="stat-label">nivel</div>
+</div>
+
+```bash
+pytest modules/01-primer-eval/tests/ \
+  -m "not slow" -q
+```
+
+<div class="module-next">
+  <div class="next-label">Siguiente →</div>
+  <a href="/modulos/02-ragas-basics">02 — ragas-basics</a>
+</div>
+
+</div>
+</div>
