@@ -1,5 +1,9 @@
 # LLM Testing Lab
 
+> **382 tests · 14 independent pytest modules · zero API calls needed**
+>
+> RAG evaluation · LLM-as-judge · red teaming · guardrails · observability · drift monitoring
+
 **14 módulos pytest que cubren todas las capas de calidad en LLMs — evaluación RAG, red teaming, guardrails, observabilidad y drift monitoring. Sin llamadas a APIs para ejecutar la suite completa.**
 
 [![CI](https://github.com/gonzaloMorenoc/ai-testing-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/gonzaloMorenoc/ai-testing-lab/actions/workflows/ci.yml)
@@ -8,9 +12,11 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/gonzaloMorenoc/ai-testing-lab)
 
-<p align="center">
-  <img src="assets/demo.svg" alt="142 tests de LLMs pasando en 0.16s — sin API key">
-</p>
+---
+
+**English summary:** A hands-on pytest lab covering every QA layer for LLM systems — from writing your first `LLMTestCase` to detecting semantic drift in production. 382 tests across 14 independent modules. Powered by DeepEval, RAGAS, Garak, Guardrails AI, and OpenTelemetry. No API key required to run the full suite.
+
+> ⭐ **If this lab helped you, consider starring the repo** — it helps others discover it and motivates continued development.
 
 ---
 
@@ -34,7 +40,7 @@ pytest modules/01-primer-eval/tests/ -m "not slow" -q
 Resultado esperado:
 
 ```
-........ 8 passed in 0.12s
+.......... 10 passed in 0.08s
 ```
 
 Sin API key. Sin cuenta de pago. Sin conexión a internet.
@@ -50,10 +56,10 @@ pytest modules/ -m "not slow and not redteam" -q
 ```
 
 ```
-142 passed, 1 skipped in 0.16s
+382 passed, 1 skipped in 0.88s
 ```
 
-142 tests en 14 módulos en menos de 200ms.
+382 tests en 14 módulos sin una sola llamada a API.
 
 ---
 
@@ -61,20 +67,21 @@ pytest modules/ -m "not slow and not redteam" -q
 
 | # | Módulo | Tests | Concepto clave |
 |---|--------|:-----:|----------------|
-| 01 | [primer-eval](modules/01-primer-eval/) | 8 | Primer `LLMTestCase` · AnswerRelevancy · Faithfulness |
-| 02 | [ragas-basics](modules/02-ragas-basics/) | 10 | Pipeline RAGAS · faithfulness · context\_precision · recall |
-| 03 | [llm-as-judge](modules/03-llm-as-judge/) | 11 | G-Eval · DAG Metric · position bias · verbosity bias |
-| 04 | [multi-turn](modules/04-multi-turn/) | 10 | ConversationalTestCase · KnowledgeRetention · contexto de 8 turnos |
-| 05 | [prompt-regression](modules/05-prompt-regression/) | 11 | PromptRegistry · RegressionChecker · significación estadística |
-| 06 | [hallucination-lab](modules/06-hallucination-lab/) | 9 | Extracción de claims · groundedness · detección de negaciones |
-| 07 | [redteam-garak](modules/07-redteam-garak/) | 10 | 42 attack prompts · DAN · many-shot · token manipulation |
-| 08 | [redteam-deepteam](modules/08-redteam-deepteam/) | 8 | OWASP Top 10 LLM 2025 · prompt injection · riesgos de agencia |
-| 09 | [guardrails](modules/09-guardrails/) | 11 | Detección de PII · validación de output · pipeline I/O |
-| 10 | [agent-testing](modules/10-agent-testing/) | 9 | Selección de herramientas · evaluación de trayectorias · eval AST-safe |
+| 01 | [primer-eval](modules/01-primer-eval/) | 50 | Primer `LLMTestCase` · AnswerRelevancy · Faithfulness · anti-patrones de evaluación |
+| 02 | [ragas-basics](modules/02-ragas-basics/) | 11 | Pipeline RAGAS · faithfulness · context\_precision · recall |
+| 03 | [llm-as-judge](modules/03-llm-as-judge/) | 36 | G-Eval · DAG Metric · position bias · verbosity bias · calibración |
+| 04 | [multi-turn](modules/04-multi-turn/) | 29 | 7 métricas multi-turn · coreference resolution · topic tracking |
+| 05 | [prompt-regression](modules/05-prompt-regression/) | 43 | CI gate pipeline · PromptRegistry · z-test · significación estadística |
+| 06 | [hallucination-lab](modules/06-hallucination-lab/) | 23 | Extracción de claims · groundedness · detección de negaciones |
+| 07 | [redteam-garak](modules/07-redteam-garak/) | 23 | 42 attack prompts · DAN · many-shot · token manipulation · hit rate |
+| 08 | [redteam-deepteam](modules/08-redteam-deepteam/) | 32 | OWASP Top 10 LLM 2025 · taxonomía 3 ejes de inyección · bias demográfico |
+| 09 | [guardrails](modules/09-guardrails/) | 23 | Detección de PII · validación de output · pipeline I/O |
+| 10 | [agent-testing](modules/10-agent-testing/) | 38 | 9 métricas de agentes · tool accuracy · recovery rate · handoff humano |
 | 11 | [playwright-streaming](modules/11-playwright-streaming/) | 8 | SSE streaming · E2E chatbot UI · servidor mock FastAPI |
-| 12 | [observability](modules/12-observability/) | 8 | OTel spans · decorador `@trace` · latencia · error tracking |
-| 13 | [drift-monitoring](modules/13-drift-monitoring/) | 13 | PSI · AlertHistory · detección de tendencias · alert rules |
-| 14 | [embedding-eval](modules/14-embedding-eval/) | 15 | Similitud coseno · centroid shift · regresión semántica |
+| 12 | [observability](modules/12-observability/) | 22 | 20 campos de traza · OTel spans · decorador `@trace` · IR metrics |
+| 13 | [drift-monitoring](modules/13-drift-monitoring/) | 31 | KS test · PSI · AlertHistory · detección de tendencias · bootstrap IC95 |
+| 14 | [embedding-eval](modules/14-embedding-eval/) | 33 | NDCG@k · MRR@k · MAP@k · similitud coseno · centroid shift |
+|   | **Total** | **382** | |
 
 ---
 

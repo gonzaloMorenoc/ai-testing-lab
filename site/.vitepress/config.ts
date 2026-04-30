@@ -3,22 +3,75 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
   title: "LLM Testing Lab",
   description:
-    "14 módulos pytest para testear LLMs — evaluación RAG, red teaming, guardrails, observabilidad y drift monitoring. Sin API key.",
+    "382 tests covering RAG evaluation, LLM-as-judge, red teaming, guardrails, observability and drift monitoring. 14 independent pytest modules. Zero API calls needed.",
   lang: "es-ES",
+
+  sitemap: {
+    hostname: "https://ai-testing-lab.vercel.app",
+  },
 
   head: [
     ["link", { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" }],
-    ["meta", { property: "og:title", content: "LLM Testing Lab" }],
+
+    // Open Graph
+    ["meta", { property: "og:type", content: "website" }],
+    ["meta", { property: "og:site_name", content: "LLM Testing Lab" }],
+    [
+      "meta",
+      {
+        property: "og:title",
+        content: "LLM Testing Lab — 14 pytest modules for AI quality",
+      },
+    ],
     [
       "meta",
       {
         property: "og:description",
         content:
-          "14 módulos pytest para testear LLMs. 142 tests, 0.16s, sin API key.",
+          "382 tests covering RAG eval, red teaming, guardrails, observability and drift monitoring. Zero API calls needed. DeepEval · RAGAS · Garak · OWASP LLM Top 10.",
       },
     ],
-    ["meta", { property: "og:image", content: "/og.png" }],
+    [
+      "meta",
+      { property: "og:image", content: "https://ai-testing-lab.vercel.app/og.svg" },
+    ],
+    ["meta", { property: "og:url", content: "https://ai-testing-lab.vercel.app" }],
+
+    // Twitter / X
     ["meta", { name: "twitter:card", content: "summary_large_image" }],
+    [
+      "meta",
+      {
+        name: "twitter:title",
+        content: "LLM Testing Lab — 14 pytest modules for AI quality",
+      },
+    ],
+    [
+      "meta",
+      {
+        name: "twitter:description",
+        content:
+          "382 tests. RAG eval, red teaming, guardrails, drift monitoring. Zero API calls. DeepEval · RAGAS · Garak · OWASP LLM.",
+      },
+    ],
+    [
+      "meta",
+      { name: "twitter:image", content: "https://ai-testing-lab.vercel.app/og.svg" },
+    ],
+
+    // SEO keywords & author
+    [
+      "meta",
+      {
+        name: "keywords",
+        content:
+          "llm testing, ai evaluation, rag evaluation, red teaming, prompt injection, deepeval, ragas, guardrails, drift monitoring, pytest, python, llm-as-judge, faithfulness, hallucination detection, owasp llm, ai safety, llm observability, garak, langfuse, agent testing",
+      },
+    ],
+    ["meta", { name: "author", content: "Gonzalo Moreno" }],
+
+    // Canonical
+    ["link", { rel: "canonical", href: "https://ai-testing-lab.vercel.app" }],
   ],
 
   themeConfig: {
@@ -29,8 +82,8 @@ export default defineConfig({
       { text: "Guía", link: "/guia/" },
       { text: "Módulos", link: "/modulos/" },
       {
-        text: "v0.1.0",
-        link: "https://github.com/gonzaloMorenoc/ai-testing-lab/releases/tag/v0.1.0",
+        text: "GitHub ↗",
+        link: "https://github.com/gonzaloMorenoc/ai-testing-lab",
       },
     ],
 
@@ -115,7 +168,8 @@ export default defineConfig({
     ],
 
     footer: {
-      message: "MIT License",
+      message:
+        'MIT License · <a href="https://github.com/gonzaloMorenoc/ai-testing-lab">GitHub</a>',
       copyright: "© 2026 Gonzalo Moreno",
     },
 

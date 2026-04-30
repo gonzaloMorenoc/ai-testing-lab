@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0e1a"/>
+      <stop offset="100%" stop-color="#0d1f1a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Grid lines (subtle) -->
+  <g stroke="#1a2a20" stroke-width="1" opacity="0.6">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- Left accent bar -->
+  <rect x="0" y="0" width="6" height="630" fill="url(#accent)"/>
+
+  <!-- Logo area -->
+  <circle cx="90" cy="90" r="38" fill="#22c55e" opacity="0.15"/>
+  <circle cx="90" cy="90" r="24" fill="#22c55e" opacity="0.25"/>
+  <text x="90" y="98" text-anchor="middle" font-family="monospace" font-size="22" font-weight="bold" fill="#22c55e">⚗</text>
+
+  <!-- Title -->
+  <text x="148" y="76" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="42" font-weight="800" fill="#f0fdf4" letter-spacing="-1">LLM Testing Lab</text>
+  <text x="148" y="110" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="19" fill="#86efac" letter-spacing="0.5">pytest · RAG · red teaming · guardrails · observability · drift</text>
+
+  <!-- Divider -->
+  <line x1="60" y1="140" x2="1140" y2="140" stroke="#22c55e" stroke-width="1" opacity="0.3"/>
+
+  <!-- Stats row -->
+  <!-- Stat 1 -->
+  <rect x="60" y="168" width="240" height="110" rx="12" fill="#0f1f17" stroke="#22c55e" stroke-width="1" stroke-opacity="0.3"/>
+  <text x="180" y="218" text-anchor="middle" font-family="'Inter', monospace, sans-serif" font-size="46" font-weight="800" fill="#22c55e">382</text>
+  <text x="180" y="246" text-anchor="middle" font-family="'Inter', sans-serif" font-size="15" fill="#86efac">tests passing</text>
+  <text x="180" y="265" text-anchor="middle" font-family="monospace" font-size="13" fill="#4ade80" opacity="0.7">0 API calls needed</text>
+
+  <!-- Stat 2 -->
+  <rect x="320" y="168" width="200" height="110" rx="12" fill="#0f1f17" stroke="#22c55e" stroke-width="1" stroke-opacity="0.3"/>
+  <text x="420" y="218" text-anchor="middle" font-family="'Inter', monospace, sans-serif" font-size="46" font-weight="800" fill="#22c55e">14</text>
+  <text x="420" y="246" text-anchor="middle" font-family="'Inter', sans-serif" font-size="15" fill="#86efac">modules</text>
+  <text x="420" y="265" text-anchor="middle" font-family="monospace" font-size="13" fill="#4ade80" opacity="0.7">fully independent</text>
+
+  <!-- Stat 3 -->
+  <rect x="540" y="168" width="200" height="110" rx="12" fill="#0f1f17" stroke="#22c55e" stroke-width="1" stroke-opacity="0.3"/>
+  <text x="640" y="218" text-anchor="middle" font-family="'Inter', monospace, sans-serif" font-size="46" font-weight="800" fill="#22c55e">0.9s</text>
+  <text x="640" y="246" text-anchor="middle" font-family="'Inter', sans-serif" font-size="15" fill="#86efac">full suite</text>
+  <text x="640" y="265" text-anchor="middle" font-family="monospace" font-size="13" fill="#4ade80" opacity="0.7">deterministic mocks</text>
+
+  <!-- Stat 4 -->
+  <rect x="760" y="168" width="200" height="110" rx="12" fill="#0f1f17" stroke="#22c55e" stroke-width="1" stroke-opacity="0.3"/>
+  <text x="860" y="218" text-anchor="middle" font-family="'Inter', monospace, sans-serif" font-size="46" font-weight="800" fill="#22c55e">MIT</text>
+  <text x="860" y="246" text-anchor="middle" font-family="'Inter', sans-serif" font-size="15" fill="#86efac">license</text>
+  <text x="860" y="265" text-anchor="middle" font-family="monospace" font-size="13" fill="#4ade80" opacity="0.7">open source</text>
+
+  <!-- Tags -->
+  <g font-family="monospace" font-size="14">
+    <rect x="60" y="305" width="96" height="28" rx="6" fill="#14532d" stroke="#22c55e" stroke-width="1" stroke-opacity="0.5"/>
+    <text x="108" y="323" text-anchor="middle" fill="#86efac">DeepEval</text>
+
+    <rect x="168" y="305" width="78" height="28" rx="6" fill="#14532d" stroke="#22c55e" stroke-width="1" stroke-opacity="0.5"/>
+    <text x="207" y="323" text-anchor="middle" fill="#86efac">RAGAS</text>
+
+    <rect x="258" y="305" width="80" height="28" rx="6" fill="#14532d" stroke="#22c55e" stroke-width="1" stroke-opacity="0.5"/>
+    <text x="298" y="323" text-anchor="middle" fill="#86efac">Garak</text>
+
+    <rect x="350" y="305" width="104" height="28" rx="6" fill="#14532d" stroke="#22c55e" stroke-width="1" stroke-opacity="0.5"/>
+    <text x="402" y="323" text-anchor="middle" fill="#86efac">Guardrails</text>
+
+    <rect x="466" y="305" width="110" height="28" rx="6" fill="#14532d" stroke="#22c55e" stroke-width="1" stroke-opacity="0.5"/>
+    <text x="521" y="323" text-anchor="middle" fill="#86efac">Langfuse</text>
+
+    <rect x="588" y="305" width="120" height="28" rx="6" fill="#14532d" stroke="#22c55e" stroke-width="1" stroke-opacity="0.5"/>
+    <text x="648" y="323" text-anchor="middle" fill="#86efac">OpenTelemetry</text>
+
+    <rect x="720" y="305" width="100" height="28" rx="6" fill="#14532d" stroke="#22c55e" stroke-width="1" stroke-opacity="0.5"/>
+    <text x="770" y="323" text-anchor="middle" fill="#86efac">OWASP LLM</text>
+
+    <rect x="832" y="305" width="78" height="28" rx="6" fill="#14532d" stroke="#22c55e" stroke-width="1" stroke-opacity="0.5"/>
+    <text x="871" y="323" text-anchor="middle" fill="#86efac">pytest</text>
+  </g>
+
+  <!-- Code snippet -->
+  <rect x="60" y="355" width="680" height="130" rx="10" fill="#050d08" stroke="#1a3a20" stroke-width="1"/>
+  <rect x="60" y="355" width="680" height="28" rx="10" fill="#0a1a10"/>
+  <rect x="60" y="368" width="680" height="15" fill="#0a1a10"/>
+  <circle cx="84" cy="369" r="5" fill="#ef4444" opacity="0.8"/>
+  <circle cx="100" cy="369" r="5" fill="#f59e0b" opacity="0.8"/>
+  <circle cx="116" cy="369" r="5" fill="#22c55e" opacity="0.8"/>
+  <text x="300" y="372" text-anchor="middle" font-family="monospace" font-size="12" fill="#4b5563">bash</text>
+
+  <text x="82" y="406" font-family="monospace" font-size="14" fill="#6b7280">$</text>
+  <text x="96" y="406" font-family="monospace" font-size="14" fill="#e2e8f0">pip install deepeval pytest numpy</text>
+  <text x="82" y="428" font-family="monospace" font-size="14" fill="#6b7280">$</text>
+  <text x="96" y="428" font-family="monospace" font-size="14" fill="#e2e8f0">pytest modules/ -m <tspan fill="#fbbf24">"not slow"</tspan> -q</text>
+  <text x="82" y="458" font-family="monospace" font-size="14" fill="#22c55e">✓ 382 passed, 1 skipped in 0.88s</text>
+
+  <!-- Right panel: module list preview -->
+  <rect x="760" y="355" width="380" height="130" rx="10" fill="#050d08" stroke="#1a3a20" stroke-width="1"/>
+  <text x="775" y="380" font-family="monospace" font-size="12" fill="#4ade80">RAG evaluation  →  modules 01–03</text>
+  <text x="775" y="400" font-family="monospace" font-size="12" fill="#4ade80">Multi-turn       →  module 04</text>
+  <text x="775" y="420" font-family="monospace" font-size="12" fill="#4ade80">Prompt regression →  module 05</text>
+  <text x="775" y="440" font-family="monospace" font-size="12" fill="#4ade80">Hallucination    →  module 06</text>
+  <text x="775" y="460" font-family="monospace" font-size="12" fill="#4ade80">Red teaming      →  modules 07–08</text>
+  <text x="775" y="480" font-family="monospace" font-size="12" fill="#4ade80">Drift monitoring →  module 13</text>
+
+  <!-- Footer -->
+  <line x1="60" y1="510" x2="1140" y2="510" stroke="#22c55e" stroke-width="1" opacity="0.2"/>
+  <text x="60" y="535" font-family="'Inter', sans-serif" font-size="15" fill="#6b7280">github.com/gonzaloMorenoc/ai-testing-lab</text>
+  <text x="60" y="558" font-family="'Inter', sans-serif" font-size="14" fill="#4b5563">Test your LLMs with production-grade patterns — RAG · Red teaming · Guardrails · Observability</text>
+  <text x="1140" y="558" text-anchor="end" font-family="'Inter', sans-serif" font-size="14" fill="#22c55e" opacity="0.7">ai-testing-lab.vercel.app</text>
+</svg>

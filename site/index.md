@@ -7,7 +7,7 @@ hero:
   tagline: "14 módulos pytest · RAG · red teaming · guardrails · observabilidad · drift. Sin API key. Sin conexión."
   image:
     src: /demo.svg
-    alt: "142 tests pasando en 0.16s"
+    alt: "382 tests pasando en 0.9s"
   actions:
     - theme: brand
       text: Empezar →
@@ -45,7 +45,7 @@ features:
     details: Si sabes pytest, ya sabes cómo ejecutar esto. Sin frameworks propietarios, sin CLIs especiales. Solo pytest y las librerías que ya conoces.
 ---
 
-<div class="hero-badge">✓ 142 tests · 0.16s · sin API key</div>
+<div class="hero-badge">✓ 382 tests · ~0.9s · sin API key</div>
 
 ## Quickstart
 
@@ -57,7 +57,7 @@ pytest modules/ -m "not slow and not redteam" -q
 ```
 
 ```
-142 passed, 1 skipped in 0.16s
+382 passed, 1 skipped in 0.88s
 ```
 
 Sin API key. Sin cuenta de pago. Sin conexión a internet.
