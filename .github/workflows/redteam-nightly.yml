@@ -23,7 +23,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install redteam dependencies
-        run: uv sync --extra redteam
+        run: uv sync --extra redteam --no-install-project
 
       - name: Run vulnerability scanner (slow tests con LLM real)
         run: |
@@ -48,7 +48,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: uv sync --extra redteam
+      - run: uv sync --extra redteam --no-install-project
 
       - name: Run OWASP scan (slow tests con LLM real)
         run: |
