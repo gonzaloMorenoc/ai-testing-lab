@@ -20,7 +20,6 @@ from semantic_drift import DriftResult, compute_centroid_shift, semantic_drift_a
 
 
 class TestMockEmbeddingModel:
-
     def test_encode_returns_correct_shape(self, model: MockEmbeddingModel) -> None:
         texts = ["hello world", "foo bar", "baz"]
         vecs = model.encode(texts)
@@ -43,16 +42,15 @@ class TestMockEmbeddingModel:
 
 
 class TestSemanticSimilarityMetric:
-
     def test_identical_texts_high_similarity(self, metric: SemanticSimilarityMetric) -> None:
-        result = metric.measure("The capital of France is Paris.", "The capital of France is Paris.")
+        result = metric.measure(
+            "The capital of France is Paris.", "The capital of France is Paris."
+        )
         print(f"\n  identical similarity: {result.similarity}")
         assert result.similarity > 0.99
 
     def test_similar_texts_pass_threshold(self, metric: SemanticSimilarityMetric) -> None:
-        result = metric.measure(
-            "The sky is blue.", "The color of the sky is blue."
-        )
+        result = metric.measure("The sky is blue.", "The color of the sky is blue.")
         print(f"\n  similar similarity: {result.similarity}")
         assert isinstance(result, SimilarityResult)
         assert result.similarity >= 0.0
@@ -73,7 +71,6 @@ class TestSemanticSimilarityMetric:
 
 
 class TestEmbeddingRegressionChecker:
-
     def test_identical_outputs_all_pass(self, checker: EmbeddingRegressionChecker) -> None:
         expected = ["The answer is 42.", "Paris is in France."]
         candidate = ["The answer is 42.", "Paris is in France."]
@@ -86,7 +83,9 @@ class TestEmbeddingRegressionChecker:
         with pytest.raises(ValueError, match="equal length"):
             checker.check(["a", "b"], ["x"])
 
-    def test_report_summary_contains_required_info(self, checker: EmbeddingRegressionChecker) -> None:
+    def test_report_summary_contains_required_info(
+        self, checker: EmbeddingRegressionChecker
+    ) -> None:
         report = checker.check(["hello world"], ["hello world"])
         summary = report.summary()
         assert "pass_rate=" in summary
@@ -95,7 +94,6 @@ class TestEmbeddingRegressionChecker:
 
 
 class TestSemanticDrift:
-
     def test_identical_corpus_near_zero_shift(self, model: MockEmbeddingModel) -> None:
         ref = ["cat sat on mat", "dog ran in park", "bird flew over river"]
         shift = compute_centroid_shift(ref, ref, model)
@@ -127,7 +125,6 @@ class TestSemanticDrift:
 
 
 class TestRetrievalMetrics:
-
     # --- ndcg_at_k ---
 
     def test_ndcg_perfect_ranking(self) -> None:

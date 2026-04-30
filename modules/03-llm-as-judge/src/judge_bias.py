@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 
-class JudgeBiasType(str, Enum):
+class JudgeBiasType(StrEnum):
     """Los 5 sesgos principales del LLM-as-Judge (Tabla 5.1 del Manual QA AI v12)."""
 
     VERBOSITY = "verbosity"  # prefiere respuestas largas aunque sean peores
@@ -87,7 +87,7 @@ def cohen_kappa(annotations_a: list[int], annotations_b: list[int]) -> IAAResult
     categories = sorted(set(annotations_a) | set(annotations_b))
 
     # Acuerdo observado
-    po = sum(a == b for a, b in zip(annotations_a, annotations_b)) / n
+    po = sum(a == b for a, b in zip(annotations_a, annotations_b, strict=False)) / n
 
     # Acuerdo esperado por azar
     pe = 0.0
@@ -96,10 +96,7 @@ def cohen_kappa(annotations_a: list[int], annotations_b: list[int]) -> IAAResult
         pb = annotations_b.count(cat) / n
         pe += pa * pb
 
-    if pe >= 1.0:
-        kappa = 1.0
-    else:
-        kappa = round((po - pe) / (1.0 - pe), 4)
+    kappa = 1.0 if pe >= 1.0 else round((po - pe) / (1.0 - pe), 4)
 
     if kappa >= 0.81:
         interp = "casi perfecto"

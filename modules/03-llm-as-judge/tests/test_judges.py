@@ -9,17 +9,12 @@ from src.geval_judge import GEvalJudge, GEvalResult
 
 
 class TestGEvalRelevancy:
-
-    def test_relevant_response_passes(
-        self, judge: GEvalJudge, relevant_response: str
-    ) -> None:
+    def test_relevant_response_passes(self, judge: GEvalJudge, relevant_response: str) -> None:
         result: GEvalResult = judge.evaluate(relevant_response, "relevancy")
         print(f"\n  {result}")
         assert result.passed, f"Respuesta relevante debería pasar: {result.reason}"
 
-    def test_off_topic_fails_relevancy(
-        self, judge: GEvalJudge, off_topic_response: str
-    ) -> None:
+    def test_off_topic_fails_relevancy(self, judge: GEvalJudge, off_topic_response: str) -> None:
         result = judge.evaluate(off_topic_response, "relevancy")
         print(f"\n  {result}")
         assert not result.passed, "Respuesta fuera de tema no debería pasar relevancy"
@@ -30,23 +25,17 @@ class TestGEvalRelevancy:
 
 
 class TestGEvalToxicity:
-
-    def test_toxic_response_detected(
-        self, judge: GEvalJudge, toxic_response: str
-    ) -> None:
+    def test_toxic_response_detected(self, judge: GEvalJudge, toxic_response: str) -> None:
         result = judge.evaluate(toxic_response, "toxicity", threshold=0.3)
         print(f"\n  {result}")
         assert result.score > 0.0, "Respuesta tóxica debería tener score > 0"
 
-    def test_clean_response_not_toxic(
-        self, judge: GEvalJudge, relevant_response: str
-    ) -> None:
+    def test_clean_response_not_toxic(self, judge: GEvalJudge, relevant_response: str) -> None:
         result = judge.evaluate(relevant_response, "toxicity", threshold=0.3)
         assert result.score == 0.0
 
 
 class TestBiases:
-
     def test_position_bias_documented(self, judge: GEvalJudge) -> None:
         response_a = "Returns are allowed within 30 days. Refunds are full."
         response_b = "Refunds are full. Returns are allowed within 30 days."
@@ -70,7 +59,6 @@ class TestBiases:
 
 
 class TestDAGMetric:
-
     def test_keyword_dag_passes_when_present(self) -> None:
         dag = build_keyword_dag(["return", "days"])
         result: DAGResult = dag.evaluate("Returns are allowed within 30 days.")
@@ -103,6 +91,7 @@ class TestDAGMetric:
             pytest.skip("GROQ_API_KEY no encontrado")
         from deepeval.metrics import GEval
         from deepeval.test_case import LLMTestCase, LLMTestCaseParams
+
         metric = GEval(
             name="Relevancy",
             criteria="The response should address the return policy question.",
@@ -132,7 +121,6 @@ from src.judge_bias import (  # noqa: E402
 
 
 class TestDetectVerbosityBias:
-
     def test_detected_when_long_scores_much_higher(self) -> None:
         result = detect_verbosity_bias(0.7, 0.9, length_ratio=3.0)
         assert result.detected is True
@@ -163,7 +151,6 @@ class TestDetectVerbosityBias:
 
 
 class TestDetectPositionBias:
-
     def test_detected_when_delta_exceeds_threshold(self) -> None:
         result = detect_position_bias(score_ab=0.8, score_ba=0.6)
         assert result.detected is True
@@ -188,7 +175,6 @@ class TestDetectPositionBias:
 
 
 class TestCohenKappa:
-
     def test_partial_agreement_kappa_in_range(self) -> None:
         result = cohen_kappa([1, 1, 0, 1, 0], [1, 1, 0, 0, 0])
         assert 0.41 <= result.score <= 1.0
@@ -246,7 +232,6 @@ class TestCohenKappa:
 
 
 class TestJudgeBiasTypeEnum:
-
     def test_verbosity_value(self) -> None:
         assert JudgeBiasType.VERBOSITY.value == "verbosity"
 

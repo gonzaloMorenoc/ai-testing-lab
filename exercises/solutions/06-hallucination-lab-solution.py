@@ -2,6 +2,7 @@
 Solución módulo 06: implementa un RAG Triad simplificado combinando
 context_relevance + groundedness + answer_relevance en un score compuesto.
 """
+
 from __future__ import annotations
 
 import sys

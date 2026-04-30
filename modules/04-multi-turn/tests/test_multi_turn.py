@@ -5,12 +5,11 @@ import os
 import pytest
 
 from src.conversation import Conversation
-from src.multi_turn_metrics import MULTI_TURN_THRESHOLD, MultiTurnEvaluator, MultiTurnReport
+from src.multi_turn_metrics import MultiTurnEvaluator, MultiTurnReport
 from src.multi_turn_rag import _CONTEXT_HISTORY_SIZE, MultiTurnRAG
 
 
 class TestConversation:
-
     def test_add_turn_stores_both_messages(self, conversation: Conversation) -> None:
         conversation.add_turn("Hello", "Hi there!")
         assert conversation.num_turns() == 1
@@ -103,7 +102,6 @@ class TestConversation:
 
 
 class TestContextWindow:
-
     def test_context_window_size_at_least_six(self) -> None:
         assert _CONTEXT_HISTORY_SIZE >= 6, (
             f"Context window ({_CONTEXT_HISTORY_SIZE}) too small; "
@@ -142,7 +140,6 @@ class TestContextWindow:
 
 
 class TestMultiTurnEvaluator:
-
     def _conv_with_turns(self, turns: list[tuple[str, str]]) -> Conversation:
         conv = Conversation()
         for user, assistant in turns:
@@ -152,31 +149,37 @@ class TestMultiTurnEvaluator:
     # --- context_retention ---
 
     def test_context_retention_perfect(self) -> None:
-        conv = self._conv_with_turns([
-            ("Tell me about returns", "Returns are allowed within 30 days."),
-            ("What else?", "Remember: returns are within 30 days and free shipping."),
-            ("Anything more?", "Yes, returns within 30 days apply to all products."),
-        ])
+        conv = self._conv_with_turns(
+            [
+                ("Tell me about returns", "Returns are allowed within 30 days."),
+                ("What else?", "Remember: returns are within 30 days and free shipping."),
+                ("Anything more?", "Yes, returns within 30 days apply to all products."),
+            ]
+        )
         evaluator = MultiTurnEvaluator()
         score = evaluator.context_retention(conv, ["30 days"])
         assert score == 1.0
 
     def test_context_retention_partial(self) -> None:
-        conv = self._conv_with_turns([
-            ("Tell me about policy", "Returns last 30 days."),
-            ("More info?", "We have free shipping on all orders."),
-            ("Last question?", "Returns allowed within 30 days."),
-        ])
+        conv = self._conv_with_turns(
+            [
+                ("Tell me about policy", "Returns last 30 days."),
+                ("More info?", "We have free shipping on all orders."),
+                ("Last question?", "Returns allowed within 30 days."),
+            ]
+        )
         evaluator = MultiTurnEvaluator()
         # fact "free shipping" appears in 1 of 2 later turns
         score = evaluator.context_retention(conv, ["free shipping", "warranty coverage"])
         assert score == 0.5
 
     def test_context_retention_none(self) -> None:
-        conv = self._conv_with_turns([
-            ("Hello?", "Hi there!"),
-            ("How are you?", "I am fine, thanks."),
-        ])
+        conv = self._conv_with_turns(
+            [
+                ("Hello?", "Hi there!"),
+                ("How are you?", "I am fine, thanks."),
+            ]
+        )
         evaluator = MultiTurnEvaluator()
         score = evaluator.context_retention(conv, ["quantum entanglement"])
         assert score == 0.0
@@ -184,19 +187,23 @@ class TestMultiTurnEvaluator:
     # --- coreference_resolution ---
 
     def test_coreference_resolution_correct(self) -> None:
-        conv = self._conv_with_turns([
-            ("What about it?", "The policy allows returns."),
-            ("Is it flexible?", "Yes, the policy is flexible for all items."),
-        ])
+        conv = self._conv_with_turns(
+            [
+                ("What about it?", "The policy allows returns."),
+                ("Is it flexible?", "Yes, the policy is flexible for all items."),
+            ]
+        )
         evaluator = MultiTurnEvaluator()
         # pronoun "it" in user turn 1, entity "policy" expected in assistant turn 1
         score = evaluator.coreference_resolution(conv, [("it", "policy")])
         assert score == 1.0
 
     def test_coreference_resolution_none(self) -> None:
-        conv = self._conv_with_turns([
-            ("What about it?", "We have great products."),
-        ])
+        conv = self._conv_with_turns(
+            [
+                ("What about it?", "We have great products."),
+            ]
+        )
         evaluator = MultiTurnEvaluator()
         score = evaluator.coreference_resolution(conv, [("it", "warranty")])
         assert score == 0.0
@@ -220,19 +227,23 @@ class TestMultiTurnEvaluator:
     # --- topic_tracking ---
 
     def test_topic_tracking_all_correct(self) -> None:
-        conv = self._conv_with_turns([
-            ("Tell me about returns", "Returns are processed within 30 days."),
-            ("What about shipping?", "Shipping takes 3-5 business days."),
-        ])
+        conv = self._conv_with_turns(
+            [
+                ("Tell me about returns", "Returns are processed within 30 days."),
+                ("What about shipping?", "Shipping takes 3-5 business days."),
+            ]
+        )
         evaluator = MultiTurnEvaluator()
         score = evaluator.topic_tracking(conv, ["returns", "shipping"])
         assert score == 1.0
 
     def test_topic_tracking_partial(self) -> None:
-        conv = self._conv_with_turns([
-            ("Tell me about returns", "Returns are processed quickly."),
-            ("What about shipping?", "We offer great customer service."),
-        ])
+        conv = self._conv_with_turns(
+            [
+                ("Tell me about returns", "Returns are processed quickly."),
+                ("What about shipping?", "We offer great customer service."),
+            ]
+        )
         evaluator = MultiTurnEvaluator()
         score = evaluator.topic_tracking(conv, ["returns", "shipping"])
         assert score == 0.5
@@ -240,20 +251,24 @@ class TestMultiTurnEvaluator:
     # --- memory_window_used ---
 
     def test_memory_window_used_found(self) -> None:
-        conv = self._conv_with_turns([
-            ("First question", "We offer free returns."),
-            ("Second question", "Shipping costs vary."),
-            ("Third question", "No hidden fees apply."),
-        ])
+        conv = self._conv_with_turns(
+            [
+                ("First question", "We offer free returns."),
+                ("Second question", "Shipping costs vary."),
+                ("Third question", "No hidden fees apply."),
+            ]
+        )
         evaluator = MultiTurnEvaluator()
         # "returns" is in the oldest (first) assistant turn, which is 3 from the end
         result = evaluator.memory_window_used(conv, "returns")
         assert result == 3
 
     def test_memory_window_used_not_found(self) -> None:
-        conv = self._conv_with_turns([
-            ("Question?", "We offer great service."),
-        ])
+        conv = self._conv_with_turns(
+            [
+                ("Question?", "We offer great service."),
+            ]
+        )
         evaluator = MultiTurnEvaluator()
         result = evaluator.memory_window_used(conv, "quantum computing")
         assert result == 0
@@ -273,10 +288,12 @@ class TestMultiTurnEvaluator:
     # --- conversation_summarization_score ---
 
     def test_conversation_summarization_score_good(self) -> None:
-        conv = self._conv_with_turns([
-            ("Tell me about returns", "Returns policy allows items within thirty days."),
-            ("What about shipping?", "Shipping takes three business days with tracking."),
-        ])
+        conv = self._conv_with_turns(
+            [
+                ("Tell me about returns", "Returns policy allows items within thirty days."),
+                ("What about shipping?", "Shipping takes three business days with tracking."),
+            ]
+        )
         evaluator = MultiTurnEvaluator()
         summary = "Returns allowed within thirty days. Shipping takes three days with tracking."
         score = evaluator.conversation_summarization_score(summary, conv)
@@ -286,11 +303,13 @@ class TestMultiTurnEvaluator:
 
     def test_evaluate_returns_report(self) -> None:
         # Turns share key vocabulary so BoW consistency is high
-        conv = self._conv_with_turns([
-            ("What is the return policy?", "Returns allowed within thirty days for items."),
-            ("Is shipping free?", "Shipping free returns allowed within thirty days items."),
-            ("Any warranty?", "Returns allowed within thirty days warranty items covered."),
-        ])
+        conv = self._conv_with_turns(
+            [
+                ("What is the return policy?", "Returns allowed within thirty days for items."),
+                ("Is shipping free?", "Shipping free returns allowed within thirty days items."),
+                ("Any warranty?", "Returns allowed within thirty days warranty items covered."),
+            ]
+        )
         evaluator = MultiTurnEvaluator(threshold=0.4)
         summary = (
             "Returns allowed within thirty days. Shipping free returns. "

@@ -9,7 +9,6 @@ from src.groundedness_checker import GroundednessChecker, GroundednessResult
 
 
 class TestClaimExtractor:
-
     def test_extracts_multiple_claims(self, faithful_response: str) -> None:
         claims = extract_claims(faithful_response)
         print(f"\n  Claims: {claims}")
@@ -24,7 +23,6 @@ class TestClaimExtractor:
 
 
 class TestGroundednessChecker:
-
     def test_faithful_response_scores_high(
         self,
         checker: GroundednessChecker,
@@ -118,6 +116,7 @@ class TestGroundednessChecker:
             pytest.skip("GROQ_API_KEY no encontrado")
         from deepeval.metrics import HallucinationMetric
         from deepeval.test_case import LLMTestCase
+
         tc = LLMTestCase(
             input="What is the return policy?",
             actual_output=faithful_response,
@@ -142,6 +141,7 @@ class TestHallucinationClassifier:
     @pytest.fixture
     def classifier(self) -> TestHallucinationClassifier.HallucinationClassifier:
         from src.hallucination_types import HallucinationClassifier
+
         return HallucinationClassifier()
 
     @pytest.fixture
@@ -159,6 +159,7 @@ class TestHallucinationClassifier:
         self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
     ) -> None:
         from src.hallucination_types import HallucinationReport
+
         report = classifier.classify(
             response="Returns are allowed within 30 days.",
             context=base_context,
@@ -203,6 +204,7 @@ class TestHallucinationClassifier:
         self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
     ) -> None:
         from src.hallucination_types import HallucinationLevel2
+
         report = classifier.classify(
             response="The policy changed in 2019 to allow 365 days.",
             context=base_context,
@@ -214,6 +216,7 @@ class TestHallucinationClassifier:
         self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
     ) -> None:
         from src.hallucination_types import HallucinationLevel2
+
         report = classifier.classify(
             response="The return window was recently extended.",
             context=base_context,
@@ -229,6 +232,7 @@ class TestHallucinationClassifier:
         self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
     ) -> None:
         from src.hallucination_types import HallucinationLevel2
+
         report = classifier.classify(
             response="Drone delivery is free worldwide.",
             context=base_context,
@@ -240,6 +244,7 @@ class TestHallucinationClassifier:
         self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
     ) -> None:
         from src.hallucination_types import HallucinationLevel2
+
         report = classifier.classify(
             response="According to the CEO, returns are free forever.",
             context=base_context,
@@ -255,6 +260,7 @@ class TestHallucinationClassifier:
         self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
     ) -> None:
         from src.hallucination_types import HallucinationLevel1
+
         # "return" and "refund" appear in the context, so the claim contradicts it.
         report = classifier.classify(
             response="Returns are not allowed and there is no refund.",
@@ -267,6 +273,7 @@ class TestHallucinationClassifier:
         self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
     ) -> None:
         from src.hallucination_types import HallucinationLevel1
+
         # Completely new information not present in the context.
         report = classifier.classify(
             response="Same-day drone delivery is available globally.",

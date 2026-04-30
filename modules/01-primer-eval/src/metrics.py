@@ -10,6 +10,7 @@ Por qué existen:
 
 En los tests @pytest.mark.slow se usan las métricas reales de DeepEval.
 """
+
 from __future__ import annotations
 
 from deepeval.metrics import BaseMetric
@@ -77,9 +78,7 @@ class SimpleFaithfulnessMetric(BaseMetric):
             return self.score
 
         combined_context = " ".join(test_case.retrieval_context).lower()
-        output_words = [
-            w.lower() for w in test_case.actual_output.split() if len(w) > 4
-        ]
+        output_words = [w.lower() for w in test_case.actual_output.split() if len(w) > 4]
         if not output_words:
             self.score = 1.0
             self.reason = "Empty output — trivially faithful"

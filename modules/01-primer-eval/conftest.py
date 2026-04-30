@@ -1,4 +1,5 @@
 """Configura sys.path para que los tests puedan importar desde src/."""
+
 import sys
 from pathlib import Path
 

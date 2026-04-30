@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import dataclasses
+
 import numpy as np
 import pytest
 
-from src.semantic_drift_detector import detect_semantic_drift, DriftReport
+from src.semantic_drift_detector import DriftReport, detect_semantic_drift
 
 
 class TestSemanticDriftDetector:
@@ -142,7 +144,9 @@ class TestSemanticDriftDetector:
             current_scores=current,
             historical_scores=hist,
         )
-        print(f"\n  [only dist changed] dist_changed={report.distribution_changed}, quality_degraded={report.quality_degraded}")
+        print(
+            f"\n  [only dist changed] dist_changed={report.distribution_changed}, quality_degraded={report.quality_degraded}"
+        )
         if not report.quality_degraded:
             assert report.drift_detected is False
 
@@ -158,7 +162,9 @@ class TestSemanticDriftDetector:
             current_scores=current,
             historical_scores=hist,
         )
-        print(f"\n  [only quality] dist_changed={report.distribution_changed}, mean_drop={report.mean_drop}")
+        print(
+            f"\n  [only quality] dist_changed={report.distribution_changed}, mean_drop={report.mean_drop}"
+        )
         assert report.drift_detected == (report.distribution_changed and report.quality_degraded)
 
     # ------------------------------------------------------------------
@@ -175,7 +181,7 @@ class TestSemanticDriftDetector:
             historical_scores=hist,
         )
         assert isinstance(report, DriftReport)
-        with pytest.raises(Exception):
+        with pytest.raises(dataclasses.FrozenInstanceError):
             report.drift_detected = True  # type: ignore[misc]
 
     def test_report_affected_count_respects_threshold(self) -> None:

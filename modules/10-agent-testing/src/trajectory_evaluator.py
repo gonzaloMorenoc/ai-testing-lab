@@ -25,7 +25,6 @@ class AgentGoalResult:
 
 
 class TrajectoryEvaluator:
-
     def tool_call_accuracy(
         self,
         actual: list[ToolCall],

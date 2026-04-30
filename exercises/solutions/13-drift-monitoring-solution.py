@@ -1,6 +1,7 @@
 """
 Solución módulo 13: DriftReport con PSI + reglas + timestamp.
 """
+
 from __future__ import annotations
 
 import sys
@@ -71,4 +72,5 @@ if __name__ == "__main__":
         ],
     )
     import json
+
     print(json.dumps(report.as_dict(), indent=2))

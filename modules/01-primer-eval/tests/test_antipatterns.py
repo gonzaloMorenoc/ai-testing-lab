@@ -2,13 +2,11 @@
 
 Sin LLM, sin API keys.  Todos los tests son deterministas.
 """
-from __future__ import annotations
 
-import pytest
+from __future__ import annotations
 
 from src.eval_antipatterns import (
     AntiPatternSeverity,
-    AntiPatternViolation,
     EvalDesignChecker,
     EvalDesignReport,
     check_ap01_happy_path_only,
@@ -23,7 +21,6 @@ from src.eval_antipatterns import (
     check_ap10_no_variance_measurement,
 )
 
-
 # ── Fixtures ─────────────────────────────────────────────────────────────────
 
 
@@ -32,10 +29,7 @@ def _make_happy_cases(n: int = 10) -> list[dict]:
 
 
 def _make_negative_cases(n: int = 3) -> list[dict]:
-    return [
-        {"input": f"bad question {i}", "expected_output": "refuse"}
-        for i in range(n)
-    ]
+    return [{"input": f"bad question {i}", "expected_output": "refuse"} for i in range(n)]
 
 
 def _make_adversarial_case() -> dict:
@@ -46,7 +40,6 @@ def _make_adversarial_case() -> dict:
 
 
 class TestEvalDesignChecker:
-
     # AP-01 ──────────────────────────────────────────────────────────────────
 
     def test_ap01_no_negative_cases_detected(self) -> None:
@@ -266,13 +259,13 @@ class TestEvalDesignChecker:
         checker = EvalDesignChecker()
         report = checker.check_all(
             test_cases=cases,
-            baseline_score=None,      # AP-03 CRITICAL
-            n_samples=5,              # AP-04 HIGH
+            baseline_score=None,  # AP-03 CRITICAL
+            n_samples=5,  # AP-04 HIGH
             generator_model_id="gpt-4o",
             judge_model_id="gpt-4o",  # AP-05 CRITICAL
-            threshold=0.73,           # AP-07 MEDIUM
+            threshold=0.73,  # AP-07 MEDIUM
             latency_stats={"mean": 1.0},  # AP-09 HIGH
-            n_runs=1,                 # AP-10 HIGH
+            n_runs=1,  # AP-10 HIGH
             has_variance_report=False,
         )
         assert report.passed is False

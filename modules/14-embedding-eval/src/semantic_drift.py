@@ -46,4 +46,5 @@ def semantic_drift_alert(
             triggered=triggered,
             message=f"centroid_shift={shift:.4f} {'>' if triggered else '<='} {threshold}",
         )
+
     return check

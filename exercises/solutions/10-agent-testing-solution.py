@@ -1,6 +1,7 @@
 """
 Solución módulo 10: agente con tool translate + evaluación de trayectoria.
 """
+
 from __future__ import annotations
 
 import sys
@@ -15,7 +16,6 @@ _TRANSLATE_KEYWORDS: tuple[str, ...] = ("translate", "in french", "in spanish", 
 
 
 class ExtendedAgent(SimpleAgent):
-
     def translate(self, text: str) -> str:
         return f"[translated] {text}"
 

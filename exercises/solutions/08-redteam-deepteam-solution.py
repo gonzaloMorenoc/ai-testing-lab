@@ -1,6 +1,7 @@
 """
 Solución módulo 08: añade escenario LLM11 custom.
 """
+
 from __future__ import annotations
 
 import sys

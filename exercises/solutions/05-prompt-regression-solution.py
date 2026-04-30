@@ -2,6 +2,7 @@
 Solución módulo 05: añade versionado semántico (semver) al PromptRegistry
 y detecta breaking changes entre versiones major.
 """
+
 from __future__ import annotations
 
 import sys

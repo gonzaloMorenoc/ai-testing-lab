@@ -34,9 +34,7 @@ class Conversation:
 
     def contains_info(self, info: str) -> bool:
         return any(
-            info.lower() in m.content.lower()
-            for m in self.messages
-            if m.role == "assistant"
+            info.lower() in m.content.lower() for m in self.messages if m.role == "assistant"
         )
 
     def detect_contradiction(self, keyword: str, value_a: str, value_b: str) -> bool:

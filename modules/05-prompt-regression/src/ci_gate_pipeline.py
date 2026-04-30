@@ -1,49 +1,49 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import StrEnum
 
 
 class CIStage(StrEnum):
-    PR         = "pr"
-    STAGING    = "staging"
-    CANARY     = "canary"
+    PR = "pr"
+    STAGING = "staging"
+    CANARY = "canary"
     PRODUCTION = "production"
 
 
 # Umbrales ABSOLUTOS por etapa (scores directos, no deltas)
 STAGE_THRESHOLDS: dict[CIStage, dict[str, float]] = {
     CIStage.PR: {
-        "faithfulness":     0.70,
+        "faithfulness": 0.70,
         "answer_relevancy": 0.75,
-        "context_recall":   0.70,
-        "refusal_rate":     0.95,
+        "context_recall": 0.70,
+        "refusal_rate": 0.95,
     },
     CIStage.STAGING: {
-        "faithfulness":     0.80,
+        "faithfulness": 0.80,
         "answer_relevancy": 0.85,
-        "context_recall":   0.80,
-        "refusal_rate":     0.97,
+        "context_recall": 0.80,
+        "refusal_rate": 0.97,
     },
     CIStage.CANARY: {
-        "faithfulness":     0.85,
+        "faithfulness": 0.85,
         "answer_relevancy": 0.88,
-        "context_recall":   0.85,
-        "refusal_rate":     0.98,
+        "context_recall": 0.85,
+        "refusal_rate": 0.98,
     },
     CIStage.PRODUCTION: {
-        "faithfulness":     0.90,
+        "faithfulness": 0.90,
         "answer_relevancy": 0.92,
-        "context_recall":   0.90,
-        "refusal_rate":     0.99,
+        "context_recall": 0.90,
+        "refusal_rate": 0.99,
     },
 }
 
 # Umbrales de REGRESIÓN vs baseline (deltas máximos tolerados)
 STAGE_DELTA_THRESHOLDS: dict[CIStage, dict[str, float]] = {
-    CIStage.PR:         {"faithfulness": -0.03, "answer_relevancy": -0.03, "refusal_rate": -0.02},
-    CIStage.STAGING:    {"faithfulness": -0.02, "answer_relevancy": -0.02, "refusal_rate": -0.01},
-    CIStage.CANARY:     {"faithfulness": -0.01, "answer_relevancy": -0.01, "refusal_rate": -0.005},
+    CIStage.PR: {"faithfulness": -0.03, "answer_relevancy": -0.03, "refusal_rate": -0.02},
+    CIStage.STAGING: {"faithfulness": -0.02, "answer_relevancy": -0.02, "refusal_rate": -0.01},
+    CIStage.CANARY: {"faithfulness": -0.01, "answer_relevancy": -0.01, "refusal_rate": -0.005},
     CIStage.PRODUCTION: {"faithfulness": -0.01, "answer_relevancy": -0.01, "refusal_rate": -0.005},
 }
 
@@ -52,8 +52,8 @@ STAGE_DELTA_THRESHOLDS: dict[CIStage, dict[str, float]] = {
 class StageGateResult:
     stage: CIStage
     passed: bool
-    scores: dict[str, float]              # scores evaluados
-    failures: tuple[str, ...]             # métricas que fallaron umbral absoluto
+    scores: dict[str, float]  # scores evaluados
+    failures: tuple[str, ...]  # métricas que fallaron umbral absoluto
     regression_failures: tuple[str, ...]  # métricas con regresión vs baseline
     baseline: dict[str, float] | None = None
 

@@ -2,6 +2,7 @@
 RAG mínimo para el módulo 01. Knowledge base hardcodeada, sin dependencias externas.
 Sirve como sistema bajo prueba (SUT) para los tests de evaluación.
 """
+
 from __future__ import annotations
 
 KNOWLEDGE_BASE: dict[str, str] = {

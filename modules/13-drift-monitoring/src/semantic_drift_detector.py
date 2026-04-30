@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import numpy as np
 from dataclasses import dataclass
+
+import numpy as np
 from scipy.stats import ks_2samp
 
 
@@ -45,10 +46,7 @@ def _bootstrap_ci(
     n_bootstrap: int,
     rng: np.random.Generator,
 ) -> tuple[float, float]:
-    boots = [
-        rng.choice(scores, size=len(scores), replace=True).mean()
-        for _ in range(n_bootstrap)
-    ]
+    boots = [rng.choice(scores, size=len(scores), replace=True).mean() for _ in range(n_bootstrap)]
     return float(np.percentile(boots, 2.5)), float(np.percentile(boots, 97.5))
 
 

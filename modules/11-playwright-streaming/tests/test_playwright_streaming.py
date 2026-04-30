@@ -26,7 +26,6 @@ from playwright.sync_api import Page, expect  # noqa: E402
 
 
 class TestChatUI:
-
     def test_response_appears_in_dom(self, page: Page, server_url: str) -> None:
         page.goto(server_url)
         page.fill("#input", "hello world")
@@ -47,9 +46,7 @@ class TestChatUI:
         page.goto(server_url)
         page.fill("#input", "complete test")
         page.click("#send")
-        expect(page.locator("#response")).to_have_attribute(
-            "data-complete", "true", timeout=10_000
-        )
+        expect(page.locator("#response")).to_have_attribute("data-complete", "true", timeout=10_000)
         text = page.locator("#response").text_content()
         assert text and len(text) > 0
 
@@ -57,9 +54,7 @@ class TestChatUI:
         page.goto(server_url)
         page.fill("#input", "hello")
         page.click("#send")
-        expect(page.locator("#response")).to_have_attribute(
-            "data-complete", "true", timeout=10_000
-        )
+        expect(page.locator("#response")).to_have_attribute("data-complete", "true", timeout=10_000)
         text = page.locator("#response").text_content() or ""
         assert re.search(r"Echo:", text, re.IGNORECASE), f"Unexpected response: {text!r}"
 
@@ -72,9 +67,7 @@ class TestChatUI:
         page.goto(server_url)
         page.fill("#input", "screenshot test")
         page.click("#send")
-        expect(page.locator("#response")).to_have_attribute(
-            "data-complete", "true", timeout=10_000
-        )
+        expect(page.locator("#response")).to_have_attribute("data-complete", "true", timeout=10_000)
         screenshot = tmp_path / "chat_final.png"
         page.screenshot(path=str(screenshot))
         assert screenshot.exists()

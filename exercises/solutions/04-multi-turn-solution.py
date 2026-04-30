@@ -3,6 +3,7 @@ Solución módulo 04: implementa detección de contradicciones entre turnos.
 Si el asistente dice "30 days" en el turno 1 y "60 days" en el turno 3,
 la conversación tiene una contradicción.
 """
+
 from __future__ import annotations
 
 import re

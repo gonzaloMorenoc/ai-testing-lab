@@ -1,4 +1,5 @@
 """Fixtures compartidos para el módulo 01-primer-eval."""
+
 from __future__ import annotations
 
 import pytest

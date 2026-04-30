@@ -1,5 +1,17 @@
 {
   "permissions": {
-    "defaultMode": "bypassPermissions"
+    "defaultMode": "dontAsk",
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "Agent(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "mcp__*"
+    ]
   }
 }

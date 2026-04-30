@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-
 # ---------------------------------------------------------------------------
 # recovery_rate
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True)
 class RecoveryRateResult:
@@ -39,6 +39,7 @@ def compute_recovery_rate(
 # human_handoff_rate
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True)
 class HumanHandoffResult:
     total_tasks: int
@@ -68,6 +69,7 @@ def compute_human_handoff_rate(
 # ---------------------------------------------------------------------------
 # context_retention_rate
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True)
 class ContextRetentionResult:
@@ -119,6 +121,7 @@ def compute_context_retention_rate(
 # hallucination_rate_per_tool
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True)
 class HallucinationRateResult:
     total_calls: int
@@ -161,9 +164,11 @@ def compute_hallucination_rate_per_tool(
 # AgentMetricsReport combinado (todas las métricas juntas)
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True)
 class AgentMetricsReport:
     """Todas las métricas del Tabla 18.X del Manual QA AI v12."""
+
     # Métricas existentes (valores pasados externamente)
     tool_accuracy: float
     goal_achievement_rate: float

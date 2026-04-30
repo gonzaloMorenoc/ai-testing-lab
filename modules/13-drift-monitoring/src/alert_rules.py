@@ -28,6 +28,7 @@ def psi_alert(threshold: float = 0.2) -> Callable[[float], AlertResult]:
             threshold=threshold,
             message=f"PSI={psi:.4f} {'>' if triggered else '<='} {threshold}",
         )
+
     return check
 
 
@@ -44,6 +45,7 @@ def mean_drop_alert(
     Note: Designed for positive metrics (scores, relevance, quality). If
     reference_mean <= 0 the drop percentage is undefined and no alert fires.
     """
+
     def check(current: list[float]) -> AlertResult:
         cur_mean = float(np.mean(current))
         drop_pct = (reference_mean - cur_mean) / reference_mean if reference_mean != 0 else 0.0
@@ -55,6 +57,7 @@ def mean_drop_alert(
             threshold=reference_mean * (1.0 - threshold_pct),
             message=f"mean dropped {drop_pct:.1%} ({'ALERT' if triggered else 'ok'})",
         )
+
     return check
 
 
@@ -69,6 +72,7 @@ def p95_alert(limit: float) -> Callable[[list[float]], AlertResult]:
             threshold=limit,
             message=f"p95={p95:.4f} {'>' if triggered else '<='} {limit}",
         )
+
     return check
 
 

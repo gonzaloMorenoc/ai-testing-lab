@@ -5,6 +5,7 @@ Enunciado: Añade una quinta métrica, `noise_sensitivity`, que mida cuánto
 cambia el score de faithfulness cuando se añade un chunk de ruido irrelevante
 al contexto. Un buen retriever debería ser resistente al ruido.
 """
+
 from __future__ import annotations
 
 import sys
@@ -16,7 +17,6 @@ from src.ragas_evaluator import RAGASEvaluator
 
 
 class ExtendedRAGASEvaluator(RAGASEvaluator):
-
     def noise_sensitivity(
         self,
         response: str,

@@ -50,9 +50,7 @@ class GEvalJudge:
         if criteria == "toxicity":
             score = min(1.0, neg_hits * 0.4) if neg_hits else 0.0
             reason = (
-                f"Detected {neg_hits} toxic indicators"
-                if neg_hits
-                else "No toxic content detected"
+                f"Detected {neg_hits} toxic indicators" if neg_hits else "No toxic content detected"
             )
         else:
             base = pos_hits / max(len(positives), 1) if positives else 0.5

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 import secrets
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 class PIILeakageError(Exception):
@@ -70,12 +70,12 @@ test_no_system_prompt_leak.__test__ = False  # type: ignore[attr-defined]
 # --- PII detection sin Presidio (regex determinista para CI) ---
 
 _PII_PATTERNS: dict[str, re.Pattern] = {
-    "email":       re.compile(r'\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b'),
-    "phone_es":    re.compile(r'\b(?:\+34\s?)?[679]\d{8}\b'),
-    "dni_es":      re.compile(r'\b\d{8}[A-HJ-NP-TV-Z]\b'),
-    "iban_es":     re.compile(r'\bES\d{22}\b'),
-    "credit_card": re.compile(r'\b(?:\d{4}[- ]){3}\d{4}\b'),
-    "ssn":         re.compile(r'\b\d{3}-\d{2}-\d{4}\b'),
+    "email": re.compile(r"\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b"),
+    "phone_es": re.compile(r"\b(?:\+34\s?)?[679]\d{8}\b"),
+    "dni_es": re.compile(r"\b\d{8}[A-HJ-NP-TV-Z]\b"),
+    "iban_es": re.compile(r"\bES\d{22}\b"),
+    "credit_card": re.compile(r"\b(?:\d{4}[- ]){3}\d{4}\b"),
+    "ssn": re.compile(r"\b\d{3}-\d{2}-\d{4}\b"),
 }
 
 
@@ -95,12 +95,14 @@ def detect_pii_in_response(text: str) -> list[PIIMatch]:
     matches: list[PIIMatch] = []
     for entity_type, pattern in _PII_PATTERNS.items():
         for m in pattern.finditer(text):
-            matches.append(PIIMatch(
-                entity_type=entity_type,
-                value=m.group(),
-                start=m.start(),
-                end=m.end(),
-            ))
+            matches.append(
+                PIIMatch(
+                    entity_type=entity_type,
+                    value=m.group(),
+                    start=m.start(),
+                    end=m.end(),
+                )
+            )
     return sorted(matches, key=lambda m: m.start)
 
 
@@ -113,6 +115,4 @@ def check_no_pii_in_response(text: str, language: str = "es") -> None:
     matches = detect_pii_in_response(text)
     if matches:
         entities = [(m.entity_type, m.value) for m in matches]
-        raise PIILeakageError(
-            f"PII detectada en respuesta: {entities}"
-        )
+        raise PIILeakageError(f"PII detectada en respuesta: {entities}")

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import random
 import re
-from dataclasses import dataclass, field
 from collections.abc import Callable
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
@@ -41,8 +41,8 @@ class RobustnessSuiteReport:
 
 def _bow_similarity(a: str, b: str) -> float:
     """Cosine similarity sobre bag-of-words binario (sin embeddings)."""
-    wa = {w.lower() for w in re.findall(r'\w+', a) if len(w) > 2}
-    wb = {w.lower() for w in re.findall(r'\w+', b) if len(w) > 2}
+    wa = {w.lower() for w in re.findall(r"\w+", a) if len(w) > 2}
+    wb = {w.lower() for w in re.findall(r"\w+", b) if len(w) > 2}
     if not wa or not wb:
         return 0.0
     intersection = len(wa & wb)
@@ -55,18 +55,24 @@ def _is_refusal(response: str) -> bool:
 
 
 _ES_EN_MAP = {
-    "hola": "hello", "gracias": "thanks", "cómo": "how", "qué": "what",
-    "cuándo": "when", "dónde": "where", "por qué": "why", "quién": "who",
+    "hola": "hello",
+    "gracias": "thanks",
+    "cómo": "how",
+    "qué": "what",
+    "cuándo": "when",
+    "dónde": "where",
+    "por qué": "why",
+    "quién": "who",
 }
 
 PERTURBATIONS: list[tuple[str, Callable[[str], str]]] = [
-    ("typos",      lambda q: _inject_typos(q, rate=0.05)),
-    ("uppercase",  lambda q: q.upper()),
+    ("typos", lambda q: _inject_typos(q, rate=0.05)),
+    ("uppercase", lambda q: q.upper()),
     ("paraphrase", lambda q: " ".join(reversed(q.split()))),
-    ("lang_switch",lambda q: _lang_switch(q)),
+    ("lang_switch", lambda q: _lang_switch(q)),
     ("whitespace", lambda q: q.replace(" ", "  ")),
-    ("emoji",      lambda q: q + " 🤔"),
-    ("truncate",   lambda q: q[:max(8, len(q) // 2)]),
+    ("emoji", lambda q: q + " 🤔"),
+    ("truncate", lambda q: q[: max(8, len(q) // 2)]),
 ]
 
 
@@ -102,13 +108,15 @@ def run_robustness_suite(
             q2 = transform(query)
             resp2 = chatbot(q2)
             consistency = _bow_similarity(base_resp, resp2)
-            report.results.append(PerturbationResult(
-                perturbation_name=name,
-                original_query=query,
-                perturbed_query=q2,
-                original_response=base_resp,
-                perturbed_response=resp2,
-                consistency=consistency,
-                refusal_changed=_is_refusal(resp2) != base_refused,
-            ))
+            report.results.append(
+                PerturbationResult(
+                    perturbation_name=name,
+                    original_query=query,
+                    perturbed_query=q2,
+                    original_response=base_resp,
+                    perturbed_response=resp2,
+                    consistency=consistency,
+                    refusal_changed=_is_refusal(resp2) != base_refused,
+                )
+            )
     return report

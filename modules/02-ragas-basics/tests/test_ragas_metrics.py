@@ -9,13 +9,10 @@ from src.ragas_evaluator import RAGASEvaluator, RAGASScores
 
 
 class TestFaithfulness:
-
     def test_faithful_response_scores_high(
         self, evaluator: RAGASEvaluator, returns_result: dict
     ) -> None:
-        score = evaluator.faithfulness(
-            returns_result["response"], returns_result["context"]
-        )
+        score = evaluator.faithfulness(returns_result["response"], returns_result["context"])
         print(f"\n  Faithfulness: {score:.2f}")
         assert score >= 0.7, f"Respuesta fiel al contexto debería superar 0.7, got {score}"
 
@@ -32,13 +29,10 @@ class TestFaithfulness:
 
 
 class TestAnswerRelevancy:
-
     def test_relevant_response_scores_high(
         self, evaluator: RAGASEvaluator, returns_result: dict
     ) -> None:
-        score = evaluator.answer_relevancy(
-            returns_result["query"], returns_result["response"]
-        )
+        score = evaluator.answer_relevancy(returns_result["query"], returns_result["response"])
         print(f"\n  Answer Relevancy: {score:.2f}")
         assert score >= 0.4
 
@@ -52,7 +46,6 @@ class TestAnswerRelevancy:
 
 
 class TestContextPrecision:
-
     def test_all_chunks_relevant(self, evaluator: RAGASEvaluator) -> None:
         context = [
             "Returns are allowed within 30 days.",
@@ -77,7 +70,6 @@ class TestContextPrecision:
 
 
 class TestEvaluatePipeline:
-
     def test_full_pipeline_passes_all_metrics(
         self, pipeline: RAGPipeline, evaluator: RAGASEvaluator
     ) -> None:
@@ -91,19 +83,14 @@ class TestEvaluatePipeline:
         assert scores.context_precision >= 0.5
         assert scores.context_recall >= 0.7
 
-    def test_batch_evaluation(
-        self, pipeline: RAGPipeline, evaluator: RAGASEvaluator
-    ) -> None:
+    def test_batch_evaluation(self, pipeline: RAGPipeline, evaluator: RAGASEvaluator) -> None:
         queries = [
             "What is the return policy?",
             "How long does shipping take?",
             "Is there a warranty?",
         ]
         results = [pipeline.run(q) for q in queries]
-        scores = [
-            evaluator.evaluate(r["query"], r["response"], r["context"])
-            for r in results
-        ]
+        scores = [evaluator.evaluate(r["query"], r["response"], r["context"]) for r in results]
         avg_faithfulness = sum(s.faithfulness for s in scores) / len(scores)
         print(f"\n  Avg faithfulness over batch: {avg_faithfulness:.2f}")
         assert avg_faithfulness >= 0.6

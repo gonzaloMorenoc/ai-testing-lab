@@ -49,9 +49,7 @@ def enforce_policy(
             f"Presupuesto USD agotado: {cost_so_far:.4f} > {policy.max_cost_usd}"
         )
     if tool in policy.human_approval_required and not human_approved:
-        raise PolicyViolationError(
-            f"Acción destructiva requiere aprobación humana: {tool!r}"
-        )
+        raise PolicyViolationError(f"Acción destructiva requiere aprobación humana: {tool!r}")
 
 
 # --- Tool Schema Validator (Cap 27) ---
@@ -103,13 +101,16 @@ def validate_tool_call(
                 tool_name=tool_name,
                 error=f"{field_name!r} debe ser string, got {type(value).__name__}",
             )
-        if expected_type == "string" and prop.get("format") == "email":
-            if not _EMAIL_RE.match(value):
-                return SchemaValidationResult(
-                    valid=False,
-                    tool_name=tool_name,
-                    error=f"{field_name!r} no es un email válido: {value!r}",
-                )
+        if (
+            expected_type == "string"
+            and prop.get("format") == "email"
+            and not _EMAIL_RE.match(value)
+        ):
+            return SchemaValidationResult(
+                valid=False,
+                tool_name=tool_name,
+                error=f"{field_name!r} no es un email válido: {value!r}",
+            )
         max_length = prop.get("maxLength")
         if max_length is not None and isinstance(value, str) and len(value) > max_length:
             return SchemaValidationResult(

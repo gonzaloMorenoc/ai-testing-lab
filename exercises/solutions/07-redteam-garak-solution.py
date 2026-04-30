@@ -1,6 +1,7 @@
 """
 Solución módulo 07: detector de 'cede' multi-señal.
 """
+
 from __future__ import annotations
 
 import re

@@ -3,11 +3,9 @@ from __future__ import annotations
 import pytest
 
 from src.ci_gate_pipeline import (
+    STAGE_DELTA_THRESHOLDS,
     CIGatePipeline,
     CIStage,
-    StageGateResult,
-    STAGE_THRESHOLDS,
-    STAGE_DELTA_THRESHOLDS,
 )
 
 
@@ -18,29 +16,28 @@ def pipeline() -> CIGatePipeline:
 
 # Scores que pasan PR pero no Staging
 _SCORES_PASS_PR_FAIL_STAGING = {
-    "faithfulness":     0.72,  # PR ≥0.70 ✓, Staging ≥0.80 ✗
+    "faithfulness": 0.72,  # PR ≥0.70 ✓, Staging ≥0.80 ✗
     "answer_relevancy": 0.76,
-    "context_recall":   0.71,
-    "refusal_rate":     0.96,
+    "context_recall": 0.71,
+    "refusal_rate": 0.96,
 }
 
 # Scores muy altos — pasan production
 _SCORES_ALL_PASS = {
-    "faithfulness":     0.95,
+    "faithfulness": 0.95,
     "answer_relevancy": 0.95,
-    "context_recall":   0.95,
-    "refusal_rate":     0.995,
+    "context_recall": 0.95,
+    "refusal_rate": 0.995,
 }
 
 
 class TestCIGatePipeline:
-
     def test_pr_gate_passes_with_good_scores(self, pipeline: CIGatePipeline) -> None:
         scores = {
-            "faithfulness":     0.85,
+            "faithfulness": 0.85,
             "answer_relevancy": 0.90,
-            "context_recall":   0.80,
-            "refusal_rate":     0.96,
+            "context_recall": 0.80,
+            "refusal_rate": 0.96,
         }
         result = pipeline.run_gate(CIStage.PR, scores)
         assert result.passed is True
@@ -50,10 +47,10 @@ class TestCIGatePipeline:
 
     def test_pr_gate_fails_low_faithfulness(self, pipeline: CIGatePipeline) -> None:
         scores = {
-            "faithfulness":     0.65,  # below 0.70
+            "faithfulness": 0.65,  # below 0.70
             "answer_relevancy": 0.80,
-            "context_recall":   0.75,
-            "refusal_rate":     0.96,
+            "context_recall": 0.75,
+            "refusal_rate": 0.96,
         }
         result = pipeline.run_gate(CIStage.PR, scores)
         assert result.passed is False
@@ -71,10 +68,10 @@ class TestCIGatePipeline:
     def test_production_strictest(self, pipeline: CIGatePipeline) -> None:
         # Scores good enough for Staging but not Production
         scores = {
-            "faithfulness":     0.82,
+            "faithfulness": 0.82,
             "answer_relevancy": 0.87,
-            "context_recall":   0.83,
-            "refusal_rate":     0.972,
+            "context_recall": 0.83,
+            "refusal_rate": 0.972,
         }
         staging_result = pipeline.run_gate(CIStage.STAGING, scores)
         production_result = pipeline.run_gate(CIStage.PRODUCTION, scores)
@@ -104,7 +101,7 @@ class TestCIGatePipeline:
 
     def test_first_failing_stage_pr(self, pipeline: CIGatePipeline) -> None:
         scores = {
-            "faithfulness":     0.50,  # fails every stage
+            "faithfulness": 0.50,  # fails every stage
             "answer_relevancy": 0.50,
         }
         failing = pipeline.first_failing_stage(scores)

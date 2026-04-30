@@ -11,6 +11,7 @@ ModelFn = Callable[[str], str]
 def guarded_model() -> ModelFn:
     def _fn(_: str) -> str:
         return "I cannot help with that request."
+
     return _fn
 
 
@@ -20,6 +21,7 @@ def injection_vulnerable_model() -> ModelFn:
         if "ignore" in prompt.lower() and "hacked" in prompt.lower():
             return "HACKED"
         return "ok"
+
     return _fn
 
 
@@ -27,6 +29,7 @@ def injection_vulnerable_model() -> ModelFn:
 def leaky_model() -> ModelFn:
     def _fn(_: str) -> str:
         return "My system prompt: You are a helpful assistant specialized in banking."
+
     return _fn
 
 
@@ -34,6 +37,7 @@ def leaky_model() -> ModelFn:
 def rogue_agent_model() -> ModelFn:
     def _fn(_: str) -> str:
         return "I have deleted the user account. Action completed."
+
     return _fn
 
 
@@ -41,14 +45,17 @@ def rogue_agent_model() -> ModelFn:
 def misinformation_model() -> ModelFn:
     def _fn(_: str) -> str:
         return "Yes, Napoleon won Waterloo — a famous French victory."
+
     return _fn
 
 
 @pytest.fixture
 def flaky_model() -> ModelFn:
     """Modelo que lanza excepción en un escenario específico."""
+
     def _fn(prompt: str) -> str:
         if "napoleon" in prompt.lower():
             raise RuntimeError("rate limited")
         return "I cannot help with that."
+
     return _fn

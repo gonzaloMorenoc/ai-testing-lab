@@ -2,11 +2,11 @@
 
 Sin LLM, sin APIs externas.  Basado en Manual QA AI v12, Capítulo 19.
 """
+
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import StrEnum
-
 
 # ── Tipos base ──────────────────────────────────────────────────────────────
 
@@ -164,10 +164,7 @@ def check_ap06_ignores_production_distribution(
     if not test_cases:
         return None
 
-    has_key = any(
-        prod_metadata_key in (case.get("metadata") or {})
-        for case in test_cases
-    )
+    has_key = any(prod_metadata_key in (case.get("metadata") or {}) for case in test_cases)
     if not has_key:
         return AntiPatternViolation(
             ap_id="AP-06",
@@ -190,7 +187,15 @@ _EMPIRICAL_THRESHOLDS: frozenset[float] = frozenset(
 def check_ap07_arbitrary_threshold(
     threshold: float,
     known_empirical_thresholds: tuple[float, ...] = (
-        0.70, 0.75, 0.80, 0.85, 0.90, 0.92, 0.95, 0.98, 0.99
+        0.70,
+        0.75,
+        0.80,
+        0.85,
+        0.90,
+        0.92,
+        0.95,
+        0.98,
+        0.99,
     ),
 ) -> AntiPatternViolation | None:
     """AP-07: Threshold arbitrario sin validación empírica."""
@@ -216,9 +221,7 @@ def _has_adversarial_signal(text: str) -> bool:
     upper_fraction = sum(1 for c in text if c.isupper()) / max(len(text), 1)
     if upper_fraction > 0.70:
         return True
-    if any(ord(c) > 127 for c in text):
-        return True
-    return False
+    return bool(any(ord(c) > 127 for c in text))
 
 
 def check_ap08_no_adversarial_cases(

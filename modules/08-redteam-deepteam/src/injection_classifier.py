@@ -37,9 +37,7 @@ class InjectionClassification:
     def label(self) -> str:
         """Etiqueta compacta: 'DIRECT/JAILBREAK/INSTRUCTION_OVERRIDE'"""
         return (
-            f"{self.axis_a.value.upper()}/"
-            f"{self.axis_b.value.upper()}/"
-            f"{self.axis_c.value.upper()}"
+            f"{self.axis_a.value.upper()}/{self.axis_b.value.upper()}/{self.axis_c.value.upper()}"
         )
 
 
@@ -152,6 +150,7 @@ _INSTRUCTION_OVERRIDE_SIGNALS: tuple[str, ...] = (
 
 # ── clasificador ──────────────────────────────────────────────────────────────
 
+
 class InjectionClassifier:
     """Clasificador heurístico de prompt injection por 3 ejes ortogonales.
 
@@ -224,9 +223,7 @@ class InjectionClassifier:
         candidates[InjectionAxisC.ENCODING] = encoding_matches
 
         # ROLEPLAY
-        candidates[InjectionAxisC.ROLEPLAY] = [
-            s for s in _ROLEPLAY_SIGNALS if s in prompt_lower
-        ]
+        candidates[InjectionAxisC.ROLEPLAY] = [s for s in _ROLEPLAY_SIGNALS if s in prompt_lower]
 
         # PAYLOAD_SPLITTING: señales de separadores + step-by-step split
         split_matches: list[str] = [s for s in _PAYLOAD_SPLIT_SIGNALS if s in prompt_lower]
@@ -235,9 +232,7 @@ class InjectionClassifier:
         candidates[InjectionAxisC.PAYLOAD_SPLITTING] = split_matches
 
         # CONTEXT_SMUGGLING: señales léxicas + zero-width chars (ord < 32, no \n\t)
-        smuggling_matches: list[str] = [
-            s for s in _CONTEXT_SMUGGLING_SIGNALS if s in prompt_lower
-        ]
+        smuggling_matches: list[str] = [s for s in _CONTEXT_SMUGGLING_SIGNALS if s in prompt_lower]
         zero_width = [ch for ch in prompt_lower if ord(ch) < 32 and ch not in "\n\t"]
         if zero_width:
             smuggling_matches.append("zero_width_char")

@@ -74,7 +74,7 @@ class MultiTurnEvaluator:
         assistant_turns = conv.get_assistant_turns()
         if not expected_topics or not assistant_turns:
             return 0.0
-        pairs = list(zip(assistant_turns, expected_topics))
+        pairs = list(zip(assistant_turns, expected_topics, strict=False))
         correct = 0
         for turn, topic in pairs:
             topic_words = set(w.lower() for w in topic.split())

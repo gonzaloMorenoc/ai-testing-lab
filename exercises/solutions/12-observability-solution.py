@@ -1,6 +1,7 @@
 """
 Solución módulo 12: @trace con token_count en attributes.
 """
+
 from __future__ import annotations
 
 import sys
@@ -18,6 +19,7 @@ from src.tracer import _CURRENT_SPAN_ID, Span, set_collector
 
 def trace_with_token_count(name: str, collector: MockCollector, **extra: Any) -> Callable:
     """Decorator like @trace but adds token_count to attributes."""
+
     def decorator(fn: Callable) -> Callable:
         @wraps(fn)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -43,7 +45,9 @@ def trace_with_token_count(name: str, collector: MockCollector, **extra: Any) ->
                 span.duration_ms = round((time.monotonic() - start) * 1000, 2)
                 _CURRENT_SPAN_ID.reset(token)
                 collector._add(span)
+
         return wrapper
+
     return decorator
 
 

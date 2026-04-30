@@ -16,6 +16,7 @@ def server_url() -> str:
     port = _free_port()
     try:
         from src.mock_chat_server import start_server
+
         start_server(port)
     except ImportError:
         pytest.skip("fastapi or uvicorn not installed — install with: pip install fastapi uvicorn")

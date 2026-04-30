@@ -8,11 +8,26 @@ from src.claim_extractor import extract_claims
 _MIN_TOKEN_LENGTH = 3
 
 # Tokens that indicate negation — used to detect claim-context contradictions.
-_NEGATION_MARKERS: frozenset[str] = frozenset({
-    "not", "never", "no", "none", "neither", "nor",
-    "cannot", "cant", "doesnt", "isnt", "arent", "wont", "didnt",
-    "nothing", "nowhere", "nobody",
-})
+_NEGATION_MARKERS: frozenset[str] = frozenset(
+    {
+        "not",
+        "never",
+        "no",
+        "none",
+        "neither",
+        "nor",
+        "cannot",
+        "cant",
+        "doesnt",
+        "isnt",
+        "arent",
+        "wont",
+        "didnt",
+        "nothing",
+        "nowhere",
+        "nobody",
+    }
+)
 
 
 @dataclass
@@ -41,7 +56,7 @@ class GroundednessChecker:
         self.overlap_threshold = overlap_threshold
 
     def _tokenize(self, text: str) -> set[str]:
-        cleaned = (re.sub(r'[^a-zA-Z0-9]', '', w) for w in text.split())
+        cleaned = (re.sub(r"[^a-zA-Z0-9]", "", w) for w in text.split())
         return {w.lower() for w in cleaned if len(w) > _MIN_TOKEN_LENGTH}
 
     def _has_negation(self, text: str) -> bool:

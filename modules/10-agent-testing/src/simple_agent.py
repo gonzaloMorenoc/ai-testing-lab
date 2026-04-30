@@ -62,7 +62,6 @@ class AgentResult:
 
 
 class SimpleAgent:
-
     def search(self, query: str) -> str:
         return f"Search result for: {query}"
 

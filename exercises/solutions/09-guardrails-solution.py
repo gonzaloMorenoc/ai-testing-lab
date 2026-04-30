@@ -1,6 +1,7 @@
 """
 Solución módulo 09: CompositeGuardrail que encadena validators.
 """
+
 from __future__ import annotations
 
 import sys
@@ -28,9 +29,7 @@ class CompositeGuardrail:
             res = v.validate(text)
             if not res.valid:
                 return CompositeResult(valid=False, rules_evaluated=i, first_failure=res)
-        return CompositeResult(
-            valid=True, rules_evaluated=len(self.validators), first_failure=None
-        )
+        return CompositeResult(valid=True, rules_evaluated=len(self.validators), first_failure=None)
 
 
 if __name__ == "__main__":

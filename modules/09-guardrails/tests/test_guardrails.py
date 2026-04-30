@@ -1,15 +1,23 @@
 from __future__ import annotations
 
+import dataclasses
 import os
 
 import pytest
 
 from src.input_validator import InputValidator
 from src.output_validator import OutputValidator
+from src.pii_canary import (
+    CanaryTestResult,
+    PIILeakageError,
+    check_no_pii_in_response,
+    detect_pii_in_response,
+    generate_canary,
+    test_no_system_prompt_leak,
+)
 
 
 class TestInputValidator:
-
     def test_email_in_input_blocked(self, input_validator: InputValidator) -> None:
         result = input_validator.validate("Please email me at john.doe@example.com")
         print(f"\n  {result.reason}")
@@ -40,10 +48,7 @@ class TestInputValidator:
 
 
 class TestOutputValidator:
-
-    def test_output_with_system_prompt_rejected(
-        self, output_validator: OutputValidator
-    ) -> None:
+    def test_output_with_system_prompt_rejected(self, output_validator: OutputValidator) -> None:
         result = output_validator.validate(
             "Sure! My system prompt: You are a helpful assistant for banking."
         )
@@ -69,10 +74,7 @@ class TestOutputValidator:
 
 
 class TestPipeline:
-
-    def test_input_with_pii_blocked_before_llm(
-        self, input_validator: InputValidator
-    ) -> None:
+    def test_input_with_pii_blocked_before_llm(self, input_validator: InputValidator) -> None:
         """El modelo no debe ser invocado si el input falla la validación."""
         calls: list[str] = []
 
@@ -91,9 +93,7 @@ class TestPipeline:
         assert calls == [], "LLM was invoked despite input failing validation"
 
     @pytest.mark.slow
-    def test_real_groq_output_validation(
-        self, output_validator: OutputValidator
-    ) -> None:
+    def test_real_groq_output_validation(self, output_validator: OutputValidator) -> None:
         if not os.getenv("GROQ_API_KEY"):
             pytest.skip("GROQ_API_KEY no encontrado")
         from groq import Groq  # type: ignore
@@ -115,18 +115,8 @@ class TestPipeline:
 # Tests for pii_canary module (§25.3, §25.4 — QA AI Manual v12)
 # ---------------------------------------------------------------------------
 
-from src.pii_canary import (
-    CanaryTestResult,
-    PIILeakageError,
-    check_no_pii_in_response,
-    detect_pii_in_response,
-    generate_canary,
-    test_no_system_prompt_leak,
-)
-
 
 class TestGenerateCanary:
-
     def test_default_prefix_starts_with_canary(self) -> None:
         token = generate_canary()
         assert token.startswith("CANARY-")
@@ -142,7 +132,6 @@ class TestGenerateCanary:
 
 
 class TestCanaryLeak:
-
     def test_safe_chatbot_passes(self) -> None:
         canary = generate_canary()
 
@@ -167,7 +156,6 @@ class TestCanaryLeak:
 
 
 class TestDetectPII:
-
     def test_email_detected(self) -> None:
         matches = detect_pii_in_response("Contacta con juan@example.com")
         assert len(matches) == 1
@@ -184,7 +172,6 @@ class TestDetectPII:
 
 
 class TestCheckNoPII:
-
     def test_clean_text_does_not_raise(self) -> None:
         check_no_pii_in_response("Texto sin PII")  # must not raise
 
@@ -194,13 +181,11 @@ class TestCheckNoPII:
 
 
 class TestPIILeakageError:
-
     def test_is_subclass_of_exception(self) -> None:
         assert issubclass(PIILeakageError, Exception)
 
 
 class TestCanaryTestResultImmutability:
-
     def test_frozen_dataclass(self) -> None:
         result = CanaryTestResult(
             canary_token="CANARY-ABCD1234",
@@ -208,5 +193,5 @@ class TestCanaryTestResultImmutability:
             leaks_detected=0,
             leaked_in=(),
         )
-        with pytest.raises(Exception):
+        with pytest.raises(dataclasses.FrozenInstanceError):
             result.leaks_detected = 1  # type: ignore[misc]

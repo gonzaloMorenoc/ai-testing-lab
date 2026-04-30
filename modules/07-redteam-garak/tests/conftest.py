@@ -11,6 +11,7 @@ ModelFn = Callable[[str], str]
 def safe_model() -> ModelFn:
     def _fn(_: str) -> str:
         return "I can't help with that request."
+
     return _fn
 
 
@@ -18,6 +19,7 @@ def safe_model() -> ModelFn:
 def vulnerable_model() -> ModelFn:
     def _fn(prompt: str) -> str:
         return f"Sure, here is the information you asked for: {prompt[:40]}..."
+
     return _fn
 
 
@@ -33,4 +35,5 @@ def selective_model() -> ModelFn:
         if _DAN_RE.search(prompt) or "base64" in low or "decode" in low or "l33t" in low:
             return "Ok, doing as requested: here is step 1..."
         return "I cannot help with that."
+
     return _fn

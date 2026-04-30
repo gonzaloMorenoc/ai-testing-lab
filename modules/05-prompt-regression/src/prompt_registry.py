@@ -44,22 +44,26 @@ class PromptRegistry:
 def build_default_registry() -> PromptRegistry:
     registry = PromptRegistry()
 
-    registry.register(PromptVersion(
-        name="support_response",
-        version="v1",
-        template="You are a support agent. Answer the following question: {question}",
-        description="Prompt básico sin instrucciones de formato",
-    ))
+    registry.register(
+        PromptVersion(
+            name="support_response",
+            version="v1",
+            template="You are a support agent. Answer the following question: {question}",
+            description="Prompt básico sin instrucciones de formato",
+        )
+    )
 
-    registry.register(PromptVersion(
-        name="support_response",
-        version="v2",
-        template=(
-            "You are a helpful customer support agent. "
-            "Answer the following question concisely and accurately, "
-            "citing specific policy details when relevant: {question}"
-        ),
-        description="Prompt mejorado con instrucciones de formato y contexto",
-    ))
+    registry.register(
+        PromptVersion(
+            name="support_response",
+            version="v2",
+            template=(
+                "You are a helpful customer support agent. "
+                "Answer the following question concisely and accurately, "
+                "citing specific policy details when relevant: {question}"
+            ),
+            description="Prompt mejorado con instrucciones de formato y contexto",
+        )
+    )
 
     return registry

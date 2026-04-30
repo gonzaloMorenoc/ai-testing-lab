@@ -6,12 +6,11 @@ import time
 import pytest
 
 from src.mock_collector import MockCollector
-from src.trace_record import TraceRecord, TraceValidationError, make_trace_record, validate_trace
+from src.trace_record import TraceRecord, make_trace_record, validate_trace
 from src.tracer import trace
 
 
 class TestTracer:
-
     def test_decorated_function_creates_span(self, collector: MockCollector) -> None:
         @trace("my_function")
         def fn(x: str) -> str:
@@ -30,7 +29,9 @@ class TestTracer:
 
         process("test input")
         span = collector.get_spans("pipeline_step")[0]
-        print(f"\n  span: input={span.input!r} output={span.output!r} duration={span.duration_ms}ms")
+        print(
+            f"\n  span: input={span.input!r} output={span.output!r} duration={span.duration_ms}ms"
+        )
         assert span.input == "test input"
         assert span.output == "TEST INPUT"
         assert span.duration_ms >= 0.0
@@ -101,7 +102,17 @@ class TestTracer:
         exported = collector.export()
         assert len(exported) == 1
         d = exported[0]
-        required_keys = {"name", "attributes", "input", "output", "duration_ms", "status", "error", "parent_id", "span_id"}
+        required_keys = {
+            "name",
+            "attributes",
+            "input",
+            "output",
+            "duration_ms",
+            "status",
+            "error",
+            "parent_id",
+            "span_id",
+        }
         assert set(d.keys()) == required_keys
         assert d["name"] == "export_test"
 
@@ -111,6 +122,7 @@ class TestTracer:
             pytest.skip("LANGFUSE_SECRET_KEY no encontrado")
         from src import tracer as tm
         from src.mock_collector import MockCollector as MC
+
         coll = MC()
         tm.set_collector(coll)
 
@@ -128,7 +140,6 @@ class TestTracer:
 
 
 class TestTraceRecord:
-
     def test_make_trace_record_defaults(self) -> None:
         record = make_trace_record(response="hello", tokens_in=10, tokens_out=5, latency_ms=120.0)
         assert isinstance(record, TraceRecord)

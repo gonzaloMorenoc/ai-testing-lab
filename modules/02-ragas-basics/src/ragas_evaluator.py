@@ -82,7 +82,9 @@ class RAGASEvaluator:
         self,
         synonym_clusters: list[frozenset[str]] | None = None,
     ) -> None:
-        self._clusters = synonym_clusters if synonym_clusters is not None else _DEFAULT_SYNONYM_CLUSTERS
+        self._clusters = (
+            synonym_clusters if synonym_clusters is not None else _DEFAULT_SYNONYM_CLUSTERS
+        )
 
     def _tokenize(self, text: str) -> set[str]:
         """Return cleaned lowercase tokens with length > 3, punctuation stripped."""
@@ -124,9 +126,7 @@ class RAGASEvaluator:
             return 0.0
         query_tokens = self._tokenize(query)
         expanded_query = self._expand_synonyms(query_tokens)
-        relevant = sum(
-            1 for chunk in context if expanded_query & self._tokenize(chunk)
-        )
+        relevant = sum(1 for chunk in context if expanded_query & self._tokenize(chunk))
         return round(relevant / len(context), 3)
 
     def context_recall(self, response: str, context: list[str]) -> float:

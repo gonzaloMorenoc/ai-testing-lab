@@ -16,11 +16,7 @@ def ndcg_at_k(relevant_ids: set[int], ranked_ids: list[int], k: int) -> float:
         return 0.0
 
     top_k = ranked_ids[:k]
-    dcg = sum(
-        1.0 / math.log2(i + 2)
-        for i, doc_id in enumerate(top_k)
-        if doc_id in relevant_ids
-    )
+    dcg = sum(1.0 / math.log2(i + 2) for i, doc_id in enumerate(top_k) if doc_id in relevant_ids)
 
     num_ideal = min(len(relevant_ids), k)
     idcg = sum(1.0 / math.log2(i + 2) for i in range(num_ideal))
@@ -71,12 +67,12 @@ def map_at_k(relevant_ids: set[int], ranked_ids: list[int], k: int) -> float:
 
 @dataclass(frozen=True)
 class RetrievalMetricsReport:
-    ndcg: float        # NDCG@k averaged over all queries
-    mrr: float         # MRR@k averaged over all queries
-    map_score: float   # MAP@k averaged over all queries
+    ndcg: float  # NDCG@k averaged over all queries
+    mrr: float  # MRR@k averaged over all queries
+    map_score: float  # MAP@k averaged over all queries
     k: int
     num_queries: int
-    passed: bool       # True if ndcg >= threshold AND mrr >= threshold AND map_score >= threshold
+    passed: bool  # True if ndcg >= threshold AND mrr >= threshold AND map_score >= threshold
 
 
 RETRIEVAL_THRESHOLD = 0.5
@@ -108,9 +104,18 @@ def evaluate_retrieval(
         raise ValueError("Se requiere al menos una query")
 
     n = len(relevant_sets)
-    avg_ndcg = sum(ndcg_at_k(r, ranked, k) for r, ranked in zip(relevant_sets, ranked_lists)) / n
-    avg_mrr = sum(mrr_at_k(r, ranked, k) for r, ranked in zip(relevant_sets, ranked_lists)) / n
-    avg_map = sum(map_at_k(r, ranked, k) for r, ranked in zip(relevant_sets, ranked_lists)) / n
+    avg_ndcg = (
+        sum(ndcg_at_k(r, ranked, k) for r, ranked in zip(relevant_sets, ranked_lists, strict=False))
+        / n
+    )
+    avg_mrr = (
+        sum(mrr_at_k(r, ranked, k) for r, ranked in zip(relevant_sets, ranked_lists, strict=False))
+        / n
+    )
+    avg_map = (
+        sum(map_at_k(r, ranked, k) for r, ranked in zip(relevant_sets, ranked_lists, strict=False))
+        / n
+    )
 
     return RetrievalMetricsReport(
         ndcg=avg_ndcg,

@@ -10,10 +10,7 @@ def judge() -> GEvalJudge:
 
 @pytest.fixture
 def relevant_response() -> str:
-    return (
-        "Based on our policy, returns are allowed within 30 days "
-        "of purchase for a full refund."
-    )
+    return "Based on our policy, returns are allowed within 30 days of purchase for a full refund."
 
 
 @pytest.fixture

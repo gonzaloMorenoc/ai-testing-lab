@@ -8,18 +8,18 @@ from enum import StrEnum
 class HallucinationLevel1(StrEnum):
     """Clasificación principal de alucinaciones (Ji et al. 2023)."""
 
-    INTRINSIC = "intrinsic"   # contradice el contexto proporcionado
-    EXTRINSIC = "extrinsic"   # añade info no presente ni soportada por el contexto
+    INTRINSIC = "intrinsic"  # contradice el contexto proporcionado
+    EXTRINSIC = "extrinsic"  # añade info no presente ni soportada por el contexto
 
 
 class HallucinationLevel2(StrEnum):
     """Subcategorías ortogonales (pueden ser intrinsic o extrinsic)."""
 
-    FACTUAL = "factual"       # cita artículo/entidad inexistente
-    TEMPORAL = "temporal"     # confunde secuencias, inventa fechas
-    NUMERICAL = "numerical"   # cifras incorrectas
-    CITATION = "citation"     # atribuye a fuente errónea
-    LOGICAL = "logical"       # conclusión no se sigue de las premisas
+    FACTUAL = "factual"  # cita artículo/entidad inexistente
+    TEMPORAL = "temporal"  # confunde secuencias, inventa fechas
+    NUMERICAL = "numerical"  # cifras incorrectas
+    CITATION = "citation"  # atribuye a fuente errónea
+    LOGICAL = "logical"  # conclusión no se sigue de las premisas
 
 
 @dataclass(frozen=True)
@@ -40,10 +40,19 @@ class HallucinationClassifier:
     """Clasifica alucinaciones sin LLM usando heurísticos deterministas."""
 
     # Señales de alucinación temporal
-    TEMPORAL_SIGNALS: frozenset[str] = frozenset({
-        "yesterday", "tomorrow", "last year", "next year",
-        "in 2019", "in 2020", "in 2021", "currently", "recently",
-    })
+    TEMPORAL_SIGNALS: frozenset[str] = frozenset(
+        {
+            "yesterday",
+            "tomorrow",
+            "last year",
+            "next year",
+            "in 2019",
+            "in 2020",
+            "in 2021",
+            "currently",
+            "recently",
+        }
+    )
     # Señales de alucinación numérica
     NUMERICAL_PATTERNS_EXTREME: tuple[str, ...] = ("100%", "0%", "never", "always", "every")
 

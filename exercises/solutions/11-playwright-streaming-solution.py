@@ -1,6 +1,7 @@
 """
 Solución módulo 11: mock_chat_server con spinner CSS.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -99,6 +100,7 @@ async def chat(request: Request) -> StreamingResponse:
 
 def start_server(port: int) -> threading.Thread:
     import uvicorn
+
     config = uvicorn.Config(app, host="127.0.0.1", port=port, log_level="error")
     server = uvicorn.Server(config)
     thread = threading.Thread(target=server.run, daemon=True)

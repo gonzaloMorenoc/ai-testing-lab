@@ -9,7 +9,6 @@ from src.trajectory_evaluator import TrajectoryEvaluator
 
 
 class TestSimpleAgent:
-
     def test_search_query_selects_search_tool(self, agent: SimpleAgent) -> None:
         result = agent.run("What is machine learning?")
         print(f"\n  trajectory: {result.trajectory}")
@@ -23,7 +22,6 @@ class TestSimpleAgent:
 
 
 class TestTrajectoryEvaluator:
-
     def test_wrong_tool_accuracy_zero(self) -> None:
         evaluator = TrajectoryEvaluator()
         actual = [ToolCall("calculate", "2+3", "5")]
@@ -132,7 +130,6 @@ class TestTrajectoryEvaluator:
 from src.agent_policy import (  # noqa: E402
     AgentPolicy,
     PolicyViolationError,
-    SchemaValidationResult,
     enforce_policy,
     validate_tool_call,
 )
@@ -151,7 +148,6 @@ EXAMPLE_SCHEMAS: dict = {
 
 
 class TestEnforcePolicy:
-
     def _policy(self, **kwargs) -> AgentPolicy:
         defaults = dict(
             allowed_tools={"send_email", "search"},
@@ -176,35 +172,38 @@ class TestEnforcePolicy:
     def test_max_iterations_reached_raises(self) -> None:
         policy = self._policy()
         with pytest.raises(PolicyViolationError, match="max_iterations"):
-            enforce_policy(
-                "search", {}, policy, iterations_so_far=5, cost_so_far=0.0
-            )
+            enforce_policy("search", {}, policy, iterations_so_far=5, cost_so_far=0.0)
 
     def test_budget_exceeded_raises(self) -> None:
         policy = self._policy()
         with pytest.raises(PolicyViolationError, match="Presupuesto"):
-            enforce_policy(
-                "search", {}, policy, iterations_so_far=0, cost_so_far=1.5
-            )
+            enforce_policy("search", {}, policy, iterations_so_far=0, cost_so_far=1.5)
 
     def test_human_approval_required_without_approval_raises(self) -> None:
         policy = self._policy()
         with pytest.raises(PolicyViolationError, match="aprobación humana"):
             enforce_policy(
-                "send_email", {}, policy, iterations_so_far=0, cost_so_far=0.0,
+                "send_email",
+                {},
+                policy,
+                iterations_so_far=0,
+                cost_so_far=0.0,
                 human_approved=False,
             )
 
     def test_human_approval_required_with_approval_does_not_raise(self) -> None:
         policy = self._policy()
         enforce_policy(
-            "send_email", {}, policy, iterations_so_far=0, cost_so_far=0.0,
+            "send_email",
+            {},
+            policy,
+            iterations_so_far=0,
+            cost_so_far=0.0,
             human_approved=True,
         )
 
 
 class TestValidateToolCall:
-
     def test_valid_args_returns_valid_true(self) -> None:
         args = {"to": "user@example.com", "subject": "Hello", "body": "Hi there"}
         result = validate_tool_call("send_email", args, EXAMPLE_SCHEMAS)
@@ -250,20 +249,15 @@ class TestValidateToolCall:
 # ---------------------------------------------------------------------------
 
 from src.agent_metrics import (  # noqa: E402
-    compute_recovery_rate,
-    compute_human_handoff_rate,
+    AgentMetricsReport,
     compute_context_retention_rate,
     compute_hallucination_rate_per_tool,
-    AgentMetricsReport,
-    RecoveryRateResult,
-    HumanHandoffResult,
-    ContextRetentionResult,
-    HallucinationRateResult,
+    compute_human_handoff_rate,
+    compute_recovery_rate,
 )
 
 
 class TestAgentMetrics:
-
     # --- recovery_rate ---
 
     def test_recovery_rate_all_recovered(self) -> None:

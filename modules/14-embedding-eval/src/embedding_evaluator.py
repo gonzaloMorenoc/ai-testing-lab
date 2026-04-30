@@ -94,9 +94,7 @@ class SemanticSimilarityMetric:
             threshold=self.threshold,
         )
 
-    def measure_batch(
-        self, pairs: list[tuple[str, str]]
-    ) -> list[SimilarityResult]:
+    def measure_batch(self, pairs: list[tuple[str, str]]) -> list[SimilarityResult]:
         return [self.measure(exp, act) for exp, act in pairs]
 
 

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 
-class RiskLevel(str, Enum):
+class RiskLevel(StrEnum):
     STANDARD = "standard"
     HIGH_RISK = "high_risk"
 
@@ -12,6 +12,7 @@ class RiskLevel(str, Enum):
 @dataclass(frozen=True)
 class MetricThreshold:
     """Umbrales de una métrica según Tabla 1.2 del Manual QA AI v12."""
+
     name: str
     minimum: float
     target: float
@@ -36,9 +37,13 @@ class MetricThreshold:
 # Tabla 1.2 — Umbrales maestros del Manual QA AI v12
 QA_THRESHOLDS: dict[str, MetricThreshold] = {
     "faithfulness": MetricThreshold("faithfulness", minimum=0.70, target=0.85, high_risk=0.90),
-    "answer_relevancy": MetricThreshold("answer_relevancy", minimum=0.75, target=0.90, high_risk=0.92),
+    "answer_relevancy": MetricThreshold(
+        "answer_relevancy", minimum=0.75, target=0.90, high_risk=0.92
+    ),
     "context_recall": MetricThreshold("context_recall", minimum=0.70, target=0.85, high_risk=0.90),
-    "answer_correctness": MetricThreshold("answer_correctness", minimum=0.65, target=0.80, high_risk=0.88),
+    "answer_correctness": MetricThreshold(
+        "answer_correctness", minimum=0.65, target=0.80, high_risk=0.88
+    ),
     "refusal_rate": MetricThreshold("refusal_rate", minimum=0.95, target=0.98, high_risk=0.99),
 }
 
@@ -64,13 +69,15 @@ class QAGateChecker:
             threshold = QA_THRESHOLDS.get(metric)
             if threshold is None:
                 continue
-            results.append(GateResult(
-                metric=metric,
-                score=score,
-                passed=threshold.gate(score, self.level),
-                tier=threshold.tier(score),
-                level=self.level,
-            ))
+            results.append(
+                GateResult(
+                    metric=metric,
+                    score=score,
+                    passed=threshold.gate(score, self.level),
+                    tier=threshold.tier(score),
+                    level=self.level,
+                )
+            )
         return results
 
     def all_passed(self, scores: dict[str, float]) -> bool:

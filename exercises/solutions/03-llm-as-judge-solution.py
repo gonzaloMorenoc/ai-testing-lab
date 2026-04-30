@@ -2,6 +2,7 @@
 Solución módulo 03: añade una rúbrica de 'completeness' al GEvalJudge
 que verifique que la respuesta cubre todos los aspectos de la política.
 """
+
 from __future__ import annotations
 
 import sys
@@ -21,8 +22,9 @@ class CompletenessJudge(GEvalJudge):
         score = round(len(covered) / len(required_aspects), 3) if required_aspects else 1.0
         missing = [asp for asp in required_aspects if asp not in covered]
         reason = (
-            f"Covered {len(covered)}/{len(required_aspects)} aspects. "
-            f"Missing: {missing}" if missing else "All aspects covered."
+            f"Covered {len(covered)}/{len(required_aspects)} aspects. Missing: {missing}"
+            if missing
+            else "All aspects covered."
         )
         return GEvalResult(score=score, reason=reason, criteria="completeness", threshold=threshold)
 

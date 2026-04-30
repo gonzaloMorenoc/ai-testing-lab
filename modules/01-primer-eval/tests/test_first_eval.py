@@ -14,6 +14,7 @@ Ejecutar:
     pytest tests/ -v -m "not slow" --record-mode=none   # CI / sin API key
     pytest tests/ -v -m "slow"                           # con GROQ_API_KEY
 """
+
 from __future__ import annotations
 
 import os
@@ -23,7 +24,7 @@ from deepeval.test_case import LLMTestCase
 
 from src.metrics import SimpleAnswerRelevancyMetric, SimpleFaithfulnessMetric
 from src.simple_rag import SimpleRAG
-from src.threshold_checker import QAGateChecker, QA_THRESHOLDS, RiskLevel
+from src.threshold_checker import QA_THRESHOLDS, QAGateChecker, RiskLevel
 
 # ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -103,7 +104,9 @@ class TestFaithfulness:
             f"Faithfulness too low: {metric.score:.2f} < {metric.threshold} | {metric.reason}"
         )
 
-    def test_hallucination_fails_faithfulness(self, hallucination_output: str, rag: SimpleRAG) -> None:
+    def test_hallucination_fails_faithfulness(
+        self, hallucination_output: str, rag: SimpleRAG
+    ) -> None:
         """Una respuesta inventada debe fallar la métrica de fidelidad."""
         _, context = rag.query("What is the return policy?")
         test_case = LLMTestCase(
@@ -177,10 +180,13 @@ def test_with_real_deepeval_metrics(rag: SimpleRAG) -> None:
 
     test_case = run_rag(rag, "What is the return policy?")
 
-    assert_test(test_case, [
-        AnswerRelevancyMetric(threshold=0.7),
-        FaithfulnessMetric(threshold=0.8),
-    ])
+    assert_test(
+        test_case,
+        [
+            AnswerRelevancyMetric(threshold=0.7),
+            FaithfulnessMetric(threshold=0.8),
+        ],
+    )
 
 
 # ── Tests de QAGateChecker (Tabla 1.2 — umbrales maestros) ────────────────────
