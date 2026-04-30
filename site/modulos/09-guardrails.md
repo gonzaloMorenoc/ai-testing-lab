@@ -34,16 +34,14 @@ Los canary tokens funcionan de manera diferente: se inyecta un identificador ún
 Empieza con el flujo más básico: un input que contiene PII y la respuesta del pipeline.
 
 ```python
-from src.guardrail_pipeline import GuardrailPipeline
+from src.input_validator import InputValidator
 
-pipeline = GuardrailPipeline()
-result = pipeline.run(
-    user_input="Mi email es usuario@ejemplo.com. ¿Cuál es mi saldo?",
-)
+validator = InputValidator()
+result = validator.validate("Mi email es usuario@ejemplo.com. ¿Cuál es mi saldo?")
 
-print(result.blocked)    # True — PII detectada en el input
-print(result.reason)     # "pii_detected"
-print(result.pii_found)  # ["usuario@ejemplo.com"]
+print(result.valid)      # False — PII detectada en el input
+print(result.reason)     # "PII detected: email"
+print(result.matches)    # {"email": ["usuario@ejemplo.com"]}
 ```
 
 El resultado incluye exactamente qué elementos de PII se detectaron. Registra esa información en tus logs de auditoría antes de descartar la request; es el rastro que necesitas si tienes que demostrar cumplimiento.
@@ -51,12 +49,12 @@ El resultado incluye exactamente qué elementos de PII se detectaron. Registra e
 El segundo punto de validación es el output. El modelo puede recibir un input limpio pero generar una respuesta que incluye PII extraída de documentos en el contexto RAG. Valida el output independientemente del input.
 
 ```python
-from src.pii_canary import detect_pii_in_response, PIILeakageError
+from src.pii_canary import detect_pii_in_response, check_no_pii_in_response, PIILeakageError
 
 response = mi_modelo("¿Qué información tenemos sobre este cliente?")
 
 matches = detect_pii_in_response(response)
-# [PIIMatch(type="phone_es", ...), PIIMatch(type="email", ...)]
+# [PIIMatch(entity_type="phone_es", ...), PIIMatch(entity_type="email", ...)]
 
 try:
     check_no_pii_in_response(response)
@@ -70,11 +68,12 @@ El tercer mecanismo protege tu propio system prompt. Genera un canary único por
 ```python
 from src.pii_canary import generate_canary, test_no_system_prompt_leak
 
-canary = generate_canary()  # e.g. "CANARY-a3f2b891"
+canary = generate_canary()  # e.g. "CANARY-A3F2B891CD012345"
 
 result = test_no_system_prompt_leak(mi_chatbot, canary)
-print(result.leaked)     # False si el system prompt no se filtra
-print(result.response)   # la respuesta real que produjo el modelo
+print(result.passed)          # True si el system prompt no se filtra
+print(result.leaks_detected)  # 0 si ningún probe reveló el canary
+print(result.leaked_in)       # () — tupla de probes donde hubo fuga
 ```
 
 ## Técnicas avanzadas
@@ -132,7 +131,7 @@ Se añadió la validación de output con el patrón de email como gate obligator
 pytest modules/09-guardrails/tests/test_guardrails.py -m "not slow" -q
 ```
 
-¿`GuardrailPipeline` bloquea el input? ¿`pii_found` lista ambos elementos? Prueba con un DNI con letra minúscula y observa si el patrón sigue detectándolo.
+¿`InputValidator` bloquea el input? ¿`matches` lista ambos elementos? Prueba con un DNI con letra minúscula y observa si el patrón sigue detectándolo.
 
 **🟡 Intermedio** — Implementa un test que verifique que un modelo stub que repite literalmente el system prompt es detectado por `test_no_system_prompt_leak`. ¿Qué umbral de similitud usarías para evitar falsos positivos cuando el modelo menciona partes del system prompt de forma paráfraseada?
 
