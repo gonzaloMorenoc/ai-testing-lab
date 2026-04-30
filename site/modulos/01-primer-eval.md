@@ -22,7 +22,7 @@ Cambias el prompt de tu chatbot y las respuestas parecen mejores. ¿Pero lo son 
 
 El flujo completo es:
 
-```
+```text
 input + actual_output + retrieval_context
           │
           ▼
@@ -95,6 +95,8 @@ def test_respuesta_relevante_y_fiel():
 ```
 
 ## Técnicas avanzadas
+
+El módulo incluye dos utilidades propias (`src/threshold_checker.py` y `src/eval_antipatterns.py`) que complementan DeepEval para escenarios de producción más exigentes.
 
 ### Umbrales diferenciados por nivel de riesgo
 
@@ -206,7 +208,7 @@ El equipo ajustó el prompt para equilibrar tono e información, volvió a ejecu
 
 ## Ejercicios
 
-- 🟢 **Básico** — Cambia el `threshold` de `AnswerRelevancyMetric` a 0.95 y ejecuta los tests. ¿Cuántos fallan? ¿Por qué tiene sentido ese comportamiento?
+- 🟢 **Básico** — Abre `modules/01-primer-eval/tests/test_first_eval.py`, cambia el `threshold` de `AnswerRelevancyMetric` a 0.95 y ejecuta `pytest modules/01-primer-eval/tests/ -m "not slow" -q`. ¿Cuántos tests fallan? ¿Por qué tiene sentido ese comportamiento?
 
 - 🟡 **Intermedio** — Añade un tercer `LLMTestCase` donde el `actual_output` contenga información que NO está en el `retrieval_context`. Verifica que `FaithfulnessMetric` lo detecta como fallido.
 
