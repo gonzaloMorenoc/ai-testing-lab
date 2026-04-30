@@ -49,3 +49,31 @@ Glosario de los términos más usados en el laboratorio.
 **AlertHistory** — Registro de resultados de una regla de alertas. Permite calcular tendencias: `degrading` (≥2 de los últimos 3 activados), `recovering` (primero activado, últimos 2 limpios), `stable` (exactamente 1 activado).
 
 **Span** — Unidad de trazabilidad en OpenTelemetry. Representa una operación dentro de un pipeline: una llamada LLM, una búsqueda en el retriever, una llamada a herramienta.
+
+## Evaluación estadística
+
+**Cohen kappa (κ)** — Medida de acuerdo entre dos anotadores que corrige el acuerdo por azar. Interpretación según Landis & Koch: κ < 0.41 pobre; 0.41–0.60 moderado; 0.61–0.80 sustancial; > 0.80 casi perfecto. Se usa en el módulo 03 para medir acuerdo entre jueces LLM.
+
+**Bootstrap IC95** — Intervalo de confianza al 95% calculado remuestreando los datos N veces. Más robusto que el z-test cuando la distribución no es normal o la muestra es pequeña. Se usa en el módulo 05 para estimar la varianza real de un score de evaluación.
+
+**Kruskal-Wallis** — Test no paramétrico para detectar si las distribuciones de K grupos independientes difieren. Se usa en el módulo 08 para detectar sesgo demográfico en las respuestas del modelo.
+
+## Seguridad y guardrails
+
+**False refusal rate** — Fracción de queries legítimas que el modelo rechaza incorrectamente. Un guardrail demasiado agresivo tiene false_refusal_rate alta, haciendo el modelo inútil para usuarios normales. Debe mantenerse ≤ 0.05 en producción.
+
+**Canary token** — Valor único generado con `secrets.token_hex()` e inyectado en el system prompt para detectar si el modelo lo filtra en sus respuestas. Si el token aparece en el output, el modelo está revelando información de su configuración interna.
+
+**Excessive agency** — Vulnerabilidad OWASP LLM donde el agente tiene más permisos de los necesarios y puede ejecutar acciones destructivas sin autorización del usuario. Se mitiga con `human_approval_required` y límites de `max_iterations`.
+
+## Evaluación de retrieval
+
+**NDCG@k** (Normalized Discounted Cumulative Gain) — Mide si los documentos relevantes aparecen en las primeras k posiciones del ranking, con penalización mayor para errores en posición 1 que en posición k. Valor máximo: 1.0 (todos los relevantes en el top-k en orden perfecto).
+
+**MRR@k** (Mean Reciprocal Rank) — Posición media del primer documento relevante en los k resultados. MRR@5 = 1.0 significa que el primer documento relevante siempre está en posición 1.
+
+**MAP@k** (Mean Average Precision) — Precision promedio calculada en cada posición donde aparece un documento relevante. Considera todos los documentos relevantes, no solo el primero, siendo más sensible que MRR cuando hay múltiples documentos relevantes.
+
+**IAA** (Inter-Annotator Agreement) — Medida del grado en que diferentes anotadores asignan las mismas etiquetas al mismo conjunto de datos. Se cuantifica típicamente con Cohen kappa. Umbral mínimo aceptable: κ ≥ 0.61.
+
+**Trajectory evaluation** — Evaluación de la secuencia completa de acciones de un agente LLM, no solo del resultado final. Verifica que el agente llegó al resultado correcto por el camino correcto — una herramienta incorrecta puede dar el resultado correcto por accidente.
