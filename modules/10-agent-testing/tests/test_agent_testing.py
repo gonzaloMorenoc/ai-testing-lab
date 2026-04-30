@@ -243,3 +243,149 @@ class TestValidateToolCall:
         assert result.valid is False
         assert result.error is not None
         assert "maxLength" in result.error
+
+
+# ---------------------------------------------------------------------------
+# Cap 18 Tabla 18.X — AgentMetrics (nuevas métricas)
+# ---------------------------------------------------------------------------
+
+from src.agent_metrics import (  # noqa: E402
+    compute_recovery_rate,
+    compute_human_handoff_rate,
+    compute_context_retention_rate,
+    compute_hallucination_rate_per_tool,
+    AgentMetricsReport,
+    RecoveryRateResult,
+    HumanHandoffResult,
+    ContextRetentionResult,
+    HallucinationRateResult,
+)
+
+
+class TestAgentMetrics:
+
+    # --- recovery_rate ---
+
+    def test_recovery_rate_all_recovered(self) -> None:
+        result = compute_recovery_rate([(True, True), (True, True)])
+        assert result.rate == 1.0
+        assert result.total_failures == 2
+        assert result.recovered == 2
+
+    def test_recovery_rate_none_recovered(self) -> None:
+        result = compute_recovery_rate([(True, False), (True, False)])
+        assert result.rate == 0.0
+        assert result.total_failures == 2
+        assert result.recovered == 0
+
+    def test_recovery_rate_no_failures(self) -> None:
+        result = compute_recovery_rate([(False, False)])
+        assert result.rate == 0.0
+        assert result.total_failures == 0
+
+    def test_recovery_rate_partial(self) -> None:
+        result = compute_recovery_rate([(True, True), (True, False)])
+        assert result.rate == 0.5
+        assert result.recovered == 1
+
+    # --- human_handoff_rate ---
+
+    def test_human_handoff_all(self) -> None:
+        result = compute_human_handoff_rate([True, True, True])
+        assert result.rate == 1.0
+        assert result.handoffs == 3
+
+    def test_human_handoff_none(self) -> None:
+        result = compute_human_handoff_rate([False, False])
+        assert result.rate == 0.0
+        assert result.handoffs == 0
+
+    def test_human_handoff_empty(self) -> None:
+        result = compute_human_handoff_rate([])
+        assert result.rate == 0.0
+        assert result.total_tasks == 0
+
+    # --- context_retention_rate ---
+
+    def test_context_retention_all(self) -> None:
+        result = compute_context_retention_rate(
+            facts=["returns"],
+            responses=["returns allowed"],
+        )
+        assert result.rate == 1.0
+        assert result.retained == 1
+
+    def test_context_retention_none(self) -> None:
+        result = compute_context_retention_rate(
+            facts=["xyz123"],
+            responses=["hello world"],
+        )
+        assert result.rate == 0.0
+        assert result.retained == 0
+
+    def test_context_retention_partial(self) -> None:
+        result = compute_context_retention_rate(
+            facts=["Paris capital", "unknown_word_zzzq"],
+            responses=["The city of Paris is beautiful"],
+        )
+        # "Paris" (5 chars) appears; "unknown_word_zzzq" → "unknown" not in responses
+        assert result.total_facts == 2
+        assert result.retained == 1
+        assert result.rate == 0.5
+
+    # --- hallucination_rate_per_tool ---
+
+    def test_hallucination_rate_no_hallucination(self) -> None:
+        calls = [("search", {"query": "hello"}, {"query"})]
+        result = compute_hallucination_rate_per_tool(calls)
+        assert result.rate == 0.0
+        assert result.hallucinated == 0
+
+    def test_hallucination_rate_missing_key(self) -> None:
+        calls = [("search", {}, {"query"})]  # required "query" missing
+        result = compute_hallucination_rate_per_tool(calls)
+        assert result.rate == 1.0
+        assert result.hallucinated == 1
+
+    def test_hallucination_rate_extra_key(self) -> None:
+        calls = [("search", {"query": "hello", "extra": "invented"}, {"query"})]
+        result = compute_hallucination_rate_per_tool(calls)
+        assert result.rate == 1.0
+        assert result.hallucinated == 1
+
+    # --- AgentMetricsReport ---
+
+    def test_agent_metrics_report_overall_health(self) -> None:
+        report = AgentMetricsReport(
+            tool_accuracy=0.9,
+            goal_achievement_rate=0.8,
+            recovery_rate=0.7,
+            human_handoff_rate=0.1,
+            context_retention_rate=0.85,
+            hallucination_rate_per_tool=0.05,
+        )
+        health = report.overall_health
+        assert 0.0 <= health <= 1.0
+
+    def test_agent_metrics_report_frozen(self) -> None:
+        report = AgentMetricsReport(
+            tool_accuracy=1.0,
+            goal_achievement_rate=1.0,
+            recovery_rate=1.0,
+            human_handoff_rate=0.0,
+            context_retention_rate=1.0,
+            hallucination_rate_per_tool=0.0,
+        )
+        with pytest.raises(AttributeError):
+            report.tool_accuracy = 0.5  # type: ignore[misc]
+
+    def test_agent_metrics_report_perfect_health(self) -> None:
+        report = AgentMetricsReport(
+            tool_accuracy=1.0,
+            goal_achievement_rate=1.0,
+            recovery_rate=1.0,
+            human_handoff_rate=0.0,
+            context_retention_rate=1.0,
+            hallucination_rate_per_tool=0.0,
+        )
+        assert report.overall_health == 1.0

@@ -64,6 +64,41 @@ failed = [r for r in results if not r.passed]
 | Answer Correctness | 0.65 | 0.80 | 0.88 |
 | Refusal Rate | 0.95 | 0.98 | 0.99 |
 
+**`EvalDesignChecker`** — los 10 anti-patterns de evaluación (AP-01 a AP-10, Cap 19):
+
+```python
+from src.eval_antipatterns import EvalDesignChecker, AntiPatternSeverity
+
+checker = EvalDesignChecker()
+report = checker.check_all(
+    test_cases=my_dataset,
+    train_inputs=train_queries,
+    baseline_score=0.85,
+    n_samples=len(my_dataset),
+    generator_model_id="claude-sonnet-4-6",
+    judge_model_id="gpt-4o",          # distinto → AP-05 OK
+    threshold=0.70,                    # empírico → AP-07 OK
+    latency_stats={"mean": 1.2, "p95": 2.8},
+    n_runs=5,
+    has_variance_report=True,
+)
+# report.passed = True si no hay CRITICAL ni HIGH violations
+# report.violations = () si diseño correcto
+```
+
+| AP | Anti-pattern | Severidad |
+|----|-------------|-----------|
+| AP-01 | Solo happy path (sin casos negativos) | HIGH |
+| AP-02 | Test contaminado con datos de training | HIGH |
+| AP-03 | Sin baseline de comparación | CRITICAL |
+| AP-04 | Muestra insuficiente (< 30 casos) | HIGH |
+| AP-05 | Mismo LLM como generador y juez | CRITICAL |
+| AP-06 | Ignora distribución de producción | MEDIUM |
+| AP-07 | Threshold arbitrario sin validación | MEDIUM |
+| AP-08 | Sin edge cases ni adversariales | HIGH |
+| AP-09 | Latencia sin percentiles (p95/p99) | HIGH |
+| AP-10 | Reproducibilidad ignorada | HIGH |
+
 </div>
 <div class="module-sidebar">
 

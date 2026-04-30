@@ -61,6 +61,38 @@ errors = validate_tool_call("search", {"query": "python docs"}, tool_schemas)
 
 Gates: `allowed_tools`, `max_iterations=12`, `max_cost_usd=1.0`, `max_tokens=50_000`, `human_approval_required`.
 
+**`AgentMetrics`** — las 4 métricas del Tabla 18.X no cubiertas anteriormente (Cap 18):
+
+```python
+from src.agent_metrics import (
+    compute_recovery_rate, compute_human_handoff_rate,
+    compute_context_retention_rate, compute_hallucination_rate_per_tool,
+    AgentMetricsReport,
+)
+
+# recovery_rate: fracción de fallos que se recuperaron con retry
+recovery = compute_recovery_rate([(True, True), (True, False), (False, False)])
+# recovery.rate = 0.5  (1 de 2 fallos recuperado)
+
+# human_handoff_rate: fracción de tareas que requirieron humano
+handoff = compute_human_handoff_rate([True, False, False, True])
+# handoff.rate = 0.5
+
+# hallucination_rate_per_tool: args inválidos / total calls
+halluc = compute_hallucination_rate_per_tool([
+    ("search", {"query": "hello"}, {"query"}),         # OK
+    ("search", {"q": "hello", "extra": "x"}, {"query"}), # alucinado
+])
+# halluc.rate = 0.5
+
+report = AgentMetricsReport(
+    tool_accuracy=0.95, goal_achievement_rate=0.90,
+    recovery_rate=0.80, human_handoff_rate=0.10,
+    context_retention_rate=0.85, hallucination_rate_per_tool=0.05,
+)
+# report.overall_health = 0.908  (media ponderada, handoff e halluc. invertidos)
+```
+
 ## Por qué importa
 
 > Los tests de agentes deben verificar no solo el resultado final sino también el proceso. Un agente que llega al resultado correcto por el camino equivocado no es un agente fiable.

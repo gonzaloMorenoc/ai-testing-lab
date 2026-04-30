@@ -55,6 +55,34 @@ regression = compare_pairwise(
 
 `ACCEPTANCE_MARGIN = 0.02` — temperatura=0 **no** garantiza determinismo, siempre usa bootstrap.
 
+**`CIGatePipeline`** — pipeline de quality gates por etapas (Cap 15):
+
+```python
+from src.ci_gate_pipeline import CIGatePipeline, CIStage
+
+pipeline = CIGatePipeline()
+
+# Gate de PR: umbrales mínimos, permite más tolerancia
+result = pipeline.run_gate(
+    CIStage.PR,
+    scores={"faithfulness": 0.82, "answer_relevancy": 0.88},
+    baseline={"faithfulness": 0.85, "answer_relevancy": 0.90},
+)
+# result.passed = True si scores OK y deltas dentro de umbral
+
+# Pipeline completo: PR → Staging → Canary → Production
+all_results = pipeline.run_all_stages(scores, baseline)
+first_fail = pipeline.first_failing_stage(scores, baseline)
+# first_fail = CIStage.CANARY si pasa PR y Staging pero falla Canary
+```
+
+| Etapa | Faithfulness | Relevancy | Delta máx. |
+|-------|-------------|-----------|------------|
+| PR | ≥ 0.70 | ≥ 0.75 | −0.03 |
+| Staging | ≥ 0.80 | ≥ 0.85 | −0.02 |
+| Canary | ≥ 0.85 | ≥ 0.88 | −0.01 |
+| Production | ≥ 0.90 | ≥ 0.92 | −0.01 |
+
 ## Por qué importa
 
 > Sin test estadístico, una mejora del 2% con 20 muestras parece real pero puede ser ruido. Un z-test te dice si necesitas más datos o si el resultado es conclusivo.
