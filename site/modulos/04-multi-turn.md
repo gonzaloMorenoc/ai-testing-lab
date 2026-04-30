@@ -74,7 +74,7 @@ report = evaluator.evaluate(
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">14</div>
+  <div class="stat-number">29</div>
   <div class="stat-label">tests</div>
 </div>
 

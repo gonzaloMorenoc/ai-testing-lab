@@ -91,7 +91,7 @@ first_fail = pipeline.first_failing_stage(scores, baseline)
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">18</div>
+  <div class="stat-number">43</div>
   <div class="stat-label">tests</div>
 </div>
 

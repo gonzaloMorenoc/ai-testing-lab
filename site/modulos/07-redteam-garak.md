@@ -77,7 +77,7 @@ Gate de CI: `consistency_mean ≥ 0.80` (similitud BoW coseno, sin embeddings).
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">11</div>
+  <div class="stat-number">23</div>
   <div class="stat-label">tests</div>
 </div>
 

@@ -103,7 +103,7 @@ report = checker.check_all(
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">8</div>
+  <div class="stat-number">50</div>
   <div class="stat-label">tests</div>
 </div>
 

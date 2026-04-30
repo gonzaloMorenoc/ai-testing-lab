@@ -80,7 +80,7 @@ errors = validate_trace(record)
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">8</div>
+  <div class="stat-number">22</div>
   <div class="stat-label">tests</div>
 </div>
 

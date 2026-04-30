@@ -101,7 +101,7 @@ report = AgentMetricsReport(
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">10</div>
+  <div class="stat-number">38</div>
   <div class="stat-label">tests</div>
 </div>
 

@@ -70,15 +70,18 @@ app = FastAPI()
 
 @app.get("/", response_class=HTMLResponse)
 async def index() -> HTMLResponse:
+    """Devuelve el HTML del chatbot con un input, botón de envío y div de respuesta."""
     return HTMLResponse(_HTML)
 
 
 @app.post("/chat")
 async def chat(request: Request) -> StreamingResponse:
+    """Acepta {message: str} y emite tokens SSE: data: {"token": "..."} + data: {"done": true}."""
     body = await request.json()
     message: str = body.get("message", "")
 
     async def generate() -> AsyncIterator[str]:
+        """Genera tokens palabra a palabra con delay de 50ms para simular streaming LLM."""
         words = f"Echo: {message}".split()
         for word in words:
             yield f"data: {json.dumps({'token': word + ' '})}\n\n"
@@ -89,6 +92,7 @@ async def chat(request: Request) -> StreamingResponse:
 
 
 def start_server(port: int) -> threading.Thread:
+    """Inicia el servidor FastAPI en un hilo daemon y espera hasta que el puerto esté disponible."""
     import uvicorn
 
     config = uvicorn.Config(app, host="127.0.0.1", port=port, log_level="error")

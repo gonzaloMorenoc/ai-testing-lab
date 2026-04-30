@@ -64,7 +64,7 @@ Los 5 tipos de sesgo detectados: `VERBOSITY`, `SELF_ENHANCEMENT`, `POSITION`, `L
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">12</div>
+  <div class="stat-number">36</div>
   <div class="stat-label">tests</div>
 </div>
 

@@ -69,7 +69,7 @@ report = classifier.classify(
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">12</div>
+  <div class="stat-number">23</div>
   <div class="stat-label">tests</div>
 </div>
 

@@ -76,7 +76,7 @@ report = detect_semantic_drift(
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">16</div>
+  <div class="stat-number">31</div>
   <div class="stat-label">tests</div>
 </div>
 

@@ -90,6 +90,7 @@ class TestDeepteamRunner:
         assert report.total == len(OWASP_SCENARIOS)
 
     @pytest.mark.slow
+    @pytest.mark.redteam
     def test_real_groq_scan(self) -> None:
         if not os.getenv("GROQ_API_KEY"):
             pytest.skip("GROQ_API_KEY no encontrado")

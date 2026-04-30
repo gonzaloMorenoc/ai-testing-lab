@@ -1,0 +1,12 @@
+{"id": "pw01", "description": "página principal devuelve HTML con botón de envío", "action": "navigate", "url": "/", "assert": {"selector": "#send", "property": "exists", "expected": true}}
+{"id": "pw02", "description": "input vacío muestra mensaje de error", "action": "click_send_empty", "url": "/", "assert": {"selector": "#messages", "property": "textContent", "expected": "Error: empty input"}}
+{"id": "pw03", "description": "mensaje simple devuelve respuesta en streaming", "action": "send_message", "input": "hello", "url": "/", "assert": {"selector": "#response", "property": "textContent_contains", "expected": "Echo: hello"}}
+{"id": "pw04", "description": "data-complete=true se establece al finalizar stream", "action": "send_message", "input": "test", "url": "/", "assert": {"selector": "#response", "attribute": "data-complete", "expected": "true"}}
+{"id": "pw05", "description": "endpoint /chat acepta POST y devuelve text/event-stream", "action": "api_post", "url": "/chat", "body": {"message": "ping"}, "assert": {"content_type": "text/event-stream", "status": 200}}
+{"id": "pw06", "description": "tokens SSE tienen formato data: {\"token\": \"...\"}", "action": "stream_capture", "url": "/chat", "body": {"message": "hi"}, "assert": {"stream_format": "data: {json}", "has_done_event": true}}
+{"id": "pw07", "description": "último evento SSE es done=true", "action": "stream_capture", "url": "/chat", "body": {"message": "end"}, "assert": {"last_event_done": true}}
+{"id": "pw08", "description": "mensaje con espacios genera múltiples tokens", "action": "stream_capture", "url": "/chat", "body": {"message": "hello world"}, "assert": {"min_tokens": 2}}
+{"id": "pw09", "description": "endpoint raíz / devuelve status 200", "action": "api_get", "url": "/", "assert": {"status": 200, "content_type_contains": "text/html"}}
+{"id": "pw10", "description": "respuesta no comienza hasta enviar el mensaje", "action": "check_initial_state", "url": "/", "assert": {"selector": "#response", "property": "textContent", "expected": ""}}
+{"id": "pw11", "description": "input se limpia tras enviar (UI reset)", "action": "send_message", "input": "test message", "url": "/", "assert": {"selector": "#input", "property": "value_after_send", "expected": ""}}
+{"id": "pw12", "description": "múltiples mensajes consecutivos funcionan sin reiniciar servidor", "action": "send_multiple", "inputs": ["first", "second", "third"], "url": "/", "assert": {"all_complete": true, "no_server_error": true}}

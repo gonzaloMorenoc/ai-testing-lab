@@ -83,7 +83,7 @@ result = classifier.classify(
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">8</div>
+  <div class="stat-number">32</div>
   <div class="stat-label">tests</div>
 </div>
 

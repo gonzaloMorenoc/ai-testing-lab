@@ -48,6 +48,8 @@ jobs:
               - 'modules/12-observability/**'
             13-drift-monitoring:
               - 'modules/13-drift-monitoring/**'
+            14-embedding-eval:
+              - 'modules/14-embedding-eval/**'
 
   eval:
     name: "Eval: ${{ matrix.module }}"

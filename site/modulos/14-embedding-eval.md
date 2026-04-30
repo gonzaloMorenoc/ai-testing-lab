@@ -74,7 +74,7 @@ ap   = map_at_k(relevant_ids={0, 2}, ranked_ids=[0, 1, 2], k=3)          # 0.833
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">15</div>
+  <div class="stat-number">33</div>
   <div class="stat-label">tests</div>
 </div>
 
