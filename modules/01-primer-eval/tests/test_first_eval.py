@@ -23,6 +23,7 @@ from deepeval.test_case import LLMTestCase
 
 from src.metrics import SimpleAnswerRelevancyMetric, SimpleFaithfulnessMetric
 from src.simple_rag import SimpleRAG
+from src.threshold_checker import QAGateChecker, QA_THRESHOLDS, RiskLevel
 
 # ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -180,3 +181,53 @@ def test_with_real_deepeval_metrics(rag: SimpleRAG) -> None:
         AnswerRelevancyMetric(threshold=0.7),
         FaithfulnessMetric(threshold=0.8),
     ])
+
+
+# ── Tests de QAGateChecker (Tabla 1.2 — umbrales maestros) ────────────────────
+
+
+class TestQAGateChecker:
+    """Verifica que QAGateChecker aplica correctamente los umbrales de la Tabla 1.2."""
+
+    def test_score_above_high_risk_passes_standard_gate(self) -> None:
+        checker = QAGateChecker(level=RiskLevel.STANDARD)
+        assert checker.all_passed({"faithfulness": 0.91})
+
+    def test_score_above_high_risk_passes_high_risk_gate(self) -> None:
+        checker = QAGateChecker(level=RiskLevel.HIGH_RISK)
+        assert checker.all_passed({"faithfulness": 0.91})
+
+    def test_score_below_minimum_fails_standard_gate(self) -> None:
+        checker = QAGateChecker(level=RiskLevel.STANDARD)
+        assert not checker.all_passed({"faithfulness": 0.69})
+
+    def test_score_at_target_but_below_high_risk_fails_high_risk_gate(self) -> None:
+        # 0.85 >= target (0.85) pero < high_risk (0.90), debe fallar en HIGH_RISK
+        checker = QAGateChecker(level=RiskLevel.HIGH_RISK)
+        assert not checker.all_passed({"faithfulness": 0.85})
+
+    def test_tier_pass_high_risk(self) -> None:
+        threshold = QA_THRESHOLDS["faithfulness"]
+        assert threshold.tier(0.91) == "pass_high_risk"
+
+    def test_tier_pass_target(self) -> None:
+        threshold = QA_THRESHOLDS["faithfulness"]
+        assert threshold.tier(0.85) == "pass_target"
+
+    def test_tier_pass_minimum(self) -> None:
+        threshold = QA_THRESHOLDS["faithfulness"]
+        assert threshold.tier(0.72) == "pass_minimum"
+
+    def test_tier_fail(self) -> None:
+        threshold = QA_THRESHOLDS["faithfulness"]
+        assert threshold.tier(0.69) == "fail"
+
+    def test_all_passed_returns_false_if_any_metric_fails(self) -> None:
+        # faithfulness pasa (0.91 >= 0.70) pero answer_relevancy falla (0.70 < 0.75)
+        checker = QAGateChecker(level=RiskLevel.STANDARD)
+        assert not checker.all_passed({"faithfulness": 0.91, "answer_relevancy": 0.70})
+
+    def test_unknown_metric_is_skipped(self) -> None:
+        checker = QAGateChecker(level=RiskLevel.STANDARD)
+        # Una métrica desconocida no debe lanzar excepción ni influir en el resultado
+        assert checker.all_passed({"unknown_metric": 0.00})

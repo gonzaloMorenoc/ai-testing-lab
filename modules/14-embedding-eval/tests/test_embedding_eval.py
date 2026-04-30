@@ -8,6 +8,14 @@ from embedding_evaluator import (
     SemanticSimilarityMetric,
     SimilarityResult,
 )
+from retrieval_metrics import (
+    RETRIEVAL_THRESHOLD,
+    RetrievalMetricsReport,
+    evaluate_retrieval,
+    map_at_k,
+    mrr_at_k,
+    ndcg_at_k,
+)
 from semantic_drift import DriftResult, compute_centroid_shift, semantic_drift_alert
 
 
@@ -116,3 +124,116 @@ class TestSemanticDrift:
         result = alert(ref, ref)
         assert result.triggered is False
         assert result.centroid_shift < 0.01
+
+
+class TestRetrievalMetrics:
+
+    # --- ndcg_at_k ---
+
+    def test_ndcg_perfect_ranking(self) -> None:
+        result = ndcg_at_k({0, 1, 2}, [0, 1, 2, 3, 4], k=3)
+        assert abs(result - 1.0) < 1e-9
+
+    def test_ndcg_no_relevant_retrieved(self) -> None:
+        result = ndcg_at_k({5, 6}, [0, 1, 2], k=3)
+        assert result == 0.0
+
+    def test_ndcg_partial_ranking(self) -> None:
+        # relevant={0,2}, ranked=[2,1,0]: relevant docs at positions 1 and 3
+        result = ndcg_at_k({0, 2}, [2, 1, 0], k=3)
+        assert 0.0 < result < 1.0
+
+    def test_ndcg_k_larger_than_list(self) -> None:
+        # k=10 but list has only 3 items — must not raise
+        result = ndcg_at_k({0, 1}, [0, 1, 2], k=10)
+        assert result == 1.0
+
+    def test_ndcg_empty_relevant(self) -> None:
+        result = ndcg_at_k(set(), [0, 1, 2], k=3)
+        assert result == 0.0
+
+    # --- mrr_at_k ---
+
+    def test_mrr_first_position(self) -> None:
+        result = mrr_at_k({0}, [0, 1, 2], k=3)
+        assert abs(result - 1.0) < 1e-9
+
+    def test_mrr_second_position(self) -> None:
+        result = mrr_at_k({1}, [0, 1, 2], k=3)
+        assert abs(result - 0.5) < 1e-9
+
+    def test_mrr_not_in_top_k(self) -> None:
+        result = mrr_at_k({5}, [0, 1, 2], k=3)
+        assert result == 0.0
+
+    def test_mrr_multiple_relevant(self) -> None:
+        # relevant at positions 1 and 2; MRR = 1/1 = 1.0 (first hit at pos 1)
+        result = mrr_at_k({0, 1}, [0, 1, 2], k=3)
+        assert abs(result - 1.0) < 1e-9
+
+    # --- map_at_k ---
+
+    def test_map_perfect(self) -> None:
+        # relevant={0,1,2}, ranked=[0,1,2], k=3
+        # |R|=3, hits at 1,2,3 → AP = (1/3)*(1 + 2/2 + 3/3) = (1/3)*3 = 1.0
+        result = map_at_k({0, 1, 2}, [0, 1, 2], k=3)
+        assert abs(result - 1.0) < 1e-9
+
+    def test_map_none_relevant(self) -> None:
+        result = map_at_k({5, 6}, [0, 1, 2], k=3)
+        assert result == 0.0
+
+    def test_map_interleaved(self) -> None:
+        # relevant={0,2}, ranked=[0,1,2], k=3
+        # |R| = min(2, 3) = 2
+        # pos 1: 0 relevant → hits=1, P@1=1/1=1.0
+        # pos 2: 1 not relevant
+        # pos 3: 2 relevant → hits=2, P@3=2/3
+        # AP = (1/2)*(1.0 + 2/3) = (1/2)*(5/3) = 5/6
+        expected = 5.0 / 6.0
+        result = map_at_k({0, 2}, [0, 1, 2], k=3)
+        assert abs(result - expected) < 1e-9
+
+    # --- evaluate_retrieval ---
+
+    def test_evaluate_retrieval_perfect(self) -> None:
+        relevant_sets = [{0, 1, 2}, {3, 4}]
+        ranked_lists = [[0, 1, 2, 5], [3, 4, 6]]
+        report = evaluate_retrieval(relevant_sets, ranked_lists, k=3, threshold=0.5)
+        assert report.passed is True
+        assert report.ndcg == 1.0
+        assert report.mrr == 1.0
+        assert report.map_score == 1.0
+
+    def test_evaluate_retrieval_mismatched_lengths(self) -> None:
+        with pytest.raises(ValueError, match="igual longitud"):
+            evaluate_retrieval([{0}], [[0], [1]], k=3)
+
+    def test_evaluate_retrieval_empty(self) -> None:
+        with pytest.raises(ValueError, match="al menos una query"):
+            evaluate_retrieval([], [], k=3)
+
+    def test_evaluate_retrieval_report_fields(self) -> None:
+        relevant_sets = [{0}, {1}]
+        ranked_lists = [[0, 2, 3], [1, 2, 3]]
+        report = evaluate_retrieval(relevant_sets, ranked_lists, k=5, threshold=0.5)
+        assert isinstance(report, RetrievalMetricsReport)
+        assert report.k == 5
+        assert report.num_queries == 2
+        assert 0.0 <= report.ndcg <= 1.0
+        assert 0.0 <= report.mrr <= 1.0
+        assert 0.0 <= report.map_score <= 1.0
+        assert isinstance(report.passed, bool)
+
+    def test_retrieval_threshold_constant(self) -> None:
+        assert RETRIEVAL_THRESHOLD == 0.5
+
+    def test_evaluate_retrieval_below_threshold_not_passed(self) -> None:
+        # No relevant docs retrieved → all metrics = 0.0 → passed=False
+        relevant_sets = [{99}]
+        ranked_lists = [[0, 1, 2]]
+        report = evaluate_retrieval(relevant_sets, ranked_lists, k=3, threshold=0.5)
+        assert report.passed is False
+        assert report.ndcg == 0.0
+        assert report.mrr == 0.0
+        assert report.map_score == 0.0

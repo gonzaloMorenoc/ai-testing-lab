@@ -124,3 +124,90 @@ class TestSignificance:
         )
         print(f"\n  Promptfoo output: {result.stdout[-300:]}")
         assert result.returncode == 0, f"Promptfoo falló: {result.stderr}"
+
+
+class TestEvaluateWithVariance:
+    """Tests for Cap 29 §29.4 — evaluate_with_variance pattern."""
+
+    from src.variance_evaluator import evaluate_with_variance, compare_pairwise, REGRESSION_THRESHOLDS
+
+    def test_high_scores_above_threshold_passes(self) -> None:
+        from src.variance_evaluator import evaluate_with_variance
+        report = evaluate_with_variance([0.88, 0.90, 0.86, 0.91, 0.89], 0.85)
+        assert report.passed is True
+        assert report.median >= 0.85
+        assert report.ci95_low >= 0.85 - 0.02
+        assert report.n_runs == 5
+
+    def test_low_scores_below_threshold_fails(self) -> None:
+        from src.variance_evaluator import evaluate_with_variance
+        report = evaluate_with_variance([0.60, 0.62, 0.58, 0.61, 0.59], 0.85)
+        assert report.passed is False
+        assert report.median < 0.85
+
+    def test_empty_scores_raises_value_error(self) -> None:
+        from src.variance_evaluator import evaluate_with_variance
+        with pytest.raises(ValueError, match="vacío"):
+            evaluate_with_variance([], 0.85)
+
+    def test_report_fields_are_populated(self) -> None:
+        from src.variance_evaluator import evaluate_with_variance
+        report = evaluate_with_variance(
+            [0.88, 0.90, 0.86, 0.91, 0.89], 0.85, metric="faithfulness"
+        )
+        assert report.metric == "faithfulness"
+        assert report.expected_threshold == 0.85
+        assert report.ci95_low <= report.median <= report.ci95_high
+        assert report.iqr >= 0.0
+
+
+class TestComparePairwise:
+    """Tests for Cap 21 — compare_pairwise pattern."""
+
+    def test_large_faithfulness_drop_is_regression(self) -> None:
+        from src.variance_evaluator import compare_pairwise
+        report = compare_pairwise({"faithfulness": 0.85}, {"faithfulness": 0.78})
+        assert report.delta["faithfulness"] == pytest.approx(-0.07, abs=1e-4)
+        assert report.regression is True
+        assert "faithfulness" in report.failing_metrics
+
+    def test_small_faithfulness_drop_not_regression(self) -> None:
+        from src.variance_evaluator import compare_pairwise
+        report = compare_pairwise({"faithfulness": 0.85}, {"faithfulness": 0.84})
+        assert report.delta["faithfulness"] == pytest.approx(-0.01, abs=1e-4)
+        assert report.regression is False
+        assert report.failing_metrics == []
+
+    def test_refusal_rate_stricter_threshold_triggers_regression(self) -> None:
+        # refusal_rate threshold is -0.02, stricter than the default -0.03.
+        # A drop of 0.025 (delta=-0.025) breaches it, whereas the same drop
+        # would not trigger a regression for a metric with the default -0.03 threshold.
+        from src.variance_evaluator import compare_pairwise, REGRESSION_THRESHOLDS
+        assert REGRESSION_THRESHOLDS["refusal_rate"] == -0.02
+        report = compare_pairwise({"refusal_rate": 0.980}, {"refusal_rate": 0.955})
+        assert report.delta["refusal_rate"] == pytest.approx(-0.025, abs=1e-4)
+        assert report.regression is True
+        assert "refusal_rate" in report.failing_metrics
+
+    def test_refusal_rate_small_drop_below_strict_threshold_no_regression(self) -> None:
+        # delta=-0.01 does not breach the -0.02 refusal_rate threshold
+        from src.variance_evaluator import compare_pairwise
+        report = compare_pairwise({"refusal_rate": 0.98}, {"refusal_rate": 0.97})
+        assert report.delta["refusal_rate"] == pytest.approx(-0.01, abs=1e-4)
+        assert report.regression is False
+
+    def test_improvement_is_never_regression(self) -> None:
+        from src.variance_evaluator import compare_pairwise
+        report = compare_pairwise(
+            {"faithfulness": 0.80, "answer_relevancy": 0.75},
+            {"faithfulness": 0.90, "answer_relevancy": 0.85},
+        )
+        assert report.regression is False
+        assert all(d > 0 for d in report.delta.values())
+
+    def test_delta_computed_for_all_baseline_keys(self) -> None:
+        from src.variance_evaluator import compare_pairwise
+        baseline = {"faithfulness": 0.85, "answer_relevancy": 0.80, "consistency": 0.90}
+        candidate = {"faithfulness": 0.82, "answer_relevancy": 0.81, "consistency": 0.88}
+        report = compare_pairwise(baseline, candidate)
+        assert set(report.delta.keys()) == set(baseline.keys())

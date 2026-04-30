@@ -33,6 +33,39 @@ response = rag.respond("¿Qué me dijiste sobre las devoluciones?")
 assert "30 días" in response or "devolución" in response.lower()
 ```
 
+## Nuevas implementaciones (Manual QA AI v12)
+
+**`MultiTurnEvaluator`** — las 7 métricas de conversación de Tabla 13.1 (Cap 13), todas deterministas sin LLM:
+
+```python
+from src.multi_turn_metrics import MultiTurnEvaluator, MULTI_TURN_THRESHOLD
+from src.conversation import Conversation
+
+conv = Conversation()
+conv.add_turn("¿Cuál es la política de devoluciones?", "30 días para devoluciones completas.")
+conv.add_turn("¿Y los gastos de envío?", "Envío gratis a partir de 50€.")
+
+evaluator = MultiTurnEvaluator(memory_window=8, threshold=MULTI_TURN_THRESHOLD)
+report = evaluator.evaluate(
+    conv=conv,
+    key_facts=["30 días", "50€"],
+    pronoun_entity_pairs=[("it", "devolución")],
+    expected_topics=["devoluciones", "envío"],
+    summary="El chatbot habló de devoluciones y envío.",
+)
+# report.context_retention, report.consistency, report.passed
+```
+
+| Métrica | Descripción |
+|---------|-------------|
+| `context_retention` | % de hechos anteriores aún referenciados |
+| `coreference_resolution` | % de pronombres resueltos correctamente |
+| `consistency` | similitud BoW entre respuestas equivalentes |
+| `topic_tracking` | % de turnos con topic correcto |
+| `memory_window_used` | turnos atrás que fueron recordados |
+| `context_overflow_detected` | True si num_turns > memory_window |
+| `conversation_summarization_score` | overlap entre resumen y conversación |
+
 ## Por qué importa
 
 > Un sistema RAG con ventana de contexto pequeña "olvida" información relevante a medida que avanza la conversación. El usuario siente que el sistema no le presta atención.

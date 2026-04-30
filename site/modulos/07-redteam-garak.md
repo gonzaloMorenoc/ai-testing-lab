@@ -43,6 +43,32 @@ by_cat = report.hit_rate_by_category()
 | Token manip. | 4 | Guiones, zero-width chars |
 | Indirect inj. | 5 | Instrucciones en documentos |
 
+## Nuevas implementaciones (Manual QA AI v12)
+
+**`RobustnessSuite`** — batería de 7 perturbaciones (§9.5) para medir consistencia bajo variaciones del input:
+
+```python
+from src.robustness_suite import run_robustness_suite
+
+golden_queries = ["¿Cuál es la política de devoluciones?", "¿Cuánto tarda el envío?"]
+report = run_robustness_suite(mi_chatbot, golden_queries)
+# report.consistency_mean: float
+# report.passed = consistency_mean >= 0.80
+# report.results: list[PerturbationResult] — una por perturbación
+```
+
+| Perturbación | Ejemplo |
+|-------------|---------|
+| `typos` | política → politica |
+| `uppercase` | POLÍTICA DE DEVOLUCIONES |
+| `paraphrase` | reordenación de palabras |
+| `lang_switch` | mezcla español/inglés |
+| `whitespace` | espacios extra |
+| `emoji` | 📦 política devoluciones |
+| `truncate` | cortar al 70% del texto |
+
+Gate de CI: `consistency_mean ≥ 0.80` (similitud BoW coseno, sin embeddings).
+
 ## Por qué importa
 
 > Un modelo con hit rate > 30% necesita guardrails antes de ir a producción. Este módulo te da la línea base para medirlo.

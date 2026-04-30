@@ -37,6 +37,29 @@ print(result["calibrated_winner"]) # "A", "B" o "tie"
 
 > Sin calibración, el 60-70% de las comparaciones A/B con LLM-as-judge están sesgadas hacia la posición. Esto invalida completamente los resultados de evaluación comparativa.
 
+## Nuevas implementaciones (Manual QA AI v12)
+
+**`JudgeBias`** — detección de los 5 sesgos del juez (Cap 05) y acuerdo inter-anotador IAA (Cap 28):
+
+```python
+from src.judge_bias import detect_verbosity_bias, detect_position_bias, cohen_kappa
+
+# Sesgo de verbosidad: respuesta más larga puntuada más alto injustamente
+bias = detect_verbosity_bias(score_short=0.6, score_long=0.85, length_ratio=3.0)
+# bias.detected = True (ratio > 2.0 AND delta > 0.15)
+
+# Acuerdo inter-anotador (κ Cohen)
+result = cohen_kappa(
+    annotations_a=[1, 0, 1, 1, 0],
+    annotations_b=[1, 0, 0, 1, 0],
+)
+# result.score ≈ 0.60
+# result.acceptable = (score >= 0.61)  → Landis & Koch
+# result.interpretation = "Substantial" | "Almost perfect" | ...
+```
+
+Los 5 tipos de sesgo detectados: `VERBOSITY`, `SELF_ENHANCEMENT`, `POSITION`, `LENIENT`, `FORMAT`.
+
 </div>
 <div class="module-sidebar">
 

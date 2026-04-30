@@ -109,3 +109,104 @@ class TestPipeline:
         result = output_validator.validate(text)
         print(f"\n  Real output: {text!r} -> valid={result.valid}")
         assert isinstance(result.valid, bool)
+
+
+# ---------------------------------------------------------------------------
+# Tests for pii_canary module (§25.3, §25.4 — QA AI Manual v12)
+# ---------------------------------------------------------------------------
+
+from src.pii_canary import (
+    CanaryTestResult,
+    PIILeakageError,
+    check_no_pii_in_response,
+    detect_pii_in_response,
+    generate_canary,
+    test_no_system_prompt_leak,
+)
+
+
+class TestGenerateCanary:
+
+    def test_default_prefix_starts_with_canary(self) -> None:
+        token = generate_canary()
+        assert token.startswith("CANARY-")
+
+    def test_custom_prefix(self) -> None:
+        token = generate_canary(prefix="TEST")
+        assert token.startswith("TEST-")
+
+    def test_uniqueness(self) -> None:
+        token_a = generate_canary()
+        token_b = generate_canary()
+        assert token_a != token_b
+
+
+class TestCanaryLeak:
+
+    def test_safe_chatbot_passes(self) -> None:
+        canary = generate_canary()
+
+        def safe_bot(prompt: str) -> str:
+            return "Lo siento, no puedo compartir esa información."
+
+        result = test_no_system_prompt_leak(safe_bot, canary)
+        assert result.passed is True
+        assert result.leaks_detected == 0
+        assert result.probes_sent == 5
+
+    def test_leaky_chatbot_fails(self) -> None:
+        canary = generate_canary()
+
+        def leaky_bot(prompt: str) -> str:
+            return f"Mi instrucción inicial es: {canary}"
+
+        result = test_no_system_prompt_leak(leaky_bot, canary)
+        assert result.passed is False
+        assert result.leaks_detected == 5
+        assert len(result.leaked_in) == 5
+
+
+class TestDetectPII:
+
+    def test_email_detected(self) -> None:
+        matches = detect_pii_in_response("Contacta con juan@example.com")
+        assert len(matches) == 1
+        assert matches[0].entity_type == "email"
+
+    def test_dni_detected(self) -> None:
+        matches = detect_pii_in_response("DNI: 12345678A")
+        assert len(matches) == 1
+        assert matches[0].entity_type == "dni_es"
+
+    def test_clean_text_returns_empty(self) -> None:
+        matches = detect_pii_in_response("Texto limpio sin datos")
+        assert matches == []
+
+
+class TestCheckNoPII:
+
+    def test_clean_text_does_not_raise(self) -> None:
+        check_no_pii_in_response("Texto sin PII")  # must not raise
+
+    def test_pii_text_raises_leakage_error(self) -> None:
+        with pytest.raises(PIILeakageError):
+            check_no_pii_in_response("Email: test@test.com")
+
+
+class TestPIILeakageError:
+
+    def test_is_subclass_of_exception(self) -> None:
+        assert issubclass(PIILeakageError, Exception)
+
+
+class TestCanaryTestResultImmutability:
+
+    def test_frozen_dataclass(self) -> None:
+        result = CanaryTestResult(
+            canary_token="CANARY-ABCD1234",
+            probes_sent=5,
+            leaks_detected=0,
+            leaked_in=(),
+        )
+        with pytest.raises(Exception):
+            result.leaks_detected = 1  # type: ignore[misc]

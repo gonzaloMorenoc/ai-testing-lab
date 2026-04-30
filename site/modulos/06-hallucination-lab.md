@@ -35,6 +35,32 @@ assert checker.is_grounded(
 )
 ```
 
+## Nuevas implementaciones (Manual QA AI v12)
+
+**`HallucinationClassifier`** — taxonomía de 2 niveles (Ji et al. 2023, Cap 14):
+
+```python
+from src.hallucination_types import HallucinationClassifier, HallucinationLevel1, HallucinationLevel2
+
+classifier = HallucinationClassifier()
+report = classifier.classify(
+    response="Napoleon ganó la batalla de Waterloo en 1815.",
+    context="En Waterloo (1815), Napoleon fue derrotado.",
+    unsupported_claims=["Napoleon ganó"],
+)
+# report.level1 = HallucinationLevel1.INTRINSIC  (contradice el contexto)
+# report.level2 = HallucinationLevel2.FACTUAL    (hecho factual incorrecto)
+# report.confidence: float, report.explanation: str
+```
+
+| Nivel 1 | Nivel 2 |
+|---------|---------|
+| `INTRINSIC` — contradice el contexto | `FACTUAL` — hecho factual incorrecto |
+| `EXTRINSIC` — información no verificable | `TEMPORAL` — dato temporal erróneo |
+| | `NUMERICAL` — cifra inventada |
+| | `CITATION` — referencia inexistente |
+| | `LOGICAL` — inconsistencia interna |
+
 ## Por qué importa
 
 > La mayoría de métricas de faithfulness no detectan negaciones explícitas. Un modelo que dice "No tienes derecho a devoluciones" cuando el contexto dice que sí las hay pasa los filtros de overlap léxico estándar.

@@ -127,3 +127,178 @@ class TestGroundednessChecker:
         metric.measure(tc)
         print(f"\n  Real HallucinationMetric score: {metric.score}")
         assert metric.is_successful()
+
+
+class TestHallucinationClassifier:
+    """Tests para la taxonomía de alucinaciones (Ji et al. 2023)."""
+
+    from src.hallucination_types import (
+        HallucinationClassifier,
+        HallucinationLevel1,
+        HallucinationLevel2,
+        HallucinationReport,
+    )
+
+    @pytest.fixture
+    def classifier(self) -> TestHallucinationClassifier.HallucinationClassifier:
+        from src.hallucination_types import HallucinationClassifier
+        return HallucinationClassifier()
+
+    @pytest.fixture
+    def base_context(self) -> str:
+        return (
+            "Our return policy allows customers to return any product within 30 days "
+            "of purchase for a full refund."
+        )
+
+    # ------------------------------------------------------------------ #
+    # has_hallucination                                                    #
+    # ------------------------------------------------------------------ #
+
+    def test_no_claims_returns_no_hallucination(
+        self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
+    ) -> None:
+        from src.hallucination_types import HallucinationReport
+        report = classifier.classify(
+            response="Returns are allowed within 30 days.",
+            context=base_context,
+            unsupported_claims=[],
+        )
+        assert isinstance(report, HallucinationReport)
+        assert report.has_hallucination is False
+        assert report.passed is True
+        assert report.level1 is None
+        assert report.level2 is None
+        assert report.unsupported_claims == ()
+        assert report.confidence == 1.0
+
+    def test_with_claims_returns_hallucination(
+        self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
+    ) -> None:
+        report = classifier.classify(
+            response="We offer a 500% money-back guarantee.",
+            context=base_context,
+            unsupported_claims=["We offer a 500% money-back guarantee."],
+        )
+        assert report.has_hallucination is True
+        assert report.passed is False
+        assert len(report.unsupported_claims) == 1
+
+    def test_report_is_immutable(
+        self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
+    ) -> None:
+        report = classifier.classify(
+            response="Drones deliver within 1 minute.",
+            context=base_context,
+            unsupported_claims=["Drones deliver within 1 minute."],
+        )
+        with pytest.raises((AttributeError, TypeError)):
+            report.has_hallucination = False  # type: ignore[misc]
+
+    # ------------------------------------------------------------------ #
+    # Level 2 — TEMPORAL                                                  #
+    # ------------------------------------------------------------------ #
+
+    def test_claim_with_temporal_signal_in_2019(
+        self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
+    ) -> None:
+        from src.hallucination_types import HallucinationLevel2
+        report = classifier.classify(
+            response="The policy changed in 2019 to allow 365 days.",
+            context=base_context,
+            unsupported_claims=["The policy changed in 2019 to allow 365 days."],
+        )
+        assert report.level2 == HallucinationLevel2.TEMPORAL
+
+    def test_claim_with_recently_signal(
+        self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
+    ) -> None:
+        from src.hallucination_types import HallucinationLevel2
+        report = classifier.classify(
+            response="The return window was recently extended.",
+            context=base_context,
+            unsupported_claims=["recently extended the return window."],
+        )
+        assert report.level2 == HallucinationLevel2.TEMPORAL
+
+    # ------------------------------------------------------------------ #
+    # Level 2 — FACTUAL / CITATION                                        #
+    # ------------------------------------------------------------------ #
+
+    def test_claim_without_temporal_falls_back_to_factual(
+        self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
+    ) -> None:
+        from src.hallucination_types import HallucinationLevel2
+        report = classifier.classify(
+            response="Drone delivery is free worldwide.",
+            context=base_context,
+            unsupported_claims=["Drone delivery is free worldwide."],
+        )
+        assert report.level2 in {HallucinationLevel2.FACTUAL, HallucinationLevel2.CITATION}
+
+    def test_claim_with_citation_marker(
+        self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
+    ) -> None:
+        from src.hallucination_types import HallucinationLevel2
+        report = classifier.classify(
+            response="According to the CEO, returns are free forever.",
+            context=base_context,
+            unsupported_claims=["according to the CEO, returns are free forever."],
+        )
+        assert report.level2 == HallucinationLevel2.CITATION
+
+    # ------------------------------------------------------------------ #
+    # Level 1 — INTRINSIC vs EXTRINSIC                                    #
+    # ------------------------------------------------------------------ #
+
+    def test_claim_sharing_context_words_is_intrinsic(
+        self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
+    ) -> None:
+        from src.hallucination_types import HallucinationLevel1
+        # "return" and "refund" appear in the context, so the claim contradicts it.
+        report = classifier.classify(
+            response="Returns are not allowed and there is no refund.",
+            context=base_context,
+            unsupported_claims=["Returns are not allowed and there is no refund."],
+        )
+        assert report.level1 == HallucinationLevel1.INTRINSIC
+
+    def test_claim_with_no_context_overlap_is_extrinsic(
+        self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
+    ) -> None:
+        from src.hallucination_types import HallucinationLevel1
+        # Completely new information not present in the context.
+        report = classifier.classify(
+            response="Same-day drone delivery is available globally.",
+            context=base_context,
+            unsupported_claims=["Same-day drone globally available."],
+        )
+        assert report.level1 == HallucinationLevel1.EXTRINSIC
+
+    # ------------------------------------------------------------------ #
+    # confidence                                                           #
+    # ------------------------------------------------------------------ #
+
+    def test_confidence_higher_when_both_levels_detected(
+        self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
+    ) -> None:
+        # A claim that overlaps the context (→ INTRINSIC) and contains a temporal signal.
+        report = classifier.classify(
+            response="The return policy changed in 2019.",
+            context=base_context,
+            unsupported_claims=["The return policy changed in 2019."],
+        )
+        # Both level1 (INTRINSIC, because "return" and "policy" match context)
+        # and level2 (TEMPORAL) are detected → confidence == 0.8
+        assert report.confidence == 0.8
+
+    def test_unsupported_claims_preserved_in_report(
+        self, classifier: TestHallucinationClassifier.HallucinationClassifier, base_context: str
+    ) -> None:
+        claims = ["Free worldwide shipping.", "Unlimited returns forever."]
+        report = classifier.classify(
+            response=" ".join(claims),
+            context=base_context,
+            unsupported_claims=claims,
+        )
+        assert report.unsupported_claims == tuple(claims)

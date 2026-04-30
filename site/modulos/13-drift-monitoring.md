@@ -46,6 +46,28 @@ print(history.trigger_rate) # fracción de checks que activaron alerta
 | 0.1 – 0.2 | Cambio moderado, investigar |
 | > 0.2 | Cambio significativo, actuar |
 
+## Nuevas implementaciones (Manual QA AI v12)
+
+**`SemanticDriftDetector`** — detector robusto con KS de dos muestras + bootstrap IC95 (§10.3):
+
+```python
+from src.semantic_drift_detector import detect_semantic_drift
+
+report = detect_semantic_drift(
+    baseline_scores=[0.85, 0.87, 0.83, 0.86, ...],  # distribución de referencia
+    current_scores=[0.72, 0.70, 0.68, 0.71, ...],   # distribución actual
+    historical_scores=[0.84, 0.85, 0.83, ...],       # mínimo 30 muestras
+    threshold=0.85,
+    n_bootstrap=1000,
+    rng_seed=42,
+)
+# report.ks_p < 0.01      → distribuciones diferentes (KS test)
+# report.mean_drop < -0.03 → degradación significativa
+# report.drift_detected = ks_p < 0.01 AND mean_drop < -0.03
+```
+
+> El PSI (módulo existente) usa una referencia fija. El KS de dos muestras compara las distribuciones reales — es más robusto y evita falsos positivos con referencias tipo delta de Dirac.
+
 ## Por qué importa
 
 > En producción, los LLMs se degradan silenciosamente. Sin monitorización, lo detectas cuando los usuarios se quejan.

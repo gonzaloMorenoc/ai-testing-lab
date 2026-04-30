@@ -31,6 +31,31 @@ print(result.reason)     # "pii_detected"
 print(result.pii_found)  # ["usuario@ejemplo.com"]
 ```
 
+## Nuevas implementaciones (Manual QA AI v12)
+
+**`PIICanary`** — canary tokens y detección de PII (§25.3 + §25.4):
+
+```python
+from src.pii_canary import generate_canary, test_no_system_prompt_leak, detect_pii_in_response, PIILeakageError
+
+# Inyecta un canary único en el system prompt y verifica que no filtra
+canary = generate_canary()  # "CANARY-a3f2b891" (secrets.token_hex(8))
+result = test_no_system_prompt_leak(mi_chatbot, canary)
+# result.leaked = False si el chatbot no revela el system prompt
+
+# Detecta PII en respuestas con 6 patrones regex (ES + EN)
+matches = detect_pii_in_response("Llámame al 612345678 o juan@ejemplo.com")
+# [PIIMatch(type="phone_es", ...), PIIMatch(type="email", ...)]
+
+# Lanza excepción si hay PII (usa raise, no assert — assert queda desactivado con python -O)
+try:
+    check_no_pii_in_response(response)
+except PIILeakageError as e:
+    print(f"PII detectada: {e}")
+```
+
+Patrones detectados: `email`, `phone_es`, `dni_es`, `iban_es`, `credit_card`, `ssn`.
+
 ## Por qué importa
 
 > Sin guardrails, los usuarios pueden enviar datos sensibles que el LLM procesa y potencialmente incluye en respuestas a otros usuarios.

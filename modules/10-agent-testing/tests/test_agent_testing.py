@@ -123,3 +123,123 @@ class TestTrajectoryEvaluator:
         )
         print(f"\n  Groq output: {output!r} → achieved={result.achieved}")
         assert isinstance(result.achieved, bool)
+
+
+# ---------------------------------------------------------------------------
+# §18.6  AgentPolicy  +  Cap 27  ToolSchemaValidator
+# ---------------------------------------------------------------------------
+
+from src.agent_policy import (  # noqa: E402
+    AgentPolicy,
+    PolicyViolationError,
+    SchemaValidationResult,
+    enforce_policy,
+    validate_tool_call,
+)
+
+EXAMPLE_SCHEMAS: dict = {
+    "send_email": {
+        "type": "object",
+        "required": ["to", "subject", "body"],
+        "properties": {
+            "to": {"type": "string", "format": "email"},
+            "subject": {"type": "string", "maxLength": 200},
+            "body": {"type": "string"},
+        },
+    }
+}
+
+
+class TestEnforcePolicy:
+
+    def _policy(self, **kwargs) -> AgentPolicy:
+        defaults = dict(
+            allowed_tools={"send_email", "search"},
+            max_iterations=5,
+            max_cost_usd=1.0,
+            human_approval_required={"send_email"},
+        )
+        defaults.update(kwargs)
+        return AgentPolicy(**defaults)
+
+    def test_valid_call_does_not_raise(self) -> None:
+        policy = self._policy()
+        # send_email is in allowed_tools and human_approval_required → needs approval
+        # use "search" which is allowed and NOT in human_approval_required
+        enforce_policy("search", {}, policy, iterations_so_far=0, cost_so_far=0.0)
+
+    def test_tool_not_in_allowlist_raises(self) -> None:
+        policy = self._policy()
+        with pytest.raises(PolicyViolationError, match="allowlist"):
+            enforce_policy("delete_file", {}, policy, iterations_so_far=0, cost_so_far=0.0)
+
+    def test_max_iterations_reached_raises(self) -> None:
+        policy = self._policy()
+        with pytest.raises(PolicyViolationError, match="max_iterations"):
+            enforce_policy(
+                "search", {}, policy, iterations_so_far=5, cost_so_far=0.0
+            )
+
+    def test_budget_exceeded_raises(self) -> None:
+        policy = self._policy()
+        with pytest.raises(PolicyViolationError, match="Presupuesto"):
+            enforce_policy(
+                "search", {}, policy, iterations_so_far=0, cost_so_far=1.5
+            )
+
+    def test_human_approval_required_without_approval_raises(self) -> None:
+        policy = self._policy()
+        with pytest.raises(PolicyViolationError, match="aprobación humana"):
+            enforce_policy(
+                "send_email", {}, policy, iterations_so_far=0, cost_so_far=0.0,
+                human_approved=False,
+            )
+
+    def test_human_approval_required_with_approval_does_not_raise(self) -> None:
+        policy = self._policy()
+        enforce_policy(
+            "send_email", {}, policy, iterations_so_far=0, cost_so_far=0.0,
+            human_approved=True,
+        )
+
+
+class TestValidateToolCall:
+
+    def test_valid_args_returns_valid_true(self) -> None:
+        args = {"to": "user@example.com", "subject": "Hello", "body": "Hi there"}
+        result = validate_tool_call("send_email", args, EXAMPLE_SCHEMAS)
+        assert result.valid is True
+        assert result.error is None
+
+    def test_unregistered_tool_returns_valid_false(self) -> None:
+        result = validate_tool_call("unknown_tool", {}, EXAMPLE_SCHEMAS)
+        assert result.valid is False
+        assert result.error is not None
+        assert "no registrada" in result.error
+
+    def test_missing_required_field_returns_valid_false(self) -> None:
+        args = {"to": "user@example.com", "subject": "Hello"}  # body missing
+        result = validate_tool_call("send_email", args, EXAMPLE_SCHEMAS)
+        assert result.valid is False
+        assert result.error is not None
+        assert "body" in result.error
+
+    def test_invalid_email_format_returns_valid_false(self) -> None:
+        args = {"to": "not-an-email", "subject": "Hello", "body": "Hi"}
+        result = validate_tool_call("send_email", args, EXAMPLE_SCHEMAS)
+        assert result.valid is False
+        assert result.error is not None
+        assert "email" in result.error.lower()
+
+    def test_valid_email_format_returns_valid_true(self) -> None:
+        args = {"to": "valid@domain.org", "subject": "Hello", "body": "Hi"}
+        result = validate_tool_call("send_email", args, EXAMPLE_SCHEMAS)
+        assert result.valid is True
+
+    def test_max_length_exceeded_returns_valid_false(self) -> None:
+        long_subject = "x" * 201
+        args = {"to": "user@example.com", "subject": long_subject, "body": "Hi"}
+        result = validate_tool_call("send_email", args, EXAMPLE_SCHEMAS)
+        assert result.valid is False
+        assert result.error is not None
+        assert "maxLength" in result.error

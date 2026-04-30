@@ -35,6 +35,43 @@ with get_collector() as collector:
     assert collector.total_latency < 5.0
 ```
 
+## Nuevas implementaciones (Manual QA AI v12)
+
+**`TraceRecord`** — los 15 campos mandatorios de Tabla 16.1 (Cap 16 — Observabilidad):
+
+```python
+from src.trace_record import make_trace_record, validate_trace, TraceRecord
+
+record = make_trace_record(
+    response="Puedes devolver en 30 días.",
+    tokens_in=120,
+    tokens_out=18,
+    latency_ms=342.5,
+    model_id="claude-sonnet-4-6",
+    prompt_id="return-policy-v2",
+    prompt_version="2.1",
+    retriever_id="faiss-cosine",
+    top_k_docs=5,
+    eval_scores={"faithfulness": 0.87, "relevancy": 0.91},
+    safety_flags=(),
+    pii_flags=(),
+)
+
+errors = validate_trace(record)
+# errors = [] si todos los campos cumplen los requisitos mínimos
+```
+
+| Grupo | Campos |
+|-------|--------|
+| Identidad | `request_id`, `user_segment` |
+| Modelo | `model_id`, `model_version` |
+| Prompt | `prompt_id`, `prompt_version` |
+| Retriever | `retriever_id`, `retriever_version`, `top_k_docs`, `reranker_scores` |
+| Respuesta | `response`, `tokens_in`, `tokens_out`, `latency_ms` |
+| Seguridad | `safety_flags`, `pii_flags`, `tool_calls` |
+| Error | `error_code`, `retry_count` |
+| Eval | `eval_scores` |
+
 ## Por qué importa
 
 > Sin observabilidad, cuando el sistema es lento no sabes si el problema está en el retriever, en el reranker o en la llamada al LLM.

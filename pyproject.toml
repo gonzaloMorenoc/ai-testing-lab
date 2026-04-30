@@ -99,6 +99,7 @@ monitoring = [
     "scikit-learn>=1.4",
     "numpy>=1.26",
     "pandas>=2.2",
+    "scipy>=1.13",
 ]
 
 # Módulo 14 — embedding-based evaluation
@@ -158,6 +159,7 @@ markers = [
     "cassette: tests que usan cassettes VCR pregrabados",
 ]
 addopts = "-v --tb=short"
+norecursedirs = ["src", "__pycache__", ".git", "node_modules", "exercises", "goldens"]
 
 [tool.ruff]
 line-length = 100

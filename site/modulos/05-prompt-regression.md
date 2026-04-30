@@ -30,6 +30,31 @@ else:
     print("Diferencia dentro del ruido estadístico")
 ```
 
+## Nuevas implementaciones (Manual QA AI v12)
+
+**`VarianceEvaluator`** — evalúa varianza entre runs y detecta regresiones con bootstrap IC95 (Cap 21 + Cap 29):
+
+```python
+from src.variance_evaluator import evaluate_with_variance, compare_pairwise, REGRESSION_THRESHOLDS
+
+# N_RUNS=5 en PR, bootstrap IC95
+report = evaluate_with_variance(
+    scores=[0.82, 0.85, 0.83, 0.81, 0.84],
+    expected_threshold=0.80,
+)
+# report.mean=0.83, report.ci95_low, report.ci95_high, report.passed=True
+
+# Compara baseline vs candidato
+regression = compare_pairwise(
+    baseline={"faithfulness": 0.85, "answer_relevancy": 0.90},
+    candidate={"faithfulness": 0.81, "answer_relevancy": 0.88},
+)
+# REGRESSION_THRESHOLDS = {"faithfulness": -0.03, ...}
+# delta faithfulness = -0.04 < -0.03 → regresión detectada
+```
+
+`ACCEPTANCE_MARGIN = 0.02` — temperatura=0 **no** garantiza determinismo, siempre usa bootstrap.
+
 ## Por qué importa
 
 > Sin test estadístico, una mejora del 2% con 20 muestras parece real pero puede ser ruido. Un z-test te dice si necesitas más datos o si el resultado es conclusivo.
