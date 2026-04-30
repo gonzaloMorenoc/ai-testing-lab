@@ -29,13 +29,13 @@ jobs:
         run: uv sync --extra dev --no-install-project
 
       - name: Lint with ruff
-        run: uv run ruff check .
+        run: uv run --no-project ruff check .
 
       - name: Check formatting
-        run: uv run ruff format --check .
+        run: uv run --no-project ruff format --check .
 
       - name: Type check with mypy
-        run: uv run mypy modules/ --ignore-missing-imports --no-error-summary
+        run: uv run --no-project mypy modules/ --ignore-missing-imports --no-error-summary
         continue-on-error: true
 
   test:
@@ -63,7 +63,7 @@ jobs:
 
       - name: Run tests (módulos 01-14, sin API key)
         run: |
-          uv run pytest \
+          uv run --no-project pytest \
             modules/01-primer-eval/tests/ \
             modules/02-ragas-basics/tests/ \
             modules/03-llm-as-judge/tests/ \

@@ -27,7 +27,7 @@ jobs:
 
       - name: Run vulnerability scanner (slow tests con LLM real)
         run: |
-          uv run pytest modules/07-redteam-garak/tests/ \
+          uv run --no-project pytest modules/07-redteam-garak/tests/ \
             -m "slow" -v --tb=long
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
@@ -52,7 +52,7 @@ jobs:
 
       - name: Run OWASP scan (slow tests con LLM real)
         run: |
-          uv run pytest modules/08-redteam-deepteam/tests/ \
+          uv run --no-project pytest modules/08-redteam-deepteam/tests/ \
             -m "slow" -v --tb=long
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}

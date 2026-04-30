@@ -77,7 +77,7 @@ jobs:
 
       - name: Run evals (módulo ${{ matrix.module }})
         run: |
-          uv run pytest modules/${{ matrix.module }}/tests/ \
+          uv run --no-project pytest modules/${{ matrix.module }}/tests/ \
             -v \
             --record-mode=none \
             -m "not slow and not redteam" \
