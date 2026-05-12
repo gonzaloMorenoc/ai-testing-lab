@@ -1,10 +1,10 @@
 # LLM Testing Lab
 
-> **382 tests · 14 independent pytest modules · zero API calls needed**
+> **763 tests · 20 independent pytest modules · zero API calls needed**
 >
-> RAG evaluation · LLM-as-judge · red teaming · guardrails · observability · drift monitoring
+> RAG evaluation · LLM-as-judge · red teaming · guardrails · observability · drift monitoring · cost-aware QA · retrieval avanzado · chatbot testing · robustness · HITL · caso end-to-end
 
-**14 módulos pytest que cubren todas las capas de calidad en LLMs — evaluación RAG, red teaming, guardrails, observabilidad y drift monitoring. Sin llamadas a APIs para ejecutar la suite completa.**
+**20 módulos pytest que cubren todas las capas de calidad en LLMs — desde el primer `LLMTestCase` hasta un caso end-to-end completo (chatbot de aseguradora regulada). Sin llamadas a APIs para ejecutar la suite completa.**
 
 [![CI](https://github.com/gonzaloMorenoc/ai-testing-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/gonzaloMorenoc/ai-testing-lab/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/gonzaloMorenoc/ai-testing-lab/branch/main/graph/badge.svg)](https://codecov.io/gh/gonzaloMorenoc/ai-testing-lab)
@@ -14,7 +14,7 @@
 
 ---
 
-**English summary:** A hands-on pytest lab covering every QA layer for LLM systems — from writing your first `LLMTestCase` to detecting semantic drift in production. 382 tests across 14 independent modules. Powered by DeepEval, RAGAS, Garak, Guardrails AI, and OpenTelemetry. No API key required to run the full suite.
+**English summary:** A hands-on pytest lab covering every QA layer for LLM systems — from writing your first `LLMTestCase` to running a full end-to-end regulated chatbot case with incident, runbook and postmortem. 763 tests across 20 independent modules. Powered by DeepEval, RAGAS, Garak, Guardrails AI, OpenTelemetry, and our own implementations of cost-aware QA, advanced retrieval, IAA metrics, and robustness suites. No API key required to run the full suite.
 
 > ⭐ **If this lab helped you, consider starring the repo** — it helps others discover it and motivates continued development.
 
@@ -56,10 +56,10 @@ pytest modules/ -m "not slow and not redteam" -q
 ```
 
 ```
-382 passed, 1 skipped in 0.88s
+763 passed, 1 skipped in 1.6s
 ```
 
-382 tests en 14 módulos sin una sola llamada a API.
+763 tests en 20 módulos sin una sola llamada a API.
 
 ---
 
@@ -81,7 +81,13 @@ pytest modules/ -m "not slow and not redteam" -q
 | 12 | [observability](modules/12-observability/) | 22 | 20 campos de traza · OTel spans · decorador `@trace` · IR metrics |
 | 13 | [drift-monitoring](modules/13-drift-monitoring/) | 31 | KS test · PSI · AlertHistory · detección de tendencias · bootstrap IC95 |
 | 14 | [embedding-eval](modules/14-embedding-eval/) | 33 | NDCG@k · MRR@k · MAP@k · similitud coseno · centroid shift |
-|   | **Total** | **382** | |
+| 15 | [cost-aware-qa](modules/15-cost-aware-qa/) | 67 | Cap. 27 · 7 métricas de coste · CostReport · regresión Δ% por tipo de cambio |
+| 16 | [retrieval-advanced](modules/16-retrieval-advanced/) | 66 | Cap. 29 · HyDE · hybrid search · reranking · self-RAG · gate ΔNDCG@5 ≥ +0.05 |
+| 17 | [chatbot-testing](modules/17-chatbot-testing/) | 60 | Cap. 10 · 8 áreas operativas · intent, fallback, escalation, sesiones, recovery |
+| 18 | [robustness-suite](modules/18-robustness-suite/) | 52 | Cap. 12 · 8 categorías de perturbación · 4 métricas · separado de red-team |
+| 19 | [hitl-iaa](modules/19-hitl-iaa/) | 55 | Cap. 31 · Cohen κ · Krippendorff α · Fleiss κ · ICC · protocolo de calibración 6 fases |
+| 20 | [end-to-end-case](modules/20-end-to-end-case/) | 68 | Apéndice D · caso chatbot aseguradora salud · ata todos los capítulos en un flujo real |
+|   | **Total** | **770** | |
 
 ---
 
@@ -119,7 +125,7 @@ Pirámide de evaluación para LLMs
 
 ```
 ai-testing-lab/
-├── modules/          # 14 labs independientes (empieza por cualquiera)
+├── modules/          # 20 labs independientes (empieza por cualquiera)
 ├── demos/            # sistemas reales sobre los que testear (RAG, Streamlit, Rasa)
 ├── goldens/          # datasets de evaluación versionados
 ├── docs/             # manual por capítulos + glosario

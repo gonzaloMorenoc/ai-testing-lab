@@ -81,6 +81,14 @@ export default defineConfig({
     nav: [
       { text: "Guía", link: "/guia/" },
       { text: "Módulos", link: "/modulos/" },
+      { text: "Quiz", link: "/quiz/" },
+      {
+        text: "Referencia",
+        items: [
+          { text: "Bibliografía", link: "/referencias" },
+          { text: "Índice alfabético", link: "/indice" },
+        ],
+      },
       {
         text: "GitHub ↗",
         link: "https://github.com/gonzaloMorenoc/ai-testing-lab",
@@ -102,8 +110,17 @@ export default defineConfig({
           text: "Técnicas",
           items: [
             { text: "Métricas de evaluación", link: "/guia/metricas" },
+            { text: "Tabla maestra de umbrales", link: "/guia/umbrales" },
             { text: "Red teaming", link: "/guia/red-teaming" },
             { text: "Observabilidad", link: "/guia/observabilidad" },
+            { text: "Reproducibilidad", link: "/guia/reproducibilidad" },
+          ],
+        },
+        {
+          text: "Estrategia",
+          items: [
+            { text: "Marco normativo", link: "/guia/marco-normativo" },
+            { text: "Modelo de madurez L1–L5", link: "/guia/madurez" },
           ],
         },
       ],
@@ -154,6 +171,44 @@ export default defineConfig({
             {
               text: "13 — drift-monitoring",
               link: "/modulos/13-drift-monitoring",
+            },
+            { text: "15 — cost-aware-qa", link: "/modulos/15-cost-aware-qa" },
+          ],
+        },
+        {
+          text: "Retrieval avanzado",
+          items: [
+            {
+              text: "16 — retrieval-advanced",
+              link: "/modulos/16-retrieval-advanced",
+            },
+          ],
+        },
+        {
+          text: "Chatbots y robustness",
+          items: [
+            {
+              text: "17 — chatbot-testing",
+              link: "/modulos/17-chatbot-testing",
+            },
+            {
+              text: "18 — robustness-suite",
+              link: "/modulos/18-robustness-suite",
+            },
+          ],
+        },
+        {
+          text: "Calidad humana",
+          items: [
+            { text: "19 — hitl-iaa", link: "/modulos/19-hitl-iaa" },
+          ],
+        },
+        {
+          text: "Caso end-to-end",
+          items: [
+            {
+              text: "20 — end-to-end-case",
+              link: "/modulos/20-end-to-end-case",
             },
           ],
         },

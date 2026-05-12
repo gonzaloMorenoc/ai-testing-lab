@@ -1,0 +1,94 @@
+{
+  "d_cook_01": {
+    "text": "La paella valenciana tradicional lleva arroz bomba, azafrán y conejo.",
+    "domain": "cooking"
+  },
+  "d_cook_02": {
+    "text": "La fideuá es un plato de fideos similar a la paella pero con marisco.",
+    "domain": "cooking"
+  },
+  "d_cook_03": {
+    "text": "El gazpacho andaluz es una sopa fría a base de tomate y pimiento.",
+    "domain": "cooking"
+  },
+  "d_cook_04": {
+    "text": "La tortilla española clásica solo lleva huevo, patata y aceite de oliva.",
+    "domain": "cooking"
+  },
+  "d_cook_05": {
+    "text": "El cocido madrileño es un guiso de garbanzos con carne y verduras.",
+    "domain": "cooking"
+  },
+  "d_tech_01": {
+    "text": "Python es un lenguaje multipropósito muy usado en data science y backend.",
+    "domain": "tech"
+  },
+  "d_tech_02": {
+    "text": "Rust ofrece seguridad de memoria sin garbage collector mediante el borrow checker.",
+    "domain": "tech"
+  },
+  "d_tech_03": {
+    "text": "Kubernetes orquesta contenedores Docker en clusters distribuidos.",
+    "domain": "tech"
+  },
+  "d_tech_04": {
+    "text": "PostgreSQL soporta JSONB, full-text search y extensiones como PostGIS.",
+    "domain": "tech"
+  },
+  "d_tech_05": {
+    "text": "GraphQL permite al cliente especificar exactamente los campos de la respuesta.",
+    "domain": "tech"
+  },
+  "d_health_01": {
+    "text": "La hipertensión arterial se diagnostica con valores sostenidos sobre 140/90.",
+    "domain": "health"
+  },
+  "d_health_02": {
+    "text": "La diabetes tipo 2 se asocia a obesidad y resistencia a la insulina.",
+    "domain": "health"
+  },
+  "d_health_03": {
+    "text": "El insomnio crónico requiere evaluación médica si dura más de tres meses.",
+    "domain": "health"
+  },
+  "d_health_04": {
+    "text": "La fibrilación auricular es la arritmia sostenida más común en adultos.",
+    "domain": "health"
+  },
+  "d_travel_01": {
+    "text": "Lisboa destaca por sus tranvías históricos y el mirador de Santa Catarina.",
+    "domain": "travel"
+  },
+  "d_travel_02": {
+    "text": "El Camino de Santiago Francés parte desde Saint-Jean-Pied-de-Port.",
+    "domain": "travel"
+  },
+  "d_travel_03": {
+    "text": "Marrakech es famosa por su zoco, la plaza Jemaa el-Fna y los jardines Majorelle.",
+    "domain": "travel"
+  },
+  "d_fin_01": {
+    "text": "Un ETF replica un índice bursátil con costes inferiores a los fondos activos.",
+    "domain": "finance"
+  },
+  "d_fin_02": {
+    "text": "La inflación reduce el poder adquisitivo si los salarios no se ajustan.",
+    "domain": "finance"
+  },
+  "d_fin_03": {
+    "text": "Diversificar entre clases de activo reduce la volatilidad de la cartera.",
+    "domain": "finance"
+  },
+  "d_noise_01": {
+    "text": "Los gatos cazan ratones en jardines por la noche.",
+    "domain": "misc"
+  },
+  "d_noise_02": {
+    "text": "Las nubes cirros indican buen tiempo a corto plazo.",
+    "domain": "misc"
+  },
+  "d_noise_03": {
+    "text": "Los volcanes activos en Islandia atraen geólogos cada año.",
+    "domain": "misc"
+  }
+}

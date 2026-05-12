@@ -20,7 +20,7 @@
 - Phoenix: [github.com/Arize-ai/phoenix](https://github.com/Arize-ai/phoenix)
 - LangSmith: [docs.langchain.com/langsmith/evaluation](https://docs.langchain.com/langsmith/evaluation)
 - MLflow GenAI: [mlflow.org/docs/latest/genai/eval-monitor](https://mlflow.org/docs/latest/genai/eval-monitor/)
-- ISTQB CT-AI v2.0: [istqb.org/certifications/certified-tester-ai-testing-ct-ai](https://istqb.org/certifications/certified-tester-ai-testing-ct-ai/)
+- ISTQB CT-AI v1.0 e ISTQB CT-GenAI v1.0: [istqb.org/certifications](https://www.istqb.org/certifications/)
 - MT-Bench paper: [arxiv.org/abs/2306.05685](https://arxiv.org/abs/2306.05685)
 - Chatbot Arena leaderboard: [lmarena.ai](https://lmarena.ai/)
 
@@ -34,7 +34,7 @@ Hay tres ideas que condensan todo lo anterior y vale la pena fijar:
 2. **Tu golden dataset vale más que cualquier framework.** Da igual si eliges DeepEval, RAGAS o LangSmith: sin un dataset diverso, versionado y alimentado con failures reales de producción, todas las métricas mienten con elegancia.
 3. **La seguridad de LLMs ya no es opcional.** OWASP Top 10 LLM 2025, red teaming continuo, Garak/PyRIT en CI nightly y guardrails en runtime son baseline, igual que hoy es impensable shippear web apps sin SAST/DAST.
 
-Con el stack que ya manejas (Python + pytest + Playwright + Robot + Karate), el paso natural es construir una suite de QA multicapa donde cada herramienta haga lo que mejor hace: Playwright para la UI real, DeepEval/RAGAS para la calidad semántica, Garak/DeepTeam para seguridad, y Langfuse o Phoenix como backbone de observabilidad. Ese combo —más el CT-AI v2.0 como sello formal— te deja en la posición rara y bien pagada de ser un SDET que entiende de verdad sistemas probabilísticos.
+Con el stack que ya manejas (Python + pytest + Playwright + Robot + Karate), el paso natural es construir una suite de QA multicapa donde cada herramienta haga lo que mejor hace: Playwright para la UI real, DeepEval/RAGAS para la calidad semántica, Garak/DeepTeam para seguridad, y Langfuse o Phoenix como backbone de observabilidad. Ese combo —más ISTQB CT-AI v1.0 e ISTQB CT-GenAI v1.0 como sellos formales— te deja en la posición rara y bien pagada de ser un SDET que entiende de verdad sistemas probabilísticos.
 
 ---
 
@@ -79,8 +79,30 @@ Con el stack que ya manejas (Python + pytest + Playwright + Robot + Karate), el 
 | **Trajectory evaluation** | Evaluación de la secuencia completa de pasos de un agente, no solo el resultado final |
 | **NeMo Guardrails** | Sistema de guardrails conversacionales de NVIDIA usando Colang DSL |
 | **Guardrails AI** | Librería Python para validación de inputs/outputs de LLMs |
-| **CT-AI v2.0** | Certified Tester AI Testing v2.0 — certificación ISTQB para testing de sistemas IA |
+| **ISTQB CT-AI v1.0** | Certified Tester AI Testing — certificación ISTQB para probar sistemas IA |
+| **ISTQB CT-GenAI v1.0** | Certified Tester Generative AI Testing — certificación ISTQB para usar IA generativa como herramienta para probar software |
 | **Botium** | "El Selenium de los chatbots" — framework de testing multi-conector para chatbots |
 | **SWE-Bench** | Benchmark de resolución real de issues GitHub para evaluar capacidades de coding |
 | **MMLU** | Massive Multitask Language Understanding — benchmark de conocimiento general |
 | **Chatbot Arena** | Leaderboard de preferencia humana basado en votación y ELO (lmarena.ai) |
+| **Execution trace** | Secuencia observable de acciones, decisiones y rationales de un agente. Sustituye al obsoleto «reasoning trace» (§21.4 v13) |
+| **Cost-aware QA** | Tratamiento del coste por query como métrica de QA de primer orden, con sus propios gates (Cap. 27 v13) |
+| **HyDE** | Hypothetical Document Embeddings: el LLM genera una respuesta hipotética y se usa su embedding para retrieval (Gao et al. 2022) |
+| **Hybrid search** | Retrieval que combina BM25 (keyword) con embeddings densos, fusión típica vía reciprocal rank fusion |
+| **Reranker** | Cross-encoder que reordena los top-k iniciales del retriever para mejorar precisión en posición 1 |
+| **Self-RAG** | Retrieval con auto-reflexión: el LLM decide cuándo recuperar y evalúa el resultado (Asai et al. 2023) |
+| **Quality gate** | Umbral mínimo que debe superarse en CI/CD para promocionar un cambio (Cap. 18) |
+| **Tabla 4.2** | Tabla maestra de umbrales del Manual v13. Única fuente de verdad de los gates de calidad |
+| **RiskLevel** | Tres niveles operativos de exigencia: MINIMUM (release), TARGET (PR), HIGH_RISK (dominios regulados) |
+| **Answer Correctness** | Métrica RAGAS de corrección factual frente a ground truth. Distinta de faithfulness (Cap. 7.3) |
+| **Refusal rate** | Proporción de prompts maliciosos correctamente rechazados (≥ 0.95 objetivo) |
+| **False refusal rate** | Proporción de queries legítimas erróneamente rechazadas (≤ 0.05 objetivo) |
+| **EU AI Act** | Reglamento UE 2024/1689. Clasifica sistemas IA por riesgo y obliga a conformity assessment en alto riesgo |
+| **NIST AI RMF** | AI Risk Management Framework de NIST (EE.UU.). Funciones Govern / Map / Measure / Manage |
+| **ISO/IEC 42001** | Norma certificable para sistemas de gestión de IA (2023) |
+| **DPIA** | Data Protection Impact Assessment requerido por GDPR para tratamientos a gran escala |
+| **Model card** | Documento auditable que describe propósito, datos, métricas y limitaciones de un modelo (Mitchell et al. 2019) |
+| **System card** | Análogo al model card pero a nivel de sistema completo (guardrails, monitoring, escalado humano) |
+| **Shadow AI** | Uso de herramientas IA dentro de una organización sin aprobación formal (ISTQB CT-GenAI §5.1.1) |
+| **Krippendorff α** | Métrica de inter-annotator agreement para N anotadores, cualquier escala. Umbral fiable ≥ 0.667 |
+| **L1–L5 madurez** | Modelo de madurez de QA AI: Ad-hoc, Inicial, Gestionado, Optimizado, Excelencia (Cap. 23) |

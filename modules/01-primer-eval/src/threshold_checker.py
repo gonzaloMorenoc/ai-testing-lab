@@ -11,7 +11,7 @@ class RiskLevel(StrEnum):
 
 @dataclass(frozen=True)
 class MetricThreshold:
-    """Umbrales de una métrica según Tabla 1.2 del Manual QA AI v12."""
+    """Umbrales de una métrica. Subconjunto histórico de la Tabla 4.2 del Manual QA AI v13."""
 
     name: str
     minimum: float
@@ -19,7 +19,12 @@ class MetricThreshold:
     high_risk: float
 
     def gate(self, score: float, level: RiskLevel = RiskLevel.STANDARD) -> bool:
-        """True si el score supera el gate para el nivel dado."""
+        """True si el score supera el gate para el nivel dado.
+
+        Nota: la versión moderna y completa de la Tabla 4.2 vive en
+        `qa_thresholds.py` (raíz del repo). Este checker se mantiene por
+        compatibilidad con los tests del módulo 01.
+        """
         cutoff = self.high_risk if level == RiskLevel.HIGH_RISK else self.minimum
         return score >= cutoff
 
@@ -34,7 +39,7 @@ class MetricThreshold:
         return "fail"
 
 
-# Tabla 1.2 — Umbrales maestros del Manual QA AI v12
+# Subconjunto de la Tabla 4.2 del Manual QA AI v13. La tabla completa vive en qa_thresholds.py (raíz).
 QA_THRESHOLDS: dict[str, MetricThreshold] = {
     "faithfulness": MetricThreshold("faithfulness", minimum=0.70, target=0.85, high_risk=0.90),
     "answer_relevancy": MetricThreshold(

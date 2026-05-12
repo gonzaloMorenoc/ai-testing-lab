@@ -4,10 +4,10 @@ layout: home
 hero:
   name: "LLM Testing Lab"
   text: "Testa tus LLMs como un profesional"
-  tagline: "14 módulos pytest · RAG · red teaming · guardrails · observabilidad · drift. Sin API key. Sin conexión."
+  tagline: "20 módulos pytest · RAG · red teaming · guardrails · observabilidad · drift · cost-aware · retrieval avanzado · chatbots · robustness · HITL · caso end-to-end. Sin API key. Sin conexión."
   image:
     src: /demo.svg
-    alt: "382 tests pasando en 0.9s"
+    alt: "763 tests pasando en 1.6s"
   actions:
     - theme: brand
       text: Empezar →
@@ -45,7 +45,7 @@ features:
     details: Si sabes pytest, ya sabes cómo ejecutar esto. Sin frameworks propietarios, sin CLIs especiales. Solo pytest y las librerías que ya conoces.
 ---
 
-<div class="hero-badge">✓ 382 tests · ~0.9s · sin API key</div>
+<div class="hero-badge">✓ 763 tests · ~1.6s · sin API key</div>
 
 ## Quickstart
 
@@ -57,7 +57,7 @@ pytest modules/ -m "not slow and not redteam" -q
 ```
 
 ```
-382 passed, 1 skipped in 0.88s
+763 passed, 1 skipped in 1.6s
 ```
 
 Sin API key. Sin cuenta de pago. Sin conexión a internet.
@@ -83,9 +83,21 @@ Pirámide de evaluación para LLMs
 │   ├── 08  DeepTeam: OWASP Top 10 LLM 2025, riesgos de agencia
 │   └── 09  Guardrails: PII detection, pipeline de validación I/O
 │
-└── Producción
-    ├── 10  Evaluación de agentes: tool accuracy, trayectorias
-    ├── 11  E2E streaming: Playwright + SSE + FastAPI
-    ├── 12  Observabilidad: OTel, Langfuse, Phoenix
-    └── 13  Drift monitoring: PSI, AlertHistory, tendencias
+├── Producción y observabilidad
+│   ├── 10  Evaluación de agentes: tool accuracy, trayectorias
+│   ├── 11  E2E streaming: Playwright + SSE + FastAPI
+│   ├── 12  Observabilidad: OTel, Langfuse, Phoenix
+│   └── 13  Drift monitoring: PSI, AlertHistory, tendencias
+│
+├── Coste y retrieval avanzado
+│   ├── 15  Cost-aware QA: CostReport, 7 métricas, regresión Δ%
+│   └── 16  Retrieval avanzado: HyDE, hybrid, reranking, self-RAG
+│
+├── Chatbots y robustness
+│   ├── 17  Chatbot testing: 8 áreas operativas (intent, escalation...)
+│   └── 18  Robustness: 8 categorías de perturbación, separado de red-team
+│
+└── Calidad humana y caso end-to-end
+    ├── 19  HITL e IAA: Cohen κ, Krippendorff α, ICC, calibración
+    └── 20  Caso end-to-end: chatbot regulado, incidente, runbook, postmortem
 ```

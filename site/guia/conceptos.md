@@ -1,79 +1,256 @@
+---
+title: "Conceptos clave"
+description: "Glosario operativo de los términos canónicos del Manual QA AI v13. Cada entrada con definición operativa y referencia al capítulo o módulo donde se desarrolla."
+---
+
 # Conceptos clave
 
-Glosario de los términos más usados en el laboratorio.
+Glosario operativo alineado con el Cap. 33 del Manual QA AI v13. La convención editorial sigue el §4.7 del manual: los términos canónicos de la industria se mantienen en inglés (faithfulness, robustness, drift, jailbreak, retrieval, embedding) y se complementan con la traducción al español cuando aporta.
 
-## Evaluación de LLMs
+::: tip Cómo se usa
+Este glosario es operativo: cada entrada explica para qué sirve el término en QA. Para definiciones canónicas vinculantes, consulta el Cap. 33 del manual. Para uso en código, ver la [tabla maestra de umbrales](./umbrales) y los módulos enlazados.
+:::
 
-**LLMTestCase** — La unidad básica de evaluación en DeepEval. Encapsula la entrada del usuario, la respuesta del modelo y el contexto recuperado.
+## Métricas de evaluación
 
-**Faithfulness** — ¿La respuesta se puede inferir a partir del contexto recuperado? Una respuesta fiel no añade información que no esté en el contexto.
+**Faithfulness** — Consistencia entre la respuesta y el contexto recuperado. Una respuesta fiel no introduce información ausente en el contexto. **Distinto de factual accuracy** (§7.3): una respuesta puede tener `faithfulness = 1.0` y ser objetivamente incorrecta si el contexto está desactualizado. Cap. 7, §7.3.
 
-**Answer Relevancy** — ¿La respuesta responde a lo que se preguntó? Mide si la respuesta está alineada con la pregunta, independientemente de si es correcta.
+**Answer Relevancy** — Pertinencia de la respuesta respecto al input del usuario. Mide si la respuesta aborda lo preguntado, independientemente de su corrección. En versiones recientes de RAGAS aparece como `Response Relevancy`. §7.1, §7.4.
 
-**Context Precision** — ¿El contexto recuperado es relevante para la pregunta? Mide la calidad del retriever, no del generador.
+**Answer Correctness** — Corrección factual de la respuesta frente a un ground truth anotado. Requiere GT explícito. Es la métrica más directa de calidad factual real. §7.1, §7.4.
 
-**Context Recall** — ¿El contexto recuperado contiene toda la información necesaria para responder? Complementario a context precision.
+**Context Precision** — Proporción de chunks recuperados que son relevantes, ponderada por ranking. Métrica del retriever, no del generador. §7.1.
 
-**Groundedness** — ¿Cada afirmación de la respuesta está respaldada por el contexto? Más granular que faithfulness: opera a nivel de claims individuales.
+**Context Recall** — Cobertura del contexto recuperado respecto a la respuesta ideal. Complementaria a context precision. §7.1.
 
-## LLM-as-judge
+**Groundedness** — Sinónimo de faithfulness en algunos frameworks (TruLens). Mantenido por compatibilidad. Cap. 33.
 
-**G-Eval** — Framework de evaluación donde un LLM puntúa la respuesta siguiendo una rúbrica definida por el usuario. Flexible pero sensible a sesgos.
+**BERTScore** — Métrica de similitud semántica basada en embeddings BERT alineados por F1. §11.2.
 
-**Position Bias** — Tendencia del LLM juez a preferir la respuesta que aparece primero cuando compara dos opciones. Se mitiga evaluando en orden inverso y promediando.
+**Cosine similarity** — Producto escalar de embeddings normalizados. Rango teórico `[-1, 1]`; rango habitual con sentence-transformers normalizados sobre texto natural: `[0, 1]`. §11.2.
 
-**Verbosity Bias** — Tendencia del LLM juez a puntuar mejor las respuestas más largas, independientemente de su calidad.
+**NDCG@k** — Normalized Discounted Cumulative Gain. Mide si los documentos relevantes aparecen en las primeras k posiciones del ranking, con penalización por posición. Valor máximo 1.0. §19.3.
 
-**DAG Metric** — Métrica definida como un grafo acíclico de condiciones booleanas. Permite lógica compuesta (AND, OR) sin depender de un LLM juez.
+**MRR@k** — Mean Reciprocal Rank. Posición media del primer documento relevante en los k resultados. §19.3.
 
-## Red teaming
+**MAP@k** — Mean Average Precision sobre los k primeros. Considera todos los documentos relevantes, no solo el primero. §19.3.
 
-**DAN** (Do Anything Now) — Familia de jailbreaks que intentan convencer al modelo de que "ha sido liberado" de sus restricciones.
+**Consistency score (robustness)** — Similitud semántica media entre las respuestas a una query original y sus versiones perturbadas. Cap. 12.
 
-**Many-shot jailbreaking** — Técnica que fabrica un historial de conversación ficticio donde el modelo ya aceptó hacer cosas prohibidas, para que continúe en esa dirección.
+## Tabla 4.2 y gates
 
-**Token manipulation** — Insertar guiones, espacios o caracteres unicode entre las letras de una palabra dañina para evadir filtros basados en tokens.
+**Δ (delta)** — Variación de una métrica respecto a la baseline (versión anterior). Cap. 33, [Tabla 4.2](./umbrales).
 
-**Indirect injection** — Ocultar instrucciones maliciosas dentro de documentos, páginas web o campos JSON que el modelo procesa como datos.
+**Quality gate** — Umbral mínimo que debe superarse en CI/CD para promocionar un cambio. Cap. 18.
 
-**Hit rate** — Porcentaje de attack prompts que consiguieron una respuesta comprometida del modelo. Un modelo seguro tiene hit rate cercano a 0.
+**Tabla maestra de umbrales** — La [Tabla 4.2](./umbrales) del manual: única fuente de verdad de los gates del repo. Vive en [`qa_thresholds.py`](https://github.com/gonzaloMorenoc/ai-testing-lab/blob/main/qa_thresholds.py).
 
-## Producción y monitorización
+**RiskLevel** — Tres niveles de exigencia: `MINIMUM` (red line absoluto), `TARGET` (gate de PR), `HIGH_RISK` (dominios regulados). §4.3.
 
-**PSI** (Population Stability Index) — Métrica estadística que mide cuánto ha cambiado la distribución de los scores entre un período de referencia y el actual. PSI > 0.2 indica cambio significativo.
+## LLM-as-Judge y sesgos
 
-**Drift semántico** — Cambio gradual en el significado o la distribución de las respuestas de un modelo a lo largo del tiempo. Puede ocurrir sin cambios en el modelo si cambian los datos de entrada.
+**LLM-as-Judge** — Uso de un LLM como evaluador automático de la salida de otro LLM. Permite escalar la evaluación a miles de ejemplos sin anotadores humanos, a costa de heredar sesgos del juez. Cap. 8.
 
-**Centroid shift** — Distancia coseno entre el centroide de los embeddings de un corpus de referencia y el corpus actual. Mide el drift semántico a nivel de corpus.
+**G-Eval** — Framework de evaluación con cadena de razonamiento explícita. Flexible pero sensible a sesgos sin calibración. §8.3, Liu et al. 2023.
 
-**AlertHistory** — Registro de resultados de una regla de alertas. Permite calcular tendencias: `degrading` (≥2 de los últimos 3 activados), `recovering` (primero activado, últimos 2 limpios), `stable` (exactamente 1 activado).
+**DAG Metric** — Métrica definida como grafo acíclico de condiciones booleanas. Permite lógica compuesta sin depender de un LLM juez. Determinista. §8.
 
-**Span** — Unidad de trazabilidad en OpenTelemetry. Representa una operación dentro de un pipeline: una llamada LLM, una búsqueda en el retriever, una llamada a herramienta.
+**Verbosity bias** — Tendencia del LLM juez a preferir respuestas más largas independientemente de su calidad. §8.2.
+
+**Position bias** — Tendencia del juez a preferir la primera opción en comparaciones pairwise. Mitigación: rotar orden y promediar. §8.2.
+
+**Self-enhancement bias** — Cuando el modelo evaluador es el mismo que el generador, tiende a sobrevalorar sus propias respuestas. Mitigación: evaluador distinto al generador. §8.2.
+
+**Lenient bias** — Tendencia a puntuar generosamente sin criterio claro. Mitigación: few-shot calibrado con ejemplos negativos. §8.2.
+
+## Golden datasets y anotación humana
+
+**Golden dataset** — Conjunto de ejemplos anotados por expertos del dominio con respuestas esperadas validadas. Base para evaluación offline y regression testing. Cap. 9.
+
+**Ground truth (GT)** — Respuesta de referencia anotada por experto. Requerida para `Context Recall` y `Answer Correctness`. §7.1, §9.3.
+
+**Inter-annotator agreement (IAA)** — Concordancia entre anotadores humanos. Cap. 31.
+
+**κ de Cohen** — Coeficiente de IAA para dos anotadores con etiquetas categóricas. Umbrales: `≥ 0.61` sustancial, `≥ 0.81` casi perfecto (Landis & Koch). §31.2.
+
+**Krippendorff α** — IAA para N anotadores y cualquier escala. Umbral mínimo aceptable: `≥ 0.667`. Para datasets críticos exigir `≥ 0.80`. §31.2.
+
+**Synthetic data** — Datos generados con LLMs para ampliar golden sets en bootstrap. Útil pero no para evaluación final; introduce sesgo del modelo generador. §9.4.
+
+## Seguridad y OWASP
+
+**OWASP LLM Top 10** — Estándar de las 10 vulnerabilidades de seguridad más críticas en aplicaciones LLM (edición 2025). Cap. 14.
+
+**Prompt Injection (LLM01)** — Manipulación del input para alterar el comportamiento del LLM, superando instrucciones del sistema. §15.1.
+
+**Jailbreak** — Ataque que rompe restricciones de seguridad del modelo. Subtipo de prompt injection orientado a comportamiento. §15.1.
+
+**Indirect prompt injection** — Variante donde las instrucciones maliciosas vienen ocultas en documentos, páginas web o resultados de tools que el modelo procesa como datos. §15.1.
+
+**System Prompt Leakage (LLM07)** — Exposición del system prompt mediante técnicas de extracción. Detectable con canary tokens. §28.3.
+
+**Sensitive Information Disclosure (LLM02)** — Revelación de datos confidenciales del entrenamiento, system prompt o contexto. Cap. 14, Cap. 28.
+
+**Excessive Agency (LLM06)** — Agente con más permisos de los necesarios; puede ejecutar acciones no autorizadas. Mitigación: `permission_boundary`, allowlist de tools, `human_approval_required`. §21.6.
+
+**Improper Output Handling (LLM05)** — Uso sin validación del output del LLM como código, SQL o HTML, permitiendo inyección downstream. Cap. 14.
+
+**Misinformation (LLM09)** — Desinformación generada con tono autoritativo. Mitigación: faithfulness + answer correctness. Cap. 14.
+
+**Unbounded Consumption (LLM10)** — Consumo no controlado de tokens/API calls que puede causar DoS o costes excesivos. Cap. 14, Cap. 27.
+
+**Supply Chain (LLM03)** — Dependencias comprometidas: modelos, datasets de fine-tuning, librerías con backdoors. Cap. 14.
+
+**Data and Model Poisoning (LLM04)** — Manipulación de los datos de entrenamiento o del corpus RAG para alterar el comportamiento. §14.3.
+
+**Vector and Embedding Weaknesses (LLM08)** — Manipulación del vector store para sesgar el retrieval. Cap. 14.
+
+## Robustness y perturbaciones
+
+**Robustness** — Estabilidad de la respuesta ante perturbaciones controladas del input. Cap. 12.
+
+**Hit rate** — Porcentaje de attack prompts que consiguieron una respuesta comprometida. Modelo seguro: hit rate → 0. Cap. 7.
+
+**Refusal rate** — Proporción de prompts maliciosos correctamente rechazados. Umbral objetivo `≥ 0.95`. §25.4.
+
+**False refusal rate** — Proporción de queries legítimas erróneamente rechazadas. Umbral objetivo `≤ 0.05`. Un sistema que rechaza todo tiene `refusal_rate=1.0` pero es inoperable. §25.4.
+
+## Alucinaciones
+
+**Hallucination** — Generación de información falsa o no soportada por el contexto. Cap. 17.
+
+**Intrinsic hallucination** — La respuesta contradice el contexto proporcionado. §17.1.
+
+**Extrinsic hallucination** — La respuesta añade información no presente ni soportada por el contexto (puede ser cierta o falsa). §17.1.
+
+**Temporal hallucination** — Confundir secuencias, inventar fechas, asumir conocimiento desactualizado como vigente. §17.1.
+
+## Drift y monitorización
+
+**Drift (deriva)** — Desplazamiento gradual de la distribución de respuestas del sistema. Cap. 13.
+
+**Query-side drift (covariate shift)** — Cambio en la distribución de inputs. §13.1.
+
+**Response-side drift (concept drift)** — Cambio en cómo el sistema responde a los mismos inputs. §13.1.
+
+**Knowledge drift** — Envejecimiento del corpus indexado frente a la realidad externa. §13.1.
+
+**PSI (Population Stability Index)** — Métrica estadística que mide cambio de distribución entre baseline y período actual. PSI > 0.2 indica cambio significativo. Cap. 13.
+
+**KS test (Kolmogorov-Smirnov)** — Test no paramétrico para detectar diferencia de distribuciones. Usado en drift detection. §13.3.
+
+**Semantic drift** — Sinónimo de drift en contextos semánticos. Cap. 13.
+
+**Centroid shift** — Distancia coseno entre centroides de embeddings (baseline vs actual). §14.3 (módulo 14 del repo).
+
+**AlertHistory** — Registro de resultados de una regla de alerta. Permite detectar tendencias: degrading, recovering, stable. (Módulo 13 del repo.)
+
+**Shadow traffic** — Tráfico real replicado a un sistema candidato sin afectar al usuario final. Usado en pre-deploy. §18.2.
+
+**Canary deployment** — Despliegue progresivo a un porcentaje bajo de tráfico antes del rollout completo. §18.2.
+
+## Observabilidad
+
+**Trace schema** — Contrato mínimo de campos que cada request debe persistir para reproducibilidad y debugging. §19.2.
+
+**Span** — Unidad de trazabilidad en OpenTelemetry. Una llamada LLM, una búsqueda en retriever o una invocación de tool. Cap. 19.
+
+**Execution trace** — Secuencia observable de acciones, decisiones y rationales de un agente. **Sustituye al término obsoleto "reasoning trace"** del v10. §21.4.
+
+**Latencia P50 / P95 / P99** — Percentiles de latencia total request → response. Umbral típico: P95 ≤ 2 s chat, ≤ 5 s RAG. §27.2.
+
+**Time-to-first-token (TTFT)** — Latencia hasta el primer token devuelto. Crítico para UX de streaming. Umbral: ≤ 1 s. §27.2.
+
+## Cost-aware QA
+
+**Cost-aware QA** — Tratamiento del coste por query como métrica de QA de primer orden, con sus propios gates. Cap. 27. (Módulo 15 del repo.)
+
+**Tool fan-out** — Número de tool calls por query en agentes. Cap. 27.
+
+**Cost regression testing** — Verifica que un PR no aumenta el coste medio por query más allá de un umbral. Cap. 27.
+
+## Retrieval y RAG
+
+**RAG** — Retrieval-Augmented Generation: arquitectura retriever + LLM. Cap. 6.
+
+**Vector store** — Base de datos especializada en búsqueda por similitud. §6.1.
+
+**Chunking** — División de documentos en fragmentos para indexación. §6.2, Cap. 29.
+
+**Embedding** — Representación vectorial densa de texto. §6.1.
+
+**Reranker** — Modelo cross-encoder que reordena los top-k del retriever. §6.1, §29.2.
+
+**Information Retrieval (IR) metrics** — Familia de métricas de retrieval: MRR, NDCG, MAP. §19.3.
+
+**HyDE (Hypothetical Document Embeddings)** — Genera respuesta hipotética con LLM y la usa para retrieval (Gao et al. 2022). §29.2. (Módulo 16 del repo.)
+
+**Hybrid search** — Combina BM25 (keyword) con embeddings densos. §29.2.
+
+**Query rewriting** — Reformula la query del usuario antes del retrieval, típicamente con un LLM. §29.2.
+
+**Multi-query retrieval** — Genera N variaciones de la query y une los resultados. §29.2.
+
+**Self-RAG** — El LLM decide cuándo recuperar y reflexiona sobre el resultado (Asai et al. 2023). §29.2.
+
+**Parent-child chunks** — Indexa chunks pequeños, devuelve el contexto extendido (parent). §29.2.
+
+**Sentence-window retrieval** — Indexa oraciones, devuelve la oración +/- N de contexto. §29.2.
+
+## Agentes y function calling
+
+**Function calling / tool use** — Capacidad del LLM de invocar funciones externas con argumentos estructurados. Cap. 30.
+
+**JSON Schema validation** — Validación de argumentos de tool calls. `jsonschema.validate()` requiere `FormatChecker` explícito para validar `format: email/date-time`. §30.3.
+
+**Permission boundary** — Conjunto de tools y dominios permitidos a un agente. §21.6.
+
+**Plan quality score** — Evaluación LLM-as-Judge del plan generado por un agente vs un plan canónico. §21.3.
+
+**Tool selection accuracy** — % de queries que invocan la tool esperada según golden traces. §21.7.
+
+**Idempotencia** — Invocar la misma operación N veces produce el mismo estado final que invocarla una. Requisito en tools con efectos secundarios. §21.5.
+
+**Reversibilidad** — Existencia de operación de compensación documentada para acciones destructivas. §21.5.
+
+## Privacy y PII
+
+**PII (Personally Identifiable Information)** — Información personal identificable. Cap. 28.
+
+**Canary token** — Token único insertado en system prompt o documentos para detectar leakage. §28.3.
+
+**PII scrubbing** — Anonimización automática de PII en logs y respuestas, típicamente con Microsoft Presidio. §28.4.
 
 ## Evaluación estadística
 
-**Cohen kappa (κ)** — Medida de acuerdo entre dos anotadores que corrige el acuerdo por azar. Interpretación según Landis & Koch: κ < 0.41 pobre; 0.41–0.60 moderado; 0.61–0.80 sustancial; > 0.80 casi perfecto. Se usa en el módulo 03 para medir acuerdo entre jueces LLM.
+**Bootstrap IC95** — Intervalo de confianza al 95 % por remuestreo (≥ 1000 resamples). Más robusto que el z-test con muestras pequeñas o distribuciones no normales. §13.3.
 
-**Bootstrap IC95** — Intervalo de confianza al 95% calculado remuestreando los datos N veces. Más robusto que el z-test cuando la distribución no es normal o la muestra es pequeña. Se usa en el módulo 05 para estimar la varianza real de un score de evaluación.
+**Kruskal-Wallis** — Test no paramétrico para detectar diferencia entre grupos demográficos. §25.2.
 
-**Kruskal-Wallis** — Test no paramétrico para detectar si las distribuciones de K grupos independientes difieren. Se usa en el módulo 08 para detectar sesgo demográfico en las respuestas del modelo.
+**Mann-Whitney U / Welch t-test** — Tests para comparación pairwise (no paramétrico / paramétrico con varianzas desiguales). §8.5.
 
-## Seguridad y guardrails
+## Herramientas y frameworks
 
-**False refusal rate** — Fracción de queries legítimas que el modelo rechaza incorrectamente. Un guardrail demasiado agresivo tiene false_refusal_rate alta, haciendo el modelo inútil para usuarios normales. Debe mantenerse ≤ 0.05 en producción.
+**RAGAS** — Framework de evaluación de RAG con métricas reference-free. Cap. 7.
 
-**Canary token** — Valor único generado con `secrets.token_hex()` e inyectado en el system prompt para detectar si el modelo lo filtra en sus respuestas. Si el token aparece en el output, el modelo está revelando información de su configuración interna.
+**DeepEval** — Framework de evaluación pytest-native con 50+ métricas. §20.3.
 
-**Excessive agency** — Vulnerabilidad OWASP LLM donde el agente tiene más permisos de los necesarios y puede ejecutar acciones destructivas sin autorización del usuario. Se mitiga con `human_approval_required` y límites de `max_iterations`.
+**TruLens** — Framework de evaluación y observabilidad con feedback loop en producción. §20.2.
 
-## Evaluación de retrieval
+**Langfuse** — Plataforma OSS de tracing y evaluación unificada. §20.1.
 
-**NDCG@k** (Normalized Discounted Cumulative Gain) — Mide si los documentos relevantes aparecen en las primeras k posiciones del ranking, con penalización mayor para errores en posición 1 que en posición k. Valor máximo: 1.0 (todos los relevantes en el top-k en orden perfecto).
+**Phoenix (Arize)** — Plataforma de observabilidad OSS con OTel y auto-instrumentación. §20.1.
 
-**MRR@k** (Mean Reciprocal Rank) — Posición media del primer documento relevante en los k resultados. MRR@5 = 1.0 significa que el primer documento relevante siempre está en posición 1.
+**Garak** — Vulnerability scanner para LLMs de NVIDIA. Cap. 7 (módulo del repo).
 
-**MAP@k** (Mean Average Precision) — Precision promedio calculada en cada posición donde aparece un documento relevante. Considera todos los documentos relevantes, no solo el primero, siendo más sensible que MRR cuando hay múltiples documentos relevantes.
+**DeepTeam** — Capa de red teaming sobre DeepEval, automatiza OWASP LLM Top 10. §14.4.
 
-**IAA** (Inter-Annotator Agreement) — Medida del grado en que diferentes anotadores asignan las mismas etiquetas al mismo conjunto de datos. Se cuantifica típicamente con Cohen kappa. Umbral mínimo aceptable: κ ≥ 0.61.
+**Guardrails AI** — Librería Python para validación de input/output de LLMs. Cap. 9 (módulo del repo).
 
-**Trajectory evaluation** — Evaluación de la secuencia completa de acciones de un agente LLM, no solo del resultado final. Verifica que el agente llegó al resultado correcto por el camino correcto — una herramienta incorrecta puede dar el resultado correcto por accidente.
+**NeMo Guardrails** — Sistema de guardrails conversacionales de NVIDIA (Colang DSL). §25.3.
+
+**LlamaGuard** — Modelo Meta para multi-categoría de safety, alineado con OWASP LLM. §25.3.
+
+**Microsoft Presidio** — Librería open-source de detección y anonimización de PII multi-idioma. §28.4.
+
+**ranx** — Librería Python de métricas IR (MRR, NDCG, MAP). §19.3.
