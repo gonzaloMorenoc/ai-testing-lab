@@ -53,7 +53,7 @@ features:
       width: 24
       height: 24
     title: 20 módulos independientes
-    details: Cada lab enseña exactamente un concepto. Empieza por el que te interesa: RAG, agentes, cost-aware, robustness, HITL... O recorre el caso end-to-end del módulo 20 para verlo todo conectado.
+    details: "Cada lab enseña exactamente un concepto. Empieza por el que te interesa — RAG, agentes, cost-aware, robustness, HITL — o recorre el caso end-to-end del módulo 20 para verlo todo conectado."
 
   - icon:
       src: /icons/terminal.svg
