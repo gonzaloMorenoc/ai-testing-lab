@@ -1,25 +1,75 @@
 /* =============================================
-   PALETA LAB GREEN — VitePress custom theme
+   LLM Testing Lab — Design System v2.0
+   Stack: VitePress · Tipografía: Inter + JetBrains Mono
+   Paleta: Slate (neutral) + Lab Green (accent)
+   Dual-mode (light + dark) — OLED-inspired dark
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* =============================================
+   FASE 1 · TOKENS DE DISEÑO
    ============================================= */
 
 :root {
-  /* Brand colors */
+  /* Brand (Lab Green) — accent del sistema */
   --vp-c-brand-1: #16a34a;
   --vp-c-brand-2: #15803d;
-  --vp-c-brand-3: #4ade80;
+  --vp-c-brand-3: #22c55e;
   --vp-c-brand-soft: #f0fdf4;
+
+  /* Slate (neutral) — escala completa para jerarquía */
+  --ll-slate-50: #f8fafc;
+  --ll-slate-100: #f1f5f9;
+  --ll-slate-200: #e2e8f0;
+  --ll-slate-300: #cbd5e1;
+  --ll-slate-400: #94a3b8;
+  --ll-slate-500: #64748b;
+  --ll-slate-600: #475569;
+  --ll-slate-700: #334155;
+  --ll-slate-800: #1e293b;
+  --ll-slate-900: #0f172a;
+  --ll-slate-950: #020617;
+
+  /* Green vivo */
+  --ll-green-300: #86efac;
+  --ll-green-400: #4ade80;
+  --ll-green-500: #22c55e;
+  --ll-green-600: #16a34a;
+  --ll-green-700: #15803d;
+  --ll-green-800: #166534;
+  --ll-green-900: #14532d;
+
+  /* Tipografía */
+  --vp-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+
+  /* Easing y duraciones — Fase 4 */
+  --ll-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ll-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ll-duration-fast: 150ms;
+  --ll-duration-base: 200ms;
+  --ll-duration-slow: 300ms;
+
+  /* Sombras consistentes */
+  --ll-shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --ll-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.08), 0 2px 4px -1px rgba(15, 23, 42, 0.04);
+  --ll-shadow-md: 0 8px 24px -4px rgba(22, 163, 74, 0.12), 0 4px 8px -2px rgba(15, 23, 42, 0.06);
+  --ll-shadow-lg: 0 16px 40px -8px rgba(22, 163, 74, 0.18), 0 8px 16px -4px rgba(15, 23, 42, 0.08);
+  --ll-glow: 0 0 0 4px rgba(22, 163, 74, 0.18);
 
   /* Hero */
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient(120deg, #14532d 30%, #16a34a);
+  --vp-home-hero-name-background: linear-gradient(135deg, #14532d 0%, #16a34a 45%, #22c55e 100%);
   --vp-home-hero-image-background-image: radial-gradient(
-    circle,
-    #dcfce7 0%,
-    #f0fdf4 60%
+    circle at 30% 30%,
+    #4ade8030 0%,
+    #16a34a18 30%,
+    #f0fdf4 70%
   );
-  --vp-home-hero-image-filter: blur(44px);
+  --vp-home-hero-image-filter: blur(56px);
 
-  /* Buttons */
+  /* Buttons brand */
   --vp-button-brand-bg: #16a34a;
   --vp-button-brand-hover-bg: #15803d;
   --vp-button-brand-active-bg: #166534;
@@ -27,135 +77,519 @@
   --vp-button-brand-hover-border: #15803d;
 }
 
-/* =============================================
-   NAV
-   ============================================= */
+/* Dark mode — OLED-inspired (Fase 1) */
+.dark {
+  --vp-c-bg: #020617;
+  --vp-c-bg-alt: #0f172a;
+  --vp-c-bg-elv: #1e293b;
+  --vp-c-bg-soft: #1e293b;
+  --vp-c-brand-1: #22c55e;
+  --vp-c-brand-2: #4ade80;
+  --vp-c-brand-3: #86efac;
+  --vp-c-brand-soft: rgba(34, 197, 94, 0.12);
 
-.VPNav {
-  border-bottom: 1px solid #dcfce7 !important;
-  background: rgba(240, 253, 244, 0.92) !important;
-  backdrop-filter: blur(8px);
+  --vp-home-hero-image-background-image: radial-gradient(
+    circle at 30% 30%,
+    #22c55e22 0%,
+    #16a34a12 30%,
+    transparent 70%
+  );
+  --vp-home-hero-name-background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #86efac 100%);
+
+  --ll-shadow: 0 4px 12px -2px rgba(34, 197, 94, 0.18), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+  --ll-shadow-md: 0 8px 24px -4px rgba(34, 197, 94, 0.22), 0 4px 8px -2px rgba(0, 0, 0, 0.5);
+  --ll-shadow-lg: 0 16px 40px -8px rgba(34, 197, 94, 0.28), 0 8px 16px -4px rgba(0, 0, 0, 0.6);
+  --ll-glow: 0 0 0 4px rgba(34, 197, 94, 0.28);
 }
 
-.VPNavBar .title {
-  color: #14532d !important;
+/* =============================================
+   TIPOGRAFÍA — Inter + JetBrains Mono
+   ============================================= */
+
+html {
+  font-family: var(--vp-font-family-base);
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code,
+pre,
+kbd {
+  font-family: var(--vp-font-family-mono);
+  font-feature-settings: 'liga' 0;
+}
+
+/* Headings con tracking optimizado */
+h1, h2, h3, h4 {
+  letter-spacing: -0.02em;
   font-weight: 700;
 }
 
+h1 { font-weight: 800; }
+
+/* =============================================
+   FASE 1 · NAV con backdrop sutil
+   ============================================= */
+
+.VPNav {
+  border-bottom: 1px solid var(--ll-slate-200) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+}
+
+.dark .VPNav {
+  background: rgba(2, 6, 23, 0.85) !important;
+  border-bottom: 1px solid var(--ll-slate-800) !important;
+}
+
+.VPNavBar .title {
+  color: var(--ll-slate-900) !important;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  transition: color var(--ll-duration-fast) var(--ll-ease-out);
+}
+
+.dark .VPNavBar .title {
+  color: var(--ll-slate-50) !important;
+}
+
 .VPNavBar .title:hover {
-  color: #16a34a !important;
+  color: var(--ll-green-600) !important;
+}
+
+.dark .VPNavBar .title:hover {
+  color: var(--ll-green-400) !important;
 }
 
 /* =============================================
-   SIDEBAR
+   FASE 3 · HERO REDISEÑADO
+   ============================================= */
+
+.VPHome .name {
+  font-size: clamp(2.5rem, 6vw, 4.5rem) !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.05 !important;
+  font-weight: 800 !important;
+}
+
+.VPHome .text {
+  font-size: clamp(1.5rem, 3vw, 2.25rem) !important;
+  color: var(--ll-slate-700) !important;
+  letter-spacing: -0.02em !important;
+  font-weight: 600 !important;
+  margin-top: 0.5rem !important;
+}
+
+.dark .VPHome .text {
+  color: var(--ll-slate-300) !important;
+}
+
+.VPHome .tagline {
+  font-size: 1.125rem !important;
+  line-height: 1.6 !important;
+  color: var(--ll-slate-600) !important;
+  max-width: 640px;
+  margin-top: 1.25rem !important;
+}
+
+.dark .VPHome .tagline {
+  color: var(--ll-slate-400) !important;
+}
+
+/* Botones del hero con glow */
+.VPButton.brand {
+  font-weight: 600 !important;
+  letter-spacing: -0.01em;
+  box-shadow: var(--ll-shadow);
+  transition: all var(--ll-duration-base) var(--ll-ease-out);
+}
+
+.VPButton.brand:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ll-shadow-md), var(--ll-glow);
+}
+
+.VPButton.brand:active {
+  transform: translateY(0);
+  transition-duration: var(--ll-duration-fast);
+}
+
+.VPButton.alt {
+  transition: all var(--ll-duration-base) var(--ll-ease-out);
+}
+
+.VPButton.alt:hover {
+  transform: translateY(-1px);
+}
+
+/* =============================================
+   HERO BADGE — pulsante
+   ============================================= */
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #dcfce7, #f0fdf4);
+  border: 1px solid var(--ll-green-300);
+  color: var(--ll-green-800);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  padding: 0.375rem 0.875rem;
+  border-radius: 999px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  box-shadow: var(--ll-shadow-sm);
+}
+
+.hero-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--ll-green-500);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 var(--ll-green-500);
+  animation: ll-pulse 2s var(--ll-ease-in-out) infinite;
+}
+
+.dark .hero-badge {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(22, 163, 74, 0.08));
+  border-color: rgba(34, 197, 94, 0.35);
+  color: var(--ll-green-300);
+}
+
+@keyframes ll-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+  70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-badge::before { animation: none; }
+}
+
+/* =============================================
+   FASE 2 · FEATURE CARDS con SVG inline
+   ============================================= */
+
+.VPFeature {
+  border: 1px solid var(--ll-slate-200) !important;
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  padding: 1.75rem !important;
+  transition: all var(--ll-duration-base) var(--ll-ease-out);
+  box-shadow: var(--ll-shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.dark .VPFeature {
+  background: var(--ll-slate-900) !important;
+  border-color: var(--ll-slate-800) !important;
+}
+
+.VPFeature::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, transparent 60%, rgba(34, 197, 94, 0.04) 100%);
+  opacity: 0;
+  transition: opacity var(--ll-duration-base) var(--ll-ease-out);
+  pointer-events: none;
+}
+
+.VPFeature:hover {
+  border-color: var(--ll-green-400) !important;
+  box-shadow: var(--ll-shadow-md);
+  transform: translateY(-3px);
+}
+
+.VPFeature:hover::after {
+  opacity: 1;
+}
+
+/* Reemplazo del emoji por SVG via icon class del frontmatter */
+.VPFeature .icon {
+  background: linear-gradient(135deg, var(--ll-green-500), var(--ll-green-700)) !important;
+  border: none !important;
+  color: white !important;
+  font-size: 24px !important;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: var(--ll-shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  margin-bottom: 1rem;
+  transition: transform var(--ll-duration-base) var(--ll-ease-out);
+}
+
+.VPFeature:hover .icon {
+  transform: scale(1.08) rotate(-3deg);
+}
+
+.dark .VPFeature .icon {
+  background: linear-gradient(135deg, var(--ll-green-400), var(--ll-green-600)) !important;
+}
+
+/* SVGs dentro del .icon */
+.VPFeature .icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.VPFeature .title {
+  color: var(--ll-slate-900) !important;
+  font-weight: 700 !important;
+  font-size: 1.0625rem !important;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.5rem !important;
+}
+
+.dark .VPFeature .title {
+  color: var(--ll-slate-100) !important;
+}
+
+.VPFeature .details {
+  color: var(--ll-slate-600) !important;
+  line-height: 1.6;
+  font-size: 0.9375rem !important;
+}
+
+.dark .VPFeature .details {
+  color: var(--ll-slate-400) !important;
+}
+
+/* =============================================
+   FASE 1 · SIDEBAR
    ============================================= */
 
 .VPSidebarItem.is-active > .item .link {
-  color: #16a34a !important;
+  color: var(--ll-green-600) !important;
   font-weight: 600;
 }
 
+.dark .VPSidebarItem.is-active > .item .link {
+  color: var(--ll-green-400) !important;
+}
+
 .VPSidebarItem.is-active > .item .indicator {
-  background-color: #16a34a !important;
+  background-color: var(--ll-green-600) !important;
+  border-radius: 2px;
+}
+
+.dark .VPSidebarItem.is-active > .item .indicator {
+  background-color: var(--ll-green-400) !important;
+}
+
+/* Section titles del sidebar */
+.VPSidebarItem.level-0 > .item .text {
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.75rem !important;
+  color: var(--ll-slate-500) !important;
+}
+
+.dark .VPSidebarItem.level-0 > .item .text {
+  color: var(--ll-slate-400) !important;
+}
+
+.VPSidebarItem .link {
+  transition: color var(--ll-duration-fast) var(--ll-ease-out);
 }
 
 /* =============================================
-   CÓDIGO INLINE
+   FASE 5 · CÓDIGO INLINE
    ============================================= */
 
 :not(pre) > code {
-  background: #f0fdf4 !important;
-  color: #15803d !important;
-  border: 1px solid #dcfce7;
-  border-radius: 4px;
-  padding: 0.1em 0.35em;
+  background: var(--ll-green-50, #f0fdf4) !important;
+  color: var(--ll-green-700) !important;
+  border: 1px solid var(--ll-green-300);
+  border-radius: 6px;
+  padding: 0.125em 0.4em;
   font-size: 0.875em;
+  font-weight: 500;
+}
+
+.dark :not(pre) > code {
+  background: rgba(34, 197, 94, 0.12) !important;
+  color: var(--ll-green-300) !important;
+  border-color: rgba(34, 197, 94, 0.3);
 }
 
 /* =============================================
-   BLOQUES DE CÓDIGO FENCED
+   FASE 5 · BLOQUES DE CÓDIGO con chip de lenguaje
    ============================================= */
 
 div[class*='language-'] {
-  background: #0d2818 !important;
-  border: 1px solid #1a3d24;
-  border-radius: 8px;
+  background: var(--ll-slate-950) !important;
+  border: 1px solid var(--ll-slate-800);
+  border-radius: 10px;
+  box-shadow: var(--ll-shadow-sm);
+  position: relative;
+  margin: 1.5rem 0 !important;
 }
 
 div[class*='language-'] code {
-  color: #86efac !important;
+  color: #e2e8f0 !important;
   background: transparent !important;
   border: none;
   padding: 0;
   font-size: 0.875em;
+  font-family: var(--vp-font-family-mono);
+  font-weight: 400;
 }
 
 div[class*='language-'] .shiki {
-  background: #0d2818 !important;
+  background: var(--ll-slate-950) !important;
 }
+
+/* Chip de lenguaje arriba a la derecha */
+div[class*='language-']::before {
+  content: attr(class);
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.7rem;
+  color: var(--ll-slate-400);
+  background: rgba(15, 23, 42, 0.6);
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  opacity: 0.7;
+  /* VitePress añade clases language-python etc.; recortamos visualmente */
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* VitePress ya añade el label oficial vía data-lang — preferirlo si existe */
+div[class*='language-'][class*='line-numbers-mode']::before,
+div[class*='language-']::before {
+  content: '';
+}
+
+div[class*='language-'][class*='language-python']::before { content: 'py'; }
+div[class*='language-'][class*='language-bash']::before { content: 'bash'; }
+div[class*='language-'][class*='language-sh']::before { content: 'sh'; }
+div[class*='language-'][class*='language-json']::before { content: 'json'; }
+div[class*='language-'][class*='language-yaml']::before { content: 'yaml'; }
+div[class*='language-'][class*='language-text']::before { content: 'txt'; }
+div[class*='language-'][class*='language-md']::before { content: 'md'; }
+div[class*='language-'][class*='language-typescript']::before { content: 'ts'; }
+div[class*='language-'][class*='language-javascript']::before { content: 'js'; }
 
 /* Números de línea */
 div[class*='language-'].line-numbers-mode .line-numbers {
-  background: #0b2015 !important;
-  border-right: 1px solid #1a3d24;
-  color: #2d6a3f;
+  background: rgba(2, 6, 23, 0.6) !important;
+  border-right: 1px solid var(--ll-slate-800);
+  color: var(--ll-slate-600);
+}
+
+/* Botón copy */
+div[class*='language-'] .copy {
+  background: var(--ll-slate-800) !important;
+  border: 1px solid var(--ll-slate-700) !important;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity var(--ll-duration-base) var(--ll-ease-out),
+              background var(--ll-duration-fast) var(--ll-ease-out);
+}
+
+div[class*='language-']:hover .copy {
+  opacity: 1;
+}
+
+div[class*='language-'] .copy:hover {
+  background: var(--ll-green-600) !important;
+  border-color: var(--ll-green-500) !important;
 }
 
 /* =============================================
-   CUSTOM BLOCKS (tip, warning, etc.)
+   CUSTOM BLOCKS (tip, warning, info)
    ============================================= */
 
+.custom-block {
+  border-radius: 8px;
+  border-left-width: 4px !important;
+  padding: 1rem 1.25rem !important;
+}
+
 .custom-block.tip {
-  border-color: #16a34a !important;
-  background: #f0fdf4 !important;
+  border-color: var(--ll-green-500) !important;
+  background: var(--ll-green-50, #f0fdf4) !important;
+}
+
+.dark .custom-block.tip {
+  background: rgba(34, 197, 94, 0.08) !important;
+  border-color: var(--ll-green-400) !important;
 }
 
 .custom-block.tip .custom-block-title {
-  color: #15803d !important;
+  color: var(--ll-green-800) !important;
+  font-weight: 600;
+}
+
+.dark .custom-block.tip .custom-block-title {
+  color: var(--ll-green-300) !important;
 }
 
 .custom-block.info {
-  border-color: #4ade80 !important;
-  background: #f0fdf4 !important;
+  border-color: var(--ll-slate-400) !important;
+  background: var(--ll-slate-50) !important;
+}
+
+.dark .custom-block.info {
+  background: rgba(148, 163, 184, 0.08) !important;
+  border-color: var(--ll-slate-500) !important;
+}
+
+.custom-block.warning {
+  border-color: #f59e0b !important;
+  background: #fffbeb !important;
+}
+
+.dark .custom-block.warning {
+  background: rgba(245, 158, 11, 0.08) !important;
 }
 
 /* =============================================
-   BADGE HERO
+   FASE 4 · MICROINTERACCIONES GLOBALES
    ============================================= */
 
-.hero-badge {
-  display: inline-block;
-  background: #dcfce7;
-  border: 1px solid #86efac;
-  color: #166534;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.2rem 0.75rem;
-  border-radius: 999px;
-  margin-bottom: 1rem;
+.VPLink:focus-visible,
+.VPButton:focus-visible {
+  outline: 2px solid var(--ll-green-500);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
-/* =============================================
-   FEATURES (home page)
-   ============================================= */
-
-.VPFeature {
-  border: 1px solid #dcfce7 !important;
-  background: #f0fdf4 !important;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.VPFeature:hover {
-  border-color: #86efac !important;
-  box-shadow: 0 4px 16px #16a34a1a;
-}
-
-.VPFeature .title {
-  color: #14532d !important;
-}
-
-.VPFeature .details {
-  color: #166534 !important;
+/* prefers-reduced-motion: desactiva todas las transformaciones */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* =============================================
@@ -175,7 +609,7 @@ div[class*='language-'].line-numbers-mode .line-numbers {
 }
 
 .module-sidebar {
-  width: 180px;
+  width: 200px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -185,35 +619,69 @@ div[class*='language-'].line-numbers-mode .line-numbers {
 }
 
 .stat-card {
-  background: #f0fdf4;
-  border: 1px solid #86efac;
-  border-radius: 8px;
-  padding: 0.6rem 0.5rem;
+  background: linear-gradient(135deg, #ffffff, var(--ll-slate-50));
+  border: 1px solid var(--ll-slate-200);
+  border-radius: 10px;
+  padding: 0.75rem 0.5rem;
   text-align: center;
+  transition: all var(--ll-duration-base) var(--ll-ease-out);
+  box-shadow: var(--ll-shadow-sm);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ll-green-400);
+  box-shadow: var(--ll-shadow);
+}
+
+.dark .stat-card {
+  background: linear-gradient(135deg, var(--ll-slate-900), var(--ll-slate-800));
+  border-color: var(--ll-slate-700);
 }
 
 .stat-card.stat-ok {
-  background: #dcfce7;
+  background: linear-gradient(135deg, #dcfce7, var(--ll-green-50, #f0fdf4));
+  border-color: var(--ll-green-400);
+}
+
+.dark .stat-card.stat-ok {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(22, 163, 74, 0.08));
+  border-color: rgba(34, 197, 94, 0.35);
 }
 
 .stat-number {
-  color: #16a34a;
-  font-size: 1.5rem;
-  font-weight: 900;
+  color: var(--ll-green-600);
+  font-size: 1.625rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   line-height: 1;
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.2rem;
+  font-feature-settings: 'tnum';
+}
+
+.dark .stat-number {
+  color: var(--ll-green-400);
 }
 
 .stat-number.level {
-  font-size: 0.9rem;
-  color: #15803d;
+  font-size: 0.95rem;
+  color: var(--ll-green-700);
+}
+
+.dark .stat-number.level {
+  color: var(--ll-green-300);
 }
 
 .stat-label {
-  color: #166534;
-  font-size: 0.65rem;
+  color: var(--ll-slate-600);
+  font-size: 0.6875rem;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.dark .stat-label {
+  color: var(--ll-slate-400);
 }
 
 .module-sidebar div[class*='language-'] {
@@ -226,27 +694,53 @@ div[class*='language-'].line-numbers-mode .line-numbers {
 }
 
 .module-next {
-  padding-top: 0.75rem;
-  border-top: 1px solid #dcfce7;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--ll-slate-200);
+}
+
+.dark .module-next {
+  border-top-color: var(--ll-slate-800);
 }
 
 .next-label {
-  color: #6b7280;
+  color: var(--ll-slate-500);
   font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   margin-bottom: 0.3rem;
+  font-weight: 600;
 }
 
 .module-next a {
-  color: #16a34a !important;
+  color: var(--ll-green-600) !important;
   font-weight: 600;
-  font-size: 0.82rem;
-  text-decoration: underline;
+  font-size: 0.875rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: gap var(--ll-duration-fast) var(--ll-ease-out);
+}
+
+.dark .module-next a {
+  color: var(--ll-green-400) !important;
+}
+
+.module-next a:hover {
+  gap: 0.5rem;
+}
+
+.module-next a::after {
+  content: '→';
+  transition: transform var(--ll-duration-fast) var(--ll-ease-out);
+}
+
+.module-next a:hover::after {
+  transform: translateX(2px);
 }
 
 /* =============================================
-   RESPONSIVE — módulos en móvil
+   RESPONSIVE — móvil
    ============================================= */
 
 @media (max-width: 768px) {
@@ -264,7 +758,7 @@ div[class*='language-'].line-numbers-mode .line-numbers {
 
   .stat-card {
     flex: 1;
-    min-width: 70px;
+    min-width: 80px;
   }
 
   .module-next {
