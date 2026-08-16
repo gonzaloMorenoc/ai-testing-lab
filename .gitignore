@@ -83,3 +83,6 @@ logs/
 .DS_Store
 doc.md
 .superpowers/
+
+# Claude Code — permisos locales de cada máquina (nunca se comparten)
+.claude/settings.local.json
