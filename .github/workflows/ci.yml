@@ -39,7 +39,7 @@ jobs:
         continue-on-error: true
 
   test:
-    name: Tests módulos 01-13 (Python ${{ matrix.python-version }})
+    name: Tests (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     needs: lint
     strategy:
@@ -61,30 +61,18 @@ jobs:
       - name: Install CI dependencies
         run: uv sync --extra ci --no-install-project
 
-      - name: Run tests (módulos 01-14, sin API key)
+      # No enumerar módulos aquí: un módulo nuevo debe entrar en CI sin tocar
+      # este fichero. Enumerarlos dejó los módulos 15-20 (381 tests) sin cubrir.
+      - name: Run tests (todos los módulos, sin API key)
         run: |
-          uv run --no-project pytest \
-            modules/01-primer-eval/tests/ \
-            modules/02-ragas-basics/tests/ \
-            modules/03-llm-as-judge/tests/ \
-            modules/04-multi-turn/tests/ \
-            modules/05-prompt-regression/tests/ \
-            modules/06-hallucination-lab/tests/ \
-            modules/07-redteam-garak/tests/ \
-            modules/08-redteam-deepteam/tests/ \
-            modules/09-guardrails/tests/ \
-            modules/10-agent-testing/tests/ \
-            modules/11-playwright-streaming/tests/ \
-            modules/12-observability/tests/ \
-            modules/13-drift-monitoring/tests/ \
-            modules/14-embedding-eval/tests/ \
+          uv run --no-project pytest modules/ \
             -m "not slow and not redteam" \
             --tb=short \
             -q \
             --cov=modules \
             --cov-report=xml:coverage.xml \
             --cov-report=term-missing \
-            --cov-fail-under=75
+            --cov-fail-under=90
         env:
           DEEPEVAL_TELEMETRY_OPT_OUT: "YES"
 

@@ -139,6 +139,7 @@ source = ["modules"]
 omit = ["*/tests/*", "*/conftest.py", "exercises/*", "scripts/*"]
 
 [tool.coverage.report]
+fail_under = 90
 exclude_lines = [
     "pragma: no cover",
     "if TYPE_CHECKING:",
