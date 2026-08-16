@@ -108,7 +108,7 @@ embeddings = [
     "numpy>=1.26",
 ]
 
-# CI — dependencias ligeras para correr los 14 módulos sin API key ni heavy deps
+# CI — dependencias ligeras para correr los 20 módulos sin API key ni heavy deps
 ci = [
     "deepeval>=1.4",
     "ragas>=0.2",
@@ -123,6 +123,7 @@ ci = [
     "sacrebleu>=2.4",
     "nltk>=3.8",
     "numpy>=1.26",              # módulos 13, 14
+    "scipy>=1.13",              # módulos 08 y 13: importado en src/, rompe la colección sin él
 ]
 
 # Desarrollo completo — lint, format, type checking
