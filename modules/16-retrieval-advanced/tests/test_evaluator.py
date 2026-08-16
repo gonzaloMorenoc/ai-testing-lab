@@ -1,7 +1,6 @@
 """Tests del evaluator y del gate ΔNDCG@5 ≥ +0.05."""
 
 import pytest
-
 from retrieval_evaluator import (
     JUSTIFICATION_THRESHOLD_NDCG,
     ComparisonReport,

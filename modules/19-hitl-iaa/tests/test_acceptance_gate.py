@@ -1,7 +1,6 @@
 """Tests de assert_acceptable_iaa (gate de calidad del dataset)."""
 
 import pytest
-
 from iaa_metrics import (
     HIGH_RISK_KAPPA,
     MIN_ACCEPTABLE_KAPPA,

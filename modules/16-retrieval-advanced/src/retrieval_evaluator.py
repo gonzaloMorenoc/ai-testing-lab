@@ -21,9 +21,7 @@ def _dcg(relevances: list[float]) -> float:
     return sum(r / math.log2(i + 2) for i, r in enumerate(relevances))
 
 
-def ndcg_at_k(
-    retrieved: list[str], qrels: dict[str, float], k: int = 5
-) -> float:
+def ndcg_at_k(retrieved: list[str], qrels: dict[str, float], k: int = 5) -> float:
     """NDCG@k. qrels: doc_id -> relevancia (0/1 o 0/1/2/3...)."""
     retrieved_top = retrieved[:k]
     rels = [qrels.get(doc_id, 0.0) for doc_id in retrieved_top]

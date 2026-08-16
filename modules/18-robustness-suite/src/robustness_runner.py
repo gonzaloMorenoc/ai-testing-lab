@@ -50,8 +50,7 @@ class RobustnessRunner:
                         perturbed_query=perturbed,
                         perturbation_name=name,
                         similarity=_bow_similarity(base_response, perturbed_response),
-                        refusal_changed=self.is_refusal(perturbed_response)
-                        != base_refusal,
+                        refusal_changed=self.is_refusal(perturbed_response) != base_refusal,
                     )
                 )
         return build_report(

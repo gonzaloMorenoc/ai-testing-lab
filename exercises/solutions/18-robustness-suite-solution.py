@@ -50,6 +50,7 @@ def main() -> None:
 
     # Re-ejecutar para obtener resultados raw y agregar por categoría
     import random
+
     from perturbations import PERTURBERS  # noqa: PLC0415
     from robustness_metrics import PerturbationResult, _bow_similarity  # noqa: PLC0415
 

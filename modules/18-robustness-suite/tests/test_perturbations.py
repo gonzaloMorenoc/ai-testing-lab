@@ -3,7 +3,6 @@
 import random
 
 import pytest
-
 from perturbations import (
     PERTURBATION_SPECS,
     PERTURBERS,
@@ -25,9 +24,17 @@ from perturbations import (
 class TestSpecs:
     def test_all_canonical_perturbations_present(self):
         expected = {
-            "inject_typos", "remove_diacritics", "morph_number_swap", "passive_voice",
-            "paraphrase", "lang_switch_token", "truncate", "verbose", "uppercase",
-            "emojify", "zero_width",
+            "inject_typos",
+            "remove_diacritics",
+            "morph_number_swap",
+            "passive_voice",
+            "paraphrase",
+            "lang_switch_token",
+            "truncate",
+            "verbose",
+            "uppercase",
+            "emojify",
+            "zero_width",
         }
         assert set(PERTURBATION_SPECS.keys()) == expected
 

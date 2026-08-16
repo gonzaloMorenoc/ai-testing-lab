@@ -52,9 +52,7 @@ def consistency_score(results: list[PerturbationResult]) -> float:
     return sum(r.similarity for r in results) / len(results)
 
 
-def semantic_stability(
-    results: list[PerturbationResult], threshold: float = 0.75
-) -> float:
+def semantic_stability(results: list[PerturbationResult], threshold: float = 0.75) -> float:
     """% de pares cuya similitud queda por encima del umbral semántico."""
     if not results:
         return 0.0
@@ -74,9 +72,7 @@ def refusal_stability(results: list[PerturbationResult]) -> float:
     return stable / len(results)
 
 
-def accuracy_degradation(
-    original_accuracy: float, perturbed_accuracy: float
-) -> float:
+def accuracy_degradation(original_accuracy: float, perturbed_accuracy: float) -> float:
     """Caída de Answer Correctness por perturbación. Positivo = ha caído."""
     return original_accuracy - perturbed_accuracy
 

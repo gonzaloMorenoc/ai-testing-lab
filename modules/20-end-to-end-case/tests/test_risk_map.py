@@ -1,7 +1,6 @@
 """Tests del mapa de riesgos D.1."""
 
 import pytest
-
 from risk_map import RISK_MAP, RiskCategory, find_requirement
 
 

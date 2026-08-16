@@ -80,30 +80,75 @@ def gen_module_15() -> list[dict]:
 
 DOCS_POOL = {
     # cocina (jerga: nombres de platos, ingredientes)
-    "d_cook_01": ("La paella valenciana tradicional lleva arroz bomba, azafrán y conejo.", "cooking"),
-    "d_cook_02": ("La fideuá es un plato de fideos similar a la paella pero con marisco.", "cooking"),
+    "d_cook_01": (
+        "La paella valenciana tradicional lleva arroz bomba, azafrán y conejo.",
+        "cooking",
+    ),
+    "d_cook_02": (
+        "La fideuá es un plato de fideos similar a la paella pero con marisco.",
+        "cooking",
+    ),
     "d_cook_03": ("El gazpacho andaluz es una sopa fría a base de tomate y pimiento.", "cooking"),
-    "d_cook_04": ("La tortilla española clásica solo lleva huevo, patata y aceite de oliva.", "cooking"),
+    "d_cook_04": (
+        "La tortilla española clásica solo lleva huevo, patata y aceite de oliva.",
+        "cooking",
+    ),
     "d_cook_05": ("El cocido madrileño es un guiso de garbanzos con carne y verduras.", "cooking"),
     # tecnología (jerga: siglas, APIs)
-    "d_tech_01": ("Python es un lenguaje multipropósito muy usado en data science y backend.", "tech"),
-    "d_tech_02": ("Rust ofrece seguridad de memoria sin garbage collector mediante el borrow checker.", "tech"),
+    "d_tech_01": (
+        "Python es un lenguaje multipropósito muy usado en data science y backend.",
+        "tech",
+    ),
+    "d_tech_02": (
+        "Rust ofrece seguridad de memoria sin garbage collector mediante el borrow checker.",
+        "tech",
+    ),
     "d_tech_03": ("Kubernetes orquesta contenedores Docker en clusters distribuidos.", "tech"),
     "d_tech_04": ("PostgreSQL soporta JSONB, full-text search y extensiones como PostGIS.", "tech"),
-    "d_tech_05": ("GraphQL permite al cliente especificar exactamente los campos de la respuesta.", "tech"),
+    "d_tech_05": (
+        "GraphQL permite al cliente especificar exactamente los campos de la respuesta.",
+        "tech",
+    ),
     # salud
-    "d_health_01": ("La hipertensión arterial se diagnostica con valores sostenidos sobre 140/90.", "health"),
-    "d_health_02": ("La diabetes tipo 2 se asocia a obesidad y resistencia a la insulina.", "health"),
-    "d_health_03": ("El insomnio crónico requiere evaluación médica si dura más de tres meses.", "health"),
-    "d_health_04": ("La fibrilación auricular es la arritmia sostenida más común en adultos.", "health"),
+    "d_health_01": (
+        "La hipertensión arterial se diagnostica con valores sostenidos sobre 140/90.",
+        "health",
+    ),
+    "d_health_02": (
+        "La diabetes tipo 2 se asocia a obesidad y resistencia a la insulina.",
+        "health",
+    ),
+    "d_health_03": (
+        "El insomnio crónico requiere evaluación médica si dura más de tres meses.",
+        "health",
+    ),
+    "d_health_04": (
+        "La fibrilación auricular es la arritmia sostenida más común en adultos.",
+        "health",
+    ),
     # viajes
-    "d_travel_01": ("Lisboa destaca por sus tranvías históricos y el mirador de Santa Catarina.", "travel"),
+    "d_travel_01": (
+        "Lisboa destaca por sus tranvías históricos y el mirador de Santa Catarina.",
+        "travel",
+    ),
     "d_travel_02": ("El Camino de Santiago Francés parte desde Saint-Jean-Pied-de-Port.", "travel"),
-    "d_travel_03": ("Marrakech es famosa por su zoco, la plaza Jemaa el-Fna y los jardines Majorelle.", "travel"),
+    "d_travel_03": (
+        "Marrakech es famosa por su zoco, la plaza Jemaa el-Fna y los jardines Majorelle.",
+        "travel",
+    ),
     # finanzas
-    "d_fin_01": ("Un ETF replica un índice bursátil con costes inferiores a los fondos activos.", "finance"),
-    "d_fin_02": ("La inflación reduce el poder adquisitivo si los salarios no se ajustan.", "finance"),
-    "d_fin_03": ("Diversificar entre clases de activo reduce la volatilidad de la cartera.", "finance"),
+    "d_fin_01": (
+        "Un ETF replica un índice bursátil con costes inferiores a los fondos activos.",
+        "finance",
+    ),
+    "d_fin_02": (
+        "La inflación reduce el poder adquisitivo si los salarios no se ajustan.",
+        "finance",
+    ),
+    "d_fin_03": (
+        "Diversificar entre clases de activo reduce la volatilidad de la cartera.",
+        "finance",
+    ),
     # ruido
     "d_noise_01": ("Los gatos cazan ratones en jardines por la noche.", "misc"),
     "d_noise_02": ("Las nubes cirros indican buen tiempo a corto plazo.", "misc"),
@@ -160,7 +205,10 @@ QUERY_TEMPLATES: dict[str, list[tuple[str, list[str]]]] = {
         ("ETFs vs fondos activos coste y diversificación", ["d_fin_01", "d_fin_03"]),
         ("lisboa marrakech transporte y barrios", ["d_travel_01", "d_travel_03"]),
         ("kubernetes graphql cuándo elegir cada uno", ["d_tech_03", "d_tech_05"]),
-        ("paella tortilla cocido platos tradicionales españoles", ["d_cook_01", "d_cook_04", "d_cook_05"]),
+        (
+            "paella tortilla cocido platos tradicionales españoles",
+            ["d_cook_01", "d_cook_04", "d_cook_05"],
+        ),
         ("postgresql graphql cuándo combinarlos", ["d_tech_04", "d_tech_05"]),
         ("insomnio fibrilación pruebas diagnósticas", ["d_health_03", "d_health_04"]),
         ("inflación diversificación protección cartera", ["d_fin_02", "d_fin_03"]),
@@ -231,7 +279,10 @@ QUERY_TEMPLATES: dict[str, list[tuple[str, list[str]]]] = {
     "iterative_reasoning": [
         ("primero paella, después fideuá, comparar", ["d_cook_01", "d_cook_02"]),
         ("python para data science, después backend, integración", ["d_tech_01", "d_tech_05"]),
-        ("hipertensión diagnóstico, diabetes seguimiento, ambas conjuntas", ["d_health_01", "d_health_02"]),
+        (
+            "hipertensión diagnóstico, diabetes seguimiento, ambas conjuntas",
+            ["d_health_01", "d_health_02"],
+        ),
         ("ETF inicial, diversificar, inflación protección", ["d_fin_01", "d_fin_03", "d_fin_02"]),
         ("lisboa cultura, camino santiago peregrinos, comparar", ["d_travel_01", "d_travel_02"]),
         ("rust empezar, después kubernetes deployment", ["d_tech_02", "d_tech_03"]),
@@ -254,7 +305,8 @@ def gen_module_16() -> list[dict]:
             # Añade 1-2 relevantes parciales del mismo dominio
             domain = DOCS_POOL[relevant_ids[0]][1]
             partials = [
-                doc_id for doc_id, (_text, dom) in DOCS_POOL.items()
+                doc_id
+                for doc_id, (_text, dom) in DOCS_POOL.items()
                 if dom == domain and doc_id not in relevant_ids
             ][:2]
             for p in partials:
@@ -277,10 +329,10 @@ def gen_module_16() -> list[dict]:
 
 # ---------- Documentos compartidos ----------
 
+
 def gen_corpus_16() -> dict:
     return {
-        doc_id: {"text": text, "domain": domain}
-        for doc_id, (text, domain) in DOCS_POOL.items()
+        doc_id: {"text": text, "domain": domain} for doc_id, (text, domain) in DOCS_POOL.items()
     }
 
 

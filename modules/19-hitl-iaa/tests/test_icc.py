@@ -1,7 +1,6 @@
 """Tests de ICC(2,1)."""
 
 import pytest
-
 from iaa_metrics import icc_2way_random
 
 

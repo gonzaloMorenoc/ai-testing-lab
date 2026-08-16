@@ -47,9 +47,7 @@ def should_trigger_alert(faithfulness: float, sustained_minutes: int) -> bool:
     return faithfulness < FAITHFULNESS_AUTO_ROLLBACK and sustained_minutes >= 15
 
 
-def diagnose_root_cause(
-    prompt_changed: bool, model_changed: bool, corpus_changed: bool
-) -> str:
+def diagnose_root_cause(prompt_changed: bool, model_changed: bool, corpus_changed: bool) -> str:
     """Bisección en T+5 (D.8): qué componente cambió entre baseline y release."""
     changes = []
     if prompt_changed:

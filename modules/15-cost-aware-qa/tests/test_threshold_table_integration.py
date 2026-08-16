@@ -5,7 +5,6 @@ contra la tabla maestra de umbrales del repo, no contra valores hardcoded.
 """
 
 import pytest
-
 from qa_thresholds import QA_THRESHOLDS, RiskLevel, evaluate_gates
 
 

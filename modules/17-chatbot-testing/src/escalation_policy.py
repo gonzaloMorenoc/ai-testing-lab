@@ -12,11 +12,22 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 CRITICAL_KEYWORDS = [
-    "demanda", "abogado", "denuncia", "suicidio", "emergencia",
-    "urgente medical", "operador", "humano", "persona real",
+    "demanda",
+    "abogado",
+    "denuncia",
+    "suicidio",
+    "emergencia",
+    "urgente medical",
+    "operador",
+    "humano",
+    "persona real",
 ]
 FRUSTRATION_MARKERS = [
-    "no me sirve", "no entiendes", "déjame ya", "es una mierda", "no funciona nada",
+    "no me sirve",
+    "no entiendes",
+    "déjame ya",
+    "es una mierda",
+    "no funciona nada",
 ]
 
 
@@ -49,7 +60,5 @@ def evaluate_escalation_precision(
     """Mide precisión del policy: % casos donde la decisión coincide con la esperada."""
     if not cases:
         return {"precision": 0.0, "n": 0}
-    correct = sum(
-        1 for msg, expected in cases if should_escalate(msg).should_escalate == expected
-    )
+    correct = sum(1 for msg, expected in cases if should_escalate(msg).should_escalate == expected)
     return {"precision": correct / len(cases), "n": len(cases)}
