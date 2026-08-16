@@ -1,6 +1,6 @@
 # ai-testing-lab — Instrucciones para Claude
 
-Laboratorio didáctico de testing de LLMs y chatbots. 14 módulos Python independientes,
+Laboratorio didáctico de testing de LLMs y chatbots. 20 módulos Python independientes,
 cada uno con src/, tests/, golden datasets y una página de documentación en VitePress.
 
 ## Estructura del proyecto
@@ -31,9 +31,12 @@ exercises/solutions/        ← soluciones de ejercicios
 ## Convenciones críticas
 
 ### Módulos Python
-- Cada módulo tiene su propio `conftest.py` raíz que inserta `str(Path(__file__).parent)` en `sys.path`
-- Los imports dentro de los tests son `from src.modulo import Clase` (con prefijo `src.`)
-- **Excepción módulo 14**: inserta `src/` directamente para evitar colisión de namespace packages
+- Cada módulo tiene su propio `conftest.py` raíz que inserta su ruta en `sys.path`
+- **Módulos 01-13**: el conftest inserta la raíz del módulo y los tests importan
+  `from src.modulo import Clase` (con prefijo `src.`)
+- **Módulos 14-20**: el conftest inserta `src/` directamente y los tests importan
+  `from modulo import Clase` (sin prefijo), para evitar la colisión de namespace
+  packages al ejecutar todos los módulos juntos. Es la convención para módulos nuevos.
 - Los tests NO usan API keys reales — usan mocks, fixtures deterministas o cassettes VCR
 - Markers: `@pytest.mark.slow` (llamadas LLM reales), `@pytest.mark.redteam` (nightly), `@pytest.mark.cassette`
 
@@ -54,8 +57,10 @@ exercises/solutions/        ← soluciones de ejercicios
 # Tests de un módulo
 pytest modules/01-primer-eval/tests/ -v -m "not slow"
 
-# Todos los módulos (CI)
+# Todos los módulos (lo mismo que corre CI)
 pytest modules/ -m "not slow and not redteam" -q
+# NUNCA enumerar módulos uno a uno en .github/workflows/ci.yml: hacerlo dejó
+# los módulos 15-20 (381 tests) fuera de CI durante varias versiones.
 
 # Linter
 ruff check modules/ --fix
@@ -79,7 +84,7 @@ cd site && npm run build
 ## Dependencias
 
 Todas las dependencias están en `pyproject.toml`. Los extras relevantes:
-- `ci` — para correr los 14 módulos sin deps pesadas
+- `ci` — para correr los 20 módulos sin deps pesadas
 - `eval` — módulos 01, 02, 06
 - `redteam` — módulos 07, 08, 09
 - `embeddings` — módulo 14
