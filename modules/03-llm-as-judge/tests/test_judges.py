@@ -239,3 +239,90 @@ class TestJudgeBiasTypeEnum:
         expected = {"verbosity", "self_enhancement", "position", "lenient", "format"}
         actual = {b.value for b in JudgeBiasType}
         assert actual == expected
+
+
+class TestGEvalCompare:
+    """compare() puntua cada salida por separado y decide el ganador."""
+
+    def test_relevant_beats_off_topic(
+        self, judge: GEvalJudge, relevant_response: str, off_topic_response: str
+    ) -> None:
+        result = judge.compare(relevant_response, off_topic_response, "relevancy")
+        assert result["winner"] == "A"
+        assert result["score_a"] > result["score_b"]
+
+    def test_winner_follows_the_content_not_the_position(
+        self, judge: GEvalJudge, relevant_response: str, off_topic_response: str
+    ) -> None:
+        result = judge.compare(off_topic_response, relevant_response, "relevancy")
+        assert result["winner"] == "B", (
+            "La respuesta relevante debe ganar tambien en segunda posicion"
+        )
+
+    def test_identical_outputs_tie(self, judge: GEvalJudge, relevant_response: str) -> None:
+        result = judge.compare(relevant_response, relevant_response, "relevancy")
+        assert result["winner"] == "tie"
+        assert result["score_a"] == result["score_b"]
+
+    def test_scores_match_standalone_evaluate(
+        self, judge: GEvalJudge, relevant_response: str, off_topic_response: str
+    ) -> None:
+        result = judge.compare(relevant_response, off_topic_response, "relevancy")
+        assert result["score_a"] == judge.evaluate(relevant_response, "relevancy").score
+        assert result["score_b"] == judge.evaluate(off_topic_response, "relevancy").score
+
+
+class TestCalibrateForPositionBias:
+    """Evalua el par en ambos ordenes y promedia, para neutralizar el sesgo de posicion."""
+
+    def test_calibrated_scores_match_standalone_evaluate(
+        self, judge: GEvalJudge, relevant_response: str, off_topic_response: str
+    ) -> None:
+        result = judge.calibrate_for_position_bias(
+            relevant_response, off_topic_response, "relevancy"
+        )
+        assert result["calibrated_score_a"] == pytest.approx(
+            judge.evaluate(relevant_response, "relevancy").score
+        )
+        assert result["calibrated_score_b"] == pytest.approx(
+            judge.evaluate(off_topic_response, "relevancy").score
+        )
+
+    def test_keyword_judge_is_immune_to_position_bias(
+        self, judge: GEvalJudge, relevant_response: str, off_topic_response: str
+    ) -> None:
+        """Este juez puntua por keywords, sin ver la otra respuesta: el orden no le afecta.
+
+        Es la leccion del modulo: un juez LLM real si mueve la nota al invertir
+        el orden, y por eso hay que calibrar. Este no, y el test lo deja explicito.
+        """
+        result = judge.calibrate_for_position_bias(
+            relevant_response, off_topic_response, "relevancy"
+        )
+        assert result["bias_delta"] == 0.0
+        assert result["bias_detected"] is False
+
+    def test_calibrated_winner_is_the_better_answer(
+        self, judge: GEvalJudge, relevant_response: str, off_topic_response: str
+    ) -> None:
+        assert (
+            judge.calibrate_for_position_bias(relevant_response, off_topic_response, "relevancy")[
+                "calibrated_winner"
+            ]
+            == "A"
+        )
+        assert (
+            judge.calibrate_for_position_bias(off_topic_response, relevant_response, "relevancy")[
+                "calibrated_winner"
+            ]
+            == "B"
+        )
+
+    def test_calibrated_winner_ties_on_identical_outputs(
+        self, judge: GEvalJudge, relevant_response: str
+    ) -> None:
+        result = judge.calibrate_for_position_bias(
+            relevant_response, relevant_response, "relevancy"
+        )
+        assert result["calibrated_winner"] == "tie"
+        assert result["bias_detected"] is False
