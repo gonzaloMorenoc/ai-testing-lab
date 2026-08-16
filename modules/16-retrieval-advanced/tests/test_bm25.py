@@ -1,7 +1,5 @@
 """Tests de la implementación BM25 mínima."""
 
-import pytest
-
 from bm25 import BM25Index, _tokenize
 
 

@@ -1,7 +1,8 @@
 """Tests de CostReport y assert_cost_budget."""
 
-import pytest
+from dataclasses import FrozenInstanceError
 
+import pytest
 from cost_report import (
     BudgetExceededError,
     CostReport,
@@ -34,7 +35,7 @@ class TestCostReport:
 
     def test_frozen_dataclass(self):
         r = CostReport("gpt-4o", 100, 50)
-        with pytest.raises(Exception):  # FrozenInstanceError
+        with pytest.raises(FrozenInstanceError):
             r.model = "otro"  # type: ignore[misc]
 
     def test_cost_with_custom_prices(self):

@@ -1,7 +1,5 @@
 """Tests del protocolo de calibración de 6 fases (§31.4)."""
 
-import pytest
-
 from calibration_protocol import CalibrationPhase, run_calibration
 
 

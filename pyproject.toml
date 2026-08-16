@@ -127,7 +127,7 @@ ci = [
 
 # Desarrollo completo — lint, format, type checking
 dev = [
-    "ruff>=0.4",
+    "ruff>=0.15,<0.16",
     "mypy>=1.10",
     "pre-commit>=3.7",
     "pytest>=8.2",
@@ -173,6 +173,12 @@ src = ["modules", "demos", "scripts"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 ignore = ["E501", "B008"]
+
+[tool.ruff.lint.per-file-ignores]
+# Generadores de goldens de un solo uso: el contador alimenta el id del caso
+# (garak-001, conv-002...) y no es el indice del bucle. Reescribirlos con
+# enumerate() cambiaria los ids ya publicados en goldens/.
+"scripts/*.py" = ["SIM113"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
