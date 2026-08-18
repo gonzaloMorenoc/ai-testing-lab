@@ -49,7 +49,5 @@ def evaluate_intent_accuracy(
     """Precisión sobre casos `(query, expected_intent)`."""
     if not cases:
         return {"accuracy": 0.0, "n": 0}
-    correct = sum(
-        1 for query, expected in cases if predict_intent(query).intent == expected
-    )
+    correct = sum(1 for query, expected in cases if predict_intent(query).intent == expected)
     return {"accuracy": correct / len(cases), "n": len(cases)}

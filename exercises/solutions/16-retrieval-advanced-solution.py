@@ -49,8 +49,10 @@ def main() -> None:
     print(f"NDCG@5 baseline: {report.baseline_ndcg5:.3f}")
     print(f"NDCG@5 HyDE:     {report.advanced_ndcg5:.3f}")
     print(f"Δ NDCG@5:        {report.delta_ndcg:+.3f}")
-    print(f"Coste extra:     {report.llm_calls_overhead:.0f} LLM call(s), "
-          f"+{report.latency_overhead_ms:.0f} ms")
+    print(
+        f"Coste extra:     {report.llm_calls_overhead:.0f} LLM call(s), "
+        f"+{report.latency_overhead_ms:.0f} ms"
+    )
     print(f"HyDE justificado (gate §29.3): {report.justified}")
 
 

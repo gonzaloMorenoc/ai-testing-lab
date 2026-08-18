@@ -1,7 +1,6 @@
 """Tests de cálculo de tamaño muestral (§31.6)."""
 
 import pytest
-
 from sample_size import EffectSize, n_for_proportion_comparison, recommend_sample_size
 
 

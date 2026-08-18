@@ -40,7 +40,9 @@ def main() -> None:
     print(f"Cambio justificado: {result.passed}")
     if not result.passed:
         for v in result.violations:
-            print(f"  - {v.metric}: Δ {v.delta_pct*100:.1f}% > umbral {v.threshold_pct*100:.0f}%")
+            print(
+                f"  - {v.metric}: Δ {v.delta_pct * 100:.1f}% > umbral {v.threshold_pct * 100:.0f}%"
+            )
 
 
 if __name__ == "__main__":

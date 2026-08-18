@@ -53,9 +53,7 @@ def cohen_kappa(annotator_a: list[str], annotator_b: list[str]) -> IAAResult:
     P_o = acuerdo observado; P_e = acuerdo esperado por azar.
     """
     if len(annotator_a) != len(annotator_b):
-        raise ValueError(
-            f"Longitudes distintas: a={len(annotator_a)}, b={len(annotator_b)}"
-        )
+        raise ValueError(f"Longitudes distintas: a={len(annotator_a)}, b={len(annotator_b)}")
     if not annotator_a:
         raise ValueError("Listas vacías")
     n = len(annotator_a)
@@ -94,10 +92,7 @@ def fleiss_kappa(annotations: list[list[str]]) -> IAAResult:
     total_assignments = n_items * n_raters
     p_j = [sum(row[j] for row in table) / total_assignments for j in range(len(categories))]
     # P_i: nivel de acuerdo dentro del ítem i.
-    p_i = [
-        (sum(n_ij * (n_ij - 1) for n_ij in row)) / (n_raters * (n_raters - 1))
-        for row in table
-    ]
+    p_i = [(sum(n_ij * (n_ij - 1) for n_ij in row)) / (n_raters * (n_raters - 1)) for row in table]
     p_bar = sum(p_i) / n_items
     p_e_bar = sum(pj * pj for pj in p_j)
     if p_e_bar == 1.0:
@@ -176,12 +171,12 @@ def icc_2way_random(ratings: list[list[float]]) -> IAAResult:
 
     grand_mean = sum(sum(row) for row in ratings) / (n_items * n_raters)
     row_means = [sum(row) / n_raters for row in ratings]
-    col_means = [
-        sum(ratings[i][j] for i in range(n_items)) / n_items for j in range(n_raters)
-    ]
+    col_means = [sum(ratings[i][j] for i in range(n_items)) / n_items for j in range(n_raters)]
 
     ss_b = n_raters * sum((m - grand_mean) ** 2 for m in row_means)
-    ss_w = sum(sum((ratings[i][j] - row_means[i]) ** 2 for j in range(n_raters)) for i in range(n_items))
+    ss_w = sum(
+        sum((ratings[i][j] - row_means[i]) ** 2 for j in range(n_raters)) for i in range(n_items)
+    )
     ss_c = n_items * sum((c - grand_mean) ** 2 for c in col_means)
     ss_e = ss_w - ss_c
 

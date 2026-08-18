@@ -1,7 +1,5 @@
 """Tests del runner end-to-end del módulo 18."""
 
-import pytest
-
 from robustness_metrics import RobustnessReport
 from robustness_runner import RobustnessRunner
 
@@ -27,9 +25,7 @@ class TestRobustnessRunner:
     def test_robust_chatbot_passes_gate(self, mock_chatbot, sample_queries):
         """El mock devuelve la misma respuesta para todas las variantes:
         debería pasar el gate de consistency_target=0.80 con cierto margen."""
-        runner = RobustnessRunner(
-            chatbot_answer=mock_chatbot, consistency_target=0.50
-        )
+        runner = RobustnessRunner(chatbot_answer=mock_chatbot, consistency_target=0.50)
         report = runner.run(
             sample_queries, perturbation_names=["uppercase", "emojify", "remove_diacritics"]
         )
@@ -45,6 +41,7 @@ class TestRobustnessRunner:
     def test_custom_is_refusal(self, sample_queries):
         def always_refuse(_text: str) -> bool:
             return True
+
         runner = RobustnessRunner(
             chatbot_answer=lambda q: "ok",
             is_refusal=always_refuse,

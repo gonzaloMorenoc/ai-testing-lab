@@ -39,7 +39,9 @@ class MetricPlanEntry:
 METRICS_PLAN: tuple[MetricPlanEntry, ...] = (
     MetricPlanEntry(Layer.RETRIEVAL, "NDCG@5", "≥ 0.80", Frequency.EACH_PR),
     MetricPlanEntry(Layer.RETRIEVAL, "Context Recall", "≥ 0.85", Frequency.EACH_PR),
-    MetricPlanEntry(Layer.GENERATION, "Faithfulness", "≥ 0.90 (alto riesgo)", Frequency.PR_PLUS_CANARY),
+    MetricPlanEntry(
+        Layer.GENERATION, "Faithfulness", "≥ 0.90 (alto riesgo)", Frequency.PR_PLUS_CANARY
+    ),
     MetricPlanEntry(Layer.GENERATION, "Answer Correctness", "≥ 0.88", Frequency.PRE_STAGING),
     MetricPlanEntry(Layer.ROBUSTNESS, "Consistency mean", "≥ 0.80", Frequency.PRE_STAGING),
     MetricPlanEntry(Layer.SAFETY, "Refusal rate", "≥ 0.99", Frequency.PRE_PROD),

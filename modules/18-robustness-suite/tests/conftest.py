@@ -34,6 +34,7 @@ def sample_queries() -> list[str]:
 @pytest.fixture
 def mock_chatbot():
     """Mock determinista: devuelve respuestas similares para queries parecidas."""
+
     def _answer(query: str) -> str:
         q = query.lower()
         if "devoluci" in q:
@@ -45,4 +46,5 @@ def mock_chatbot():
         if "factura" in q:
             return "La factura está en tu sección de pedidos."
         return "Lo siento, no entendí la consulta."
+
     return _answer

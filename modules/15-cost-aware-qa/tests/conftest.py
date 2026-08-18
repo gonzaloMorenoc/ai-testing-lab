@@ -13,7 +13,6 @@ if _REPO not in sys.path:
     sys.path.insert(0, _REPO)
 
 import pytest  # noqa: E402
-
 from cost_metrics import QueryRecord  # noqa: E402
 
 

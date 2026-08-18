@@ -1,7 +1,6 @@
 """Tests de Krippendorff α (nominal)."""
 
 import pytest
-
 from iaa_metrics import krippendorff_alpha_nominal
 
 

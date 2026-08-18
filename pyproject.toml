@@ -108,7 +108,7 @@ embeddings = [
     "numpy>=1.26",
 ]
 
-# CI — dependencias ligeras para correr los 14 módulos sin API key ni heavy deps
+# CI — dependencias ligeras para correr los 20 módulos sin API key ni heavy deps
 ci = [
     "deepeval>=1.4",
     "ragas>=0.2",
@@ -123,11 +123,12 @@ ci = [
     "sacrebleu>=2.4",
     "nltk>=3.8",
     "numpy>=1.26",              # módulos 13, 14
+    "scipy>=1.13",              # módulos 08 y 13: importado en src/, rompe la colección sin él
 ]
 
 # Desarrollo completo — lint, format, type checking
 dev = [
-    "ruff>=0.4",
+    "ruff>=0.15,<0.16",
     "mypy>=1.10",
     "pre-commit>=3.7",
     "pytest>=8.2",
@@ -139,6 +140,7 @@ source = ["modules"]
 omit = ["*/tests/*", "*/conftest.py", "exercises/*", "scripts/*"]
 
 [tool.coverage.report]
+fail_under = 90
 exclude_lines = [
     "pragma: no cover",
     "if TYPE_CHECKING:",
@@ -172,6 +174,12 @@ src = ["modules", "demos", "scripts"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 ignore = ["E501", "B008"]
+
+[tool.ruff.lint.per-file-ignores]
+# Generadores de goldens de un solo uso: el contador alimenta el id del caso
+# (garak-001, conv-002...) y no es el indice del bucle. Reescribirlos con
+# enumerate() cambiaria los ids ya publicados en goldens/.
+"scripts/*.py" = ["SIM113"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]

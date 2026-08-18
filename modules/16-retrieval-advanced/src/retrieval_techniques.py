@@ -35,9 +35,7 @@ class BaselineDenseRetriever:
         self.docs = docs
 
     def retrieve(self, query: str, top_k: int = 5) -> list[Document]:
-        scored = sorted(
-            self.docs, key=lambda d: _dense_score(query, d.text), reverse=True
-        )
+        scored = sorted(self.docs, key=lambda d: _dense_score(query, d.text), reverse=True)
         return scored[:top_k]
 
     def cost_overhead(self) -> dict[str, float]:
@@ -161,9 +159,7 @@ class CrossEncoderReranker:
     def retrieve(self, query: str, top_k: int = 5) -> list[Document]:
         # Retrieve más de top_k y reordena
         candidates = self.base.retrieve(query, top_k=top_k * 2)
-        scored = sorted(
-            candidates, key=lambda d: self.mock_scorer(query, d.text), reverse=True
-        )
+        scored = sorted(candidates, key=lambda d: self.mock_scorer(query, d.text), reverse=True)
         return scored[:top_k]
 
     def cost_overhead(self) -> dict[str, float]:

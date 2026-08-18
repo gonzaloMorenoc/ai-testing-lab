@@ -1,7 +1,6 @@
 """Tests de los gates por etapa (D.5)."""
 
 import pytest
-
 from gates_pipeline import GATES, Stage, evaluate_stage
 
 
@@ -80,9 +79,7 @@ class TestPreStagingGate:
 
 class TestCanaryGate:
     def test_auto_rollback_when_below_threshold(self):
-        result = evaluate_stage(
-            Stage.CANARY_1_PCT, {"faithfulness": 0.75, "auto_rollback": 0.75}
-        )
+        result = evaluate_stage(Stage.CANARY_1_PCT, {"faithfulness": 0.75, "auto_rollback": 0.75})
         assert not result.passed
         # Mensaje específico de auto-rollback
         assert any("auto_rollback" in g or "faithfulness" in g for g in result.failed_gates)

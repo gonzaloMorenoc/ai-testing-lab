@@ -1,7 +1,6 @@
 """Tests de Cohen κ."""
 
 import pytest
-
 from iaa_metrics import IAAResult, cohen_kappa, interpret_kappa
 
 

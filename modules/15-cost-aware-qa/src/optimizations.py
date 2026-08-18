@@ -44,7 +44,9 @@ def simulate_model_routing(
     """
     cheap = sum(1 for r in records if r.tokens_in <= simple_threshold_tokens)
     expensive = len(records) - cheap
-    savings = sum(r.cost_usd * cheap_savings_factor for r in records if r.tokens_in <= simple_threshold_tokens)
+    savings = sum(
+        r.cost_usd * cheap_savings_factor for r in records if r.tokens_in <= simple_threshold_tokens
+    )
     return RoutingDecision(cheap, expensive, savings)
 
 

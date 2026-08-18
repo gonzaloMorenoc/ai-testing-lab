@@ -1,5 +1,7 @@
 """Tests del contexto del producto (D.1)."""
 
+from dataclasses import FrozenInstanceError
+
 from product_setup import DEFAULT_PRODUCT, ProductContext
 
 
@@ -27,7 +29,7 @@ class TestProductContext:
     def test_frozen_dataclass(self):
         import pytest
 
-        with pytest.raises(Exception):
+        with pytest.raises(FrozenInstanceError):
             DEFAULT_PRODUCT.users = 1000  # type: ignore[misc]
 
     def test_custom_context(self):

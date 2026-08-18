@@ -6,6 +6,13 @@ repos:
         args: [--fix]
       - id: ruff-format
 
+  # Impide que un token/clave llegue a un commit. El repo esta limpio hoy;
+  # esto es la red para que siga estandolo.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:

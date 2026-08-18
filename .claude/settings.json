@@ -1,17 +1,15 @@
 {
   "permissions": {
-    "defaultMode": "dontAsk",
     "allow": [
-      "Bash(*)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "Agent(*)",
-      "WebFetch(*)",
-      "WebSearch(*)",
-      "mcp__*"
+      "Bash(pytest:*)",
+      "Bash(ruff check:*)",
+      "Bash(ruff format:*)",
+      "Bash(uv run:*)",
+      "Bash(npm ci:*)",
+      "Bash(npm run build:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
     ]
   }
 }

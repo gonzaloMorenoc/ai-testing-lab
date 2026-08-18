@@ -12,9 +12,9 @@ from math import ceil
 
 
 class EffectSize(StrEnum):
-    LARGE = "large"      # Cohen's d ≥ 0.5
-    MEDIUM = "medium"    # Cohen's d ≈ 0.3
-    SMALL = "small"      # Cohen's d ≤ 0.1
+    LARGE = "large"  # Cohen's d ≥ 0.5
+    MEDIUM = "medium"  # Cohen's d ≈ 0.3
+    SMALL = "small"  # Cohen's d ≤ 0.1
 
 
 # Tabla §31.6 (alpha=0.05, power≥0.8). Pareadas / no pareadas.
@@ -33,9 +33,7 @@ class SampleSizeRecommendation:
     rationale: str
 
 
-def recommend_sample_size(
-    effect_size: EffectSize, paired: bool = True
-) -> SampleSizeRecommendation:
+def recommend_sample_size(effect_size: EffectSize, paired: bool = True) -> SampleSizeRecommendation:
     """Devuelve el tamaño muestral recomendado.
 
     paired=True: las dos versiones se evalúan en los mismos ítems (más eficiente).

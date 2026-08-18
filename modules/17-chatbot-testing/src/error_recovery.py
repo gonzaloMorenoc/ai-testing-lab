@@ -14,9 +14,9 @@ from enum import StrEnum
 
 
 class ErrorKind(StrEnum):
-    TRANSIENT = "transient"     # 5xx, timeout, rate limit
-    CLIENT_ERROR = "client"     # 4xx (no reintentar)
-    VALIDATION = "validation"   # input malformado del LLM
+    TRANSIENT = "transient"  # 5xx, timeout, rate limit
+    CLIENT_ERROR = "client"  # 4xx (no reintentar)
+    VALIDATION = "validation"  # input malformado del LLM
     UNKNOWN = "unknown"
 
 
@@ -46,7 +46,7 @@ def decide_recovery(
     """Decide acción de recovery según el tipo de error y retry actual."""
     if error == ErrorKind.TRANSIENT and retry_count < max_retries:
         # Backoff exponencial: 1, 2, 4 segundos
-        backoff = float(2 ** retry_count)
+        backoff = float(2**retry_count)
         return RecoveryDecision(
             retry=True,
             backoff_seconds=backoff,

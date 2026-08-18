@@ -1,7 +1,6 @@
 """Tests del intent classifier (área 1)."""
 
 import pytest
-
 from intent_classifier import IntentPrediction, evaluate_intent_accuracy, predict_intent
 
 
