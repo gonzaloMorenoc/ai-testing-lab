@@ -1,10 +1,8 @@
 """Tests de las 4 métricas de robustness §12.3."""
 
 import pytest
-
 from robustness_metrics import (
     PerturbationResult,
-    RobustnessReport,
     accuracy_degradation,
     aggregate_by_segment,
     build_report,

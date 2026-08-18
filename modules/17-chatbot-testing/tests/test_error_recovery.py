@@ -1,7 +1,6 @@
 """Tests de recuperación de errores (área 8)."""
 
 import pytest
-
 from error_recovery import (
     ErrorKind,
     classify_error,

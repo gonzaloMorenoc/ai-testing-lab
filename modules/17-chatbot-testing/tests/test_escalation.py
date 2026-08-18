@@ -1,7 +1,5 @@
 """Tests de la política de escalado humano (área 3)."""
 
-import pytest
-
 from escalation_policy import evaluate_escalation_precision, should_escalate
 
 

@@ -1,7 +1,8 @@
 """Tests de cost_metrics.py."""
 
-import pytest
+from dataclasses import FrozenInstanceError
 
+import pytest
 from cost_metrics import (
     QueryRecord,
     _percentile,
@@ -77,5 +78,5 @@ class TestComputeCostLatencyMetrics:
 
     def test_query_record_is_frozen(self):
         r = QueryRecord("gpt-4o", 100, 50, 500)
-        with pytest.raises(Exception):
+        with pytest.raises(FrozenInstanceError):
             r.model = "otro"  # type: ignore[misc]

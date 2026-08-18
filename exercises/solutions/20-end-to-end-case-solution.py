@@ -36,9 +36,7 @@ def main() -> None:
     print()
 
     print("=== T+5: diagnóstico ===")
-    cause = diagnose_root_cause(
-        prompt_changed=True, model_changed=False, corpus_changed=False
-    )
+    cause = diagnose_root_cause(prompt_changed=True, model_changed=False, corpus_changed=False)
     print(f"Causa raíz: {cause}")
     print()
 

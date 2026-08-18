@@ -1,7 +1,6 @@
 """Tests de trade_offs.py y la función recommend_technique."""
 
 import pytest
-
 from trade_offs import (
     TECHNIQUE_TRADE_OFFS,
     QueryShape,

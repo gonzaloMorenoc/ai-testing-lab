@@ -95,6 +95,4 @@ def evaluate_stage(stage: Stage, observed: dict[str, float]) -> GateEvaluation:
             if observed_value is not None and observed_value < threshold:
                 failed.append(f"{metric}_auto_rollback")
 
-    return GateEvaluation(
-        stage=stage, passed=len(failed) == 0, failed_gates=tuple(failed)
-    )
+    return GateEvaluation(stage=stage, passed=len(failed) == 0, failed_gates=tuple(failed))

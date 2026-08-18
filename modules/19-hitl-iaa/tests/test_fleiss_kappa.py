@@ -1,7 +1,6 @@
 """Tests de Fleiss κ."""
 
 import pytest
-
 from iaa_metrics import fleiss_kappa
 
 

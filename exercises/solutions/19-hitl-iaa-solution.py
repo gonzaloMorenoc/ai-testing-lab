@@ -26,9 +26,9 @@ from iaa_metrics import (  # noqa: E402
 
 def main() -> None:
     # 30 ítems, 3 anotadores. Acuerdo alto pero no perfecto.
-    annotator_a = (["yes"] * 12 + ["no"] * 18)
-    annotator_b = (["yes"] * 11 + ["no"] * 1 + ["no"] * 17 + ["yes"] * 1)
-    annotator_c = (["yes"] * 12 + ["no"] * 17 + ["yes"] * 1)
+    annotator_a = ["yes"] * 12 + ["no"] * 18
+    annotator_b = ["yes"] * 11 + ["no"] * 1 + ["no"] * 17 + ["yes"] * 1
+    annotator_c = ["yes"] * 12 + ["no"] * 17 + ["yes"] * 1
     annotations = list(zip(annotator_a, annotator_b, annotator_c, strict=True))
 
     print("=== Pairwise Cohen κ ===")

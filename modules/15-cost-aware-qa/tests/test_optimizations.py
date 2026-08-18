@@ -1,7 +1,6 @@
 """Tests de optimizations.py — §27.5 del manual."""
 
 import pytest
-
 from cost_metrics import QueryRecord
 from optimizations import (
     batching_efficiency,
@@ -23,10 +22,9 @@ class TestPromptCacheHitRate:
 
     def test_detects_cache_hits_by_low_ratio(self):
         # 5 queries con ratio normal, 5 con ratio bajo (cache hit)
-        records = (
-            [QueryRecord("gpt-4o", 1000, 100, 800, cost_usd=0.01)] * 5
-            + [QueryRecord("gpt-4o", 1000, 100, 800, cost_usd=0.001)] * 5
-        )
+        records = [QueryRecord("gpt-4o", 1000, 100, 800, cost_usd=0.01)] * 5 + [
+            QueryRecord("gpt-4o", 1000, 100, 800, cost_usd=0.001)
+        ] * 5
         rate = prompt_cache_hit_rate(records, cached_threshold_tokens=100)
         assert rate > 0.0
 

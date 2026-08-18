@@ -30,8 +30,12 @@ class TestGoldenDataset:
 
     def test_all_have_required_fields(self, records):
         required = {
-            "model", "tokens_in", "tokens_out", "latency_ms_total",
-            "cost_usd", "metadata",
+            "model",
+            "tokens_in",
+            "tokens_out",
+            "latency_ms_total",
+            "cost_usd",
+            "metadata",
         }
         for r in records:
             assert required.issubset(r.keys())

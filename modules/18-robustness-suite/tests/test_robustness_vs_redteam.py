@@ -29,8 +29,14 @@ class TestRobustnessVsRedTeam:
     def test_categories_match_manual_taxonomy(self):
         """Las 8 categorías son exactamente las de la Tabla 12.1 del manual."""
         expected = {
-            "lexical", "morphological", "syntactic", "lexico_semantic",
-            "idiomatic", "length", "case_format", "adversarial_subtle",
+            "lexical",
+            "morphological",
+            "syntactic",
+            "lexico_semantic",
+            "idiomatic",
+            "length",
+            "case_format",
+            "adversarial_subtle",
         }
         actual = {c.value for c in PerturbationCategory}
         assert actual == expected

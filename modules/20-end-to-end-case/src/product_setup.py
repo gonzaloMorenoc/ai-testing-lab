@@ -6,7 +6,7 @@ Fuente: Manual QA AI v13, Apéndice D §D.1.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)

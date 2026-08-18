@@ -3,7 +3,6 @@
 import json
 
 import pytest
-
 from price_config import PRICE_PER_1K, TokenPrice, load_prices_from_config
 
 
@@ -22,7 +21,10 @@ class TestPricePer1K:
         assert p.out_per_1k_usd > p.in_per_1k_usd
 
     def test_haiku_cheaper_than_sonnet(self):
-        assert PRICE_PER_1K["claude-haiku-4-5"].in_per_1k_usd < PRICE_PER_1K["claude-sonnet-4-5"].in_per_1k_usd
+        assert (
+            PRICE_PER_1K["claude-haiku-4-5"].in_per_1k_usd
+            < PRICE_PER_1K["claude-sonnet-4-5"].in_per_1k_usd
+        )
 
 
 class TestLoadPricesFromConfig:

@@ -6,9 +6,7 @@ from pathlib import Path
 import pytest
 
 GOLDEN_DIR = (
-    Path(__file__).resolve().parent.parent.parent.parent
-    / "goldens"
-    / "16-retrieval-advanced"
+    Path(__file__).resolve().parent.parent.parent.parent / "goldens" / "16-retrieval-advanced"
 )
 
 
@@ -64,6 +62,6 @@ class TestCorpus:
         assert len(corpus) >= 20
 
     def test_all_docs_have_text_and_domain(self, corpus):
-        for doc_id, doc in corpus.items():
+        for doc in corpus.values():
             assert "text" in doc and "domain" in doc
             assert len(doc["text"]) > 10

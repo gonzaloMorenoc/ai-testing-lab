@@ -28,12 +28,8 @@ _RUDE_MARKERS = ["cállate", "no me molestes", "déjame en paz"]
 def evaluate_tone(text: str, expected_register: str = "formal") -> ToneResult:
     """Evalúa registro, cortesía y empatía. Devuelve score [0,1]."""
     t = text.lower()
-    formal = any(m in t for m in _FORMAL_MARKERS) and not any(
-        m in t for m in _INFORMAL_MARKERS
-    )
-    polite = any(m in t for m in _POLITE_MARKERS) and not any(
-        m in t for m in _RUDE_MARKERS
-    )
+    formal = any(m in t for m in _FORMAL_MARKERS) and not any(m in t for m in _INFORMAL_MARKERS)
+    polite = any(m in t for m in _POLITE_MARKERS) and not any(m in t for m in _RUDE_MARKERS)
     empathetic = any(m in t for m in _EMPATHY_MARKERS)
 
     score = 0.0

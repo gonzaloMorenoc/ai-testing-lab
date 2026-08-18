@@ -33,9 +33,7 @@ def main() -> None:
 
     last_user_msg = conversation[-1][1]
     intent = predict_intent(last_user_msg)
-    decision = should_escalate(
-        last_user_msg, conversation_turns=3, failed_intent_attempts=1
-    )
+    decision = should_escalate(last_user_msg, conversation_turns=3, failed_intent_attempts=1)
     bot_responses = [m for role, m in conversation if role == "bot"]
     tone_scores = [evaluate_tone(r, expected_register="formal").score for r in bot_responses]
 
@@ -49,7 +47,7 @@ def main() -> None:
         print("  ✓ Bot debe escalar (frustración + petición explícita)")
     if intent.intent == "human_support":
         print("  ✓ Intent detectado correctamente")
-    print(f"  Promedio tono formal: {sum(tone_scores)/len(tone_scores):.2f}")
+    print(f"  Promedio tono formal: {sum(tone_scores) / len(tone_scores):.2f}")
 
 
 if __name__ == "__main__":
