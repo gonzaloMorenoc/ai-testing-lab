@@ -128,7 +128,7 @@ ci = [
 
 # Desarrollo completo — lint, format, type checking
 dev = [
-    "ruff>=0.15,<0.16",
+    "ruff>=0.15,<0.17",
     "mypy>=1.10",
     "pre-commit>=3.7",
     "pytest>=8.2",
