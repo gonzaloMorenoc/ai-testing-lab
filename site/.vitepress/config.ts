@@ -3,7 +3,7 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
   title: "LLM Testing Lab",
   description:
-    "382 tests covering RAG evaluation, LLM-as-judge, red teaming, guardrails, observability and drift monitoring. 14 independent pytest modules. Zero API calls needed.",
+    "763 tests covering RAG evaluation, LLM-as-judge, red teaming, guardrails, observability and drift monitoring. 20 independent pytest modules. Zero API calls needed.",
   lang: "es-ES",
 
   sitemap: {
@@ -20,7 +20,7 @@ export default defineConfig({
       "meta",
       {
         property: "og:title",
-        content: "LLM Testing Lab — 14 pytest modules for AI quality",
+        content: "LLM Testing Lab — 20 pytest modules for AI quality",
       },
     ],
     [
@@ -28,7 +28,7 @@ export default defineConfig({
       {
         property: "og:description",
         content:
-          "382 tests covering RAG eval, red teaming, guardrails, observability and drift monitoring. Zero API calls needed. DeepEval · RAGAS · Garak · OWASP LLM Top 10.",
+          "763 tests covering RAG eval, red teaming, guardrails, observability and drift monitoring. Zero API calls needed. DeepEval · RAGAS · Garak · OWASP LLM Top 10.",
       },
     ],
     [
@@ -43,7 +43,7 @@ export default defineConfig({
       "meta",
       {
         name: "twitter:title",
-        content: "LLM Testing Lab — 14 pytest modules for AI quality",
+        content: "LLM Testing Lab — 20 pytest modules for AI quality",
       },
     ],
     [
@@ -51,7 +51,7 @@ export default defineConfig({
       {
         name: "twitter:description",
         content:
-          "382 tests. RAG eval, red teaming, guardrails, drift monitoring. Zero API calls. DeepEval · RAGAS · Garak · OWASP LLM.",
+          "763 tests. RAG eval, red teaming, guardrails, drift monitoring. Zero API calls. DeepEval · RAGAS · Garak · OWASP LLM.",
       },
     ],
     [
@@ -81,6 +81,7 @@ export default defineConfig({
     nav: [
       { text: "Guía", link: "/guia/" },
       { text: "Módulos", link: "/modulos/" },
+      { text: "Manual PDF", link: "/manual" },
       { text: "Quiz", link: "/quiz/" },
       {
         text: "Referencia",

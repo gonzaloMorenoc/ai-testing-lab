@@ -765,3 +765,202 @@ div[class*='language-'] .copy:hover {
     width: 100%;
   }
 }
+
+
+/* ============================================================
+   Página del manual (/manual)
+   El hero replica la identidad del PDF (azul + cian); el resto
+   de la página usa el verde del site.
+   ============================================================ */
+
+.manual-hero {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 3rem;
+  align-items: center;
+  background: linear-gradient(135deg, #0c2039, #050c18);
+  border-radius: 16px;
+  padding: 3rem;
+  margin: 2rem 0 3rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--ll-shadow-md);
+}
+.manual-hero::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, #25cee8, rgba(37, 206, 232, 0));
+}
+
+.manual-eyebrow {
+  color: #25cee8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+}
+.manual-hero h1 {
+  font-size: 2.5rem;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #f4f7fe;
+  margin: 0 0 0.75rem;
+  border: 0;
+  letter-spacing: -0.02em;
+}
+.manual-hero h1 em {
+  color: #25cee8;
+  font-style: normal;
+}
+.manual-sub {
+  color: #a9bacc;
+  font-size: 1.0625rem;
+  margin: 0 0 1.75rem;
+}
+.manual-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  color: #8fa3b8;
+  font-size: 0.875rem;
+  margin-bottom: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #1e3a52;
+}
+.manual-cover {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #1e3a52;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  transition: transform var(--ll-duration-base) var(--ll-ease-out);
+}
+.manual-cover:hover {
+  transform: translateY(-4px);
+}
+
+.manual-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.manual-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: all var(--ll-duration-fast) var(--ll-ease-out);
+  border: 1px solid transparent;
+}
+.manual-btn-primary {
+  background: #25cee8;
+  color: #04121f !important;
+}
+.manual-btn-primary:hover {
+  background: #5adcf0;
+  transform: translateY(-2px);
+}
+.manual-hero .manual-btn-ghost {
+  border-color: #1e3a52;
+  color: #cfdcea !important;
+}
+.manual-hero .manual-btn-ghost:hover {
+  border-color: #25cee8;
+  color: #25cee8 !important;
+}
+
+/* fuera del hero el fondo es claro: el ghost usa los tokens del tema */
+.manual-btn-ghost {
+  border-color: var(--ll-slate-300);
+  color: var(--vp-c-text-1) !important;
+}
+.manual-btn-ghost:hover {
+  border-color: var(--ll-green-500);
+  color: var(--ll-green-600) !important;
+  transform: translateY(-2px);
+}
+
+.manual-parts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+.manual-part {
+  border: 1px solid var(--ll-slate-200);
+  border-radius: 10px;
+  padding: 1rem 1.125rem;
+  background: var(--vp-c-bg-soft);
+  transition: all var(--ll-duration-base) var(--ll-ease-out);
+}
+.manual-part:hover {
+  border-color: var(--ll-green-400);
+  transform: translateY(-2px);
+  box-shadow: var(--ll-shadow-sm);
+}
+.manual-part-num {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ll-green-600);
+}
+.manual-part h4 {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.manual-part p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--vp-c-text-2);
+}
+
+.dark .manual-part {
+  border-color: var(--vp-c-divider);
+}
+
+@media (max-width: 768px) {
+  .manual-hero {
+    grid-template-columns: 1fr;
+    padding: 2rem 1.5rem;
+    gap: 2rem;
+  }
+  .manual-hero h1 {
+    font-size: 1.875rem;
+  }
+  .manual-cover {
+    max-width: 220px;
+    margin: 0 auto;
+    display: block;
+  }
+  .manual-actions .manual-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+/* la pagina del manual usa todo el ancho: es una landing, no un doc */
+.manual-page .VPDoc .container { max-width: 1152px; }
+.manual-page .VPDoc .content { max-width: 100%; }
+.manual-page .VPDoc:not(.has-sidebar) .content { max-width: 100%; }
+
+.manual-btn,
+.manual-btn:hover {
+  text-decoration: none !important;
+}
+.manual-hero .manual-actions a { text-decoration: none !important; }
+
+@media (min-width: 960px) {
+  .manual-hero { grid-template-columns: 1fr 320px; }
+}

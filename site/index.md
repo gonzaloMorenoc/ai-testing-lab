@@ -13,6 +13,9 @@ hero:
       text: Empezar
       link: /guia/instalacion
     - theme: alt
+      text: Manual PDF (gratis)
+      link: /manual
+    - theme: alt
       text: Ver módulos
       link: /modulos/
     - theme: alt
