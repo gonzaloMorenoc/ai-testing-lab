@@ -218,7 +218,7 @@ El equipo ajustó el prompt para equilibrar tono e información, volvió a ejecu
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">50</div>
+  <div class="stat-number">49</div>
   <div class="stat-label">tests</div>
 </div>
 
@@ -242,10 +242,12 @@ pytest modules/01-primer-eval/tests/ \
   -m "not slow" -q
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Siguiente →</div>
   <a href="/modulos/02-ragas-basics">02 — ragas-basics</a>
 </div>
 
-</div>
-</div>

@@ -199,7 +199,7 @@ pytest modules/05-prompt-regression/tests/ -m "not slow" -q
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">43</div>
+  <div class="stat-number">42</div>
   <div class="stat-label">tests</div>
 </div>
 
@@ -223,10 +223,12 @@ pytest modules/05-prompt-regression/tests/ \
   -m "not slow" -q
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Siguiente →</div>
   <a href="/modulos/06-hallucination-lab">06 — hallucination-lab</a>
 </div>
 
-</div>
-</div>

@@ -149,7 +149,7 @@ pytest modules/08-redteam-deepteam/tests/test_deepteam_runner.py -m "not slow" -
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">32</div>
+  <div class="stat-number">31</div>
   <div class="stat-label">tests</div>
 </div>
 
@@ -173,10 +173,12 @@ pytest modules/08-redteam-deepteam/tests/ \
   -m "not slow and not redteam" -q
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Siguiente →</div>
   <a href="/modulos/09-guardrails">09 — guardrails</a>
 </div>
 
-</div>
-</div>

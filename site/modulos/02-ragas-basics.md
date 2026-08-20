@@ -150,7 +150,7 @@ pytest modules/02-ragas-basics/tests/ -m "not slow" -q
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">11</div>
+  <div class="stat-number">10</div>
   <div class="stat-label">tests</div>
 </div>
 
@@ -174,10 +174,12 @@ pytest modules/02-ragas-basics/tests/ \
   -m "not slow" -q
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Siguiente →</div>
   <a href="/modulos/03-llm-as-judge">03 — llm-as-judge</a>
 </div>
 
-</div>
-</div>

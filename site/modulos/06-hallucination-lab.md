@@ -155,7 +155,7 @@ pytest modules/06-hallucination-lab/tests/ -m "not slow" -q
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">23</div>
+  <div class="stat-number">22</div>
   <div class="stat-label">tests</div>
 </div>
 
@@ -179,10 +179,12 @@ pytest modules/06-hallucination-lab/tests/ \
   -m "not slow" -q
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Siguiente →</div>
   <a href="/modulos/07-redteam-garak">07 — redteam-garak</a>
 </div>
 
-</div>
-</div>

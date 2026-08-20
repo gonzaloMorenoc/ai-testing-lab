@@ -119,7 +119,7 @@ Un retailer con chatbot de recomendaciones vio cómo, en campaña de Navidad, la
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">31</div>
+  <div class="stat-number">30</div>
   <div class="stat-label">tests</div>
 </div>
 
@@ -143,10 +143,12 @@ pytest modules/13-drift-monitoring/tests/ \
   -m "not slow" -q
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Siguiente →</div>
   <a href="/modulos/14-embedding-eval">14 — embedding-eval</a>
 </div>
 
-</div>
-</div>

@@ -138,10 +138,12 @@ playwright install chromium
 pytest modules/11-playwright-streaming/tests/
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Siguiente →</div>
   <a href="/modulos/12-observability">12 — observability</a>
 </div>
 
-</div>
-</div>
