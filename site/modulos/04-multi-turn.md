@@ -164,7 +164,7 @@ Verifica que `context_overflow_detected` es `True`.
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">29</div>
+  <div class="stat-number">28</div>
   <div class="stat-label">tests</div>
 </div>
 
@@ -188,10 +188,12 @@ pytest modules/04-multi-turn/tests/ \
   -m "not slow" -q
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Siguiente →</div>
   <a href="/modulos/05-prompt-regression">05 — prompt-regression</a>
 </div>
 
-</div>
-</div>

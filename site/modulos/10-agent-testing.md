@@ -163,7 +163,7 @@ pytest modules/10-agent-testing/tests/test_agent_testing.py -m "not slow" -q
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">38</div>
+  <div class="stat-number">37</div>
   <div class="stat-label">tests</div>
 </div>
 
@@ -187,10 +187,12 @@ pytest modules/10-agent-testing/tests/ \
   -m "not slow" -q
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Siguiente →</div>
   <a href="/modulos/11-playwright-streaming">11 — playwright-streaming</a>
 </div>
 
-</div>
-</div>

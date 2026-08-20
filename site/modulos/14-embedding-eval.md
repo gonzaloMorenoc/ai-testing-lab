@@ -175,10 +175,12 @@ pytest modules/14-embedding-eval/tests/ \
   -m "not slow" -q
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Fin del lab</div>
   <a href="/modulos/">← Ver todos</a>
 </div>
 
-</div>
-</div>

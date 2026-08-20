@@ -149,7 +149,7 @@ Una plataforma de sanidad con asistente de triaje reportaba un p95 de 4.2 segund
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">22</div>
+  <div class="stat-number">21</div>
   <div class="stat-label">tests</div>
 </div>
 
@@ -173,10 +173,12 @@ pytest modules/12-observability/tests/ \
   -m "not slow" -q
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Siguiente →</div>
   <a href="/modulos/13-drift-monitoring">13 — drift-monitoring</a>
 </div>
 
-</div>
-</div>

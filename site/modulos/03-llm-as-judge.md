@@ -156,7 +156,7 @@ pytest modules/03-llm-as-judge/tests/ -m "not slow" -q
 <div class="module-sidebar">
 
 <div class="stat-card">
-  <div class="stat-number">36</div>
+  <div class="stat-number">43</div>
   <div class="stat-label">tests</div>
 </div>
 
@@ -180,10 +180,12 @@ pytest modules/03-llm-as-judge/tests/ \
   -m "not slow" -q
 ```
 
+
+</div>
+</div>
+
 <div class="module-next">
   <div class="next-label">Siguiente →</div>
   <a href="/modulos/14-embedding-eval">14 — embedding-eval</a>
 </div>
 
-</div>
-</div>
