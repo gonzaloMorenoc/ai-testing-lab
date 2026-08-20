@@ -16,9 +16,6 @@ hero:
       text: Manual PDF (gratis)
       link: /manual
     - theme: alt
-      text: Ver módulos
-      link: /modulos/
-    - theme: alt
       text: GitHub
       link: https://github.com/gonzaloMorenoc/ai-testing-lab
 
@@ -66,7 +63,7 @@ features:
     details: Si sabes pytest, ya sabes ejecutar esto. Sin frameworks propietarios, sin CLIs especiales, sin lock-in. Solo pytest y las librerías open-source que ya conoces.
 ---
 
-<div class="hero-badge">v13 · 20 módulos · 763 tests · 1.6 s</div>
+<div class="hero-badge">2.ª edición · 20 módulos · 763 tests · 1,6 s</div>
 
 ## Quickstart
 
@@ -87,34 +84,17 @@ Resultado esperado:
 
 Sin API key. Sin cuenta de pago. Sin conexión a internet.
 
-## Pirámide de evaluación
+## Por dónde entrar
 
-Los 20 módulos están organizados en una pirámide de evaluación que va de lo unitario a lo sistémico. Puedes empezar por cualquier nivel:
+Los 20 módulos se agrupan en cinco familias. No hay orden obligatorio: entra por la que necesites hoy.
 
-```text
-                                      ┌──────────────────────────────┐
-                                      │  20  Caso end-to-end          │  ← Apéndice D del manual
-                                      │      Chatbot regulado · runbook │     (ata todos los capítulos)
-                                      └──────────────────────────────┘
-                              ┌────────────────────────────────────────────┐
-                              │  17  Chatbot testing      18  Robustness    │
-                              │  19  HITL e IAA                              │
-                              └────────────────────────────────────────────┘
-                      ┌────────────────────────────────────────────────────────┐
-                      │  10  Agent testing    11  E2E streaming                 │
-                      │  12  Observabilidad   13  Drift monitoring              │
-                      │  15  Cost-aware QA    16  Retrieval avanzado            │
-                      └────────────────────────────────────────────────────────┘
-             ┌──────────────────────────────────────────────────────────────────────┐
-             │  07  Red team Garak   08  OWASP DeepTeam   09  Guardrails             │
-             └──────────────────────────────────────────────────────────────────────┘
-   ┌────────────────────────────────────────────────────────────────────────────────────┐
-   │  04  Multi-turn   05  Prompt regression   06  Hallucination lab                     │
-   └────────────────────────────────────────────────────────────────────────────────────┘
-┌──────────────────────────────────────────────────────────────────────────────────────────┐
-│  01  primer-eval   02  RAGAS basics   03  LLM-as-judge   14  Embedding eval               │
-└──────────────────────────────────────────────────────────────────────────────────────────┘
-```
+<div class="home-familias">
+  <a href="/modulos/#métricas-unitarias"><em>I</em><b>Métricas unitarias</b><i>El primer LLMTestCase, RAGAS, jueces LLM y similitud semántica.</i><span>01 · 02 · 03 · 14</span></a>
+  <a href="/modulos/#conversación-y-regresión"><em>II</em><b>Conversación</b><i>Multi-turno, regresión de prompts y detección de alucinaciones.</i><span>04 · 05 · 06</span></a>
+  <a href="/modulos/#seguridad-y-safety"><em>III</em><b>Seguridad</b><i>Red teaming con Garak y DeepTeam, guardrails de entrada y salida.</i><span>07 · 08 · 09</span></a>
+  <a href="/modulos/#producción"><em>IV</em><b>Producción</b><i>Agentes, streaming, observabilidad, drift y coste por consulta.</i><span>10 → 15</span></a>
+  <a href="/modulos/#disciplinas-avanzadas"><em>V</em><b>Avanzado</b><i>Retrieval, chatbots por área, robustez, anotadores y caso final.</i><span>16 → 20</span></a>
+</div>
 
 ## Recorridos sugeridos
 
@@ -134,7 +114,7 @@ Lee el [modelo de madurez L1-L5](./guia/madurez), audita tu sistema contra el [m
 
 ## Recursos
 
-- [Manual QA AI v13](https://github.com/gonzaloMorenoc/ai-testing-lab/blob/main/docs/) — 114 páginas, 33 capítulos, 4 apéndices
+- [Manual de QA para Sistemas de IA](/manual) — 193 páginas, 33 capítulos, 4 apéndices. PDF gratuito.
 - [Tabla maestra de umbrales](./guia/umbrales) — gates canónicos de CI/CD
 - [Quiz de 45 preguntas](./quiz/) — auto-evaluación de QA AI Engineer
 - [Referencias bibliográficas](./referencias) — papers y frameworks citados
