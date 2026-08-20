@@ -1,105 +1,161 @@
 /* =============================================
-   LLM Testing Lab — Design System v2.0
-   Stack: VitePress · Tipografía: Inter + JetBrains Mono
+   LLM Testing Lab — Design System v3.0 (editorial)
+   Stack: VitePress · Tipografía: Literata + Public Sans + JetBrains Mono
    Paleta: Slate (neutral) + Lab Green (accent)
    Dual-mode (light + dark) — OLED-inspired dark
    ============================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-/* =============================================
-   FASE 1 · TOKENS DE DISEÑO
-   ============================================= */
+/* Fuentes propias — servidas desde /public/fonts, sin llamar a Google */
+@import './fonts.css';
 
 :root {
-  /* Brand (Lab Green) — accent del sistema */
-  --vp-c-brand-1: #16a34a;
-  --vp-c-brand-2: #15803d;
-  --vp-c-brand-3: #22c55e;
-  --vp-c-brand-soft: #f0fdf4;
+  /* Marca — el verde baja dos escalones: sobre papel cálido el vivo chirría */
+  --vp-c-brand-1: #166534;
+  --vp-c-brand-2: #14532d;
+  --vp-c-brand-3: #16a34a;
+  --vp-c-brand-soft: #f0f7f2;
 
-  /* Slate (neutral) — escala completa para jerarquía */
-  --ll-slate-50: #f8fafc;
-  --ll-slate-100: #f1f5f9;
-  --ll-slate-200: #e2e8f0;
-  --ll-slate-300: #cbd5e1;
-  --ll-slate-400: #94a3b8;
-  --ll-slate-500: #64748b;
-  --ll-slate-600: #475569;
-  --ll-slate-700: #334155;
-  --ll-slate-800: #1e293b;
-  --ll-slate-900: #0f172a;
-  --ll-slate-950: #020617;
+  /* Papel y tinta — escala stone (cálida). Sustituye a slate. */
+  --ll-stone-50: #faf9f5;
+  --ll-stone-100: #f3f1ea;
+  --ll-stone-200: #e5e1d8;
+  --ll-stone-300: #d6d3cc;
+  --ll-stone-400: #a8a29e;
+  --ll-stone-500: #78716c;
+  --ll-stone-600: #57534e;
+  --ll-stone-700: #44403c;
+  --ll-stone-800: #292524;
+  --ll-stone-900: #1c1a17;
+  --ll-stone-950: #0f0e0c;
 
-  /* Green vivo */
-  --ll-green-300: #86efac;
-  --ll-green-400: #4ade80;
-  --ll-green-500: #22c55e;
-  --ll-green-600: #16a34a;
-  --ll-green-700: #15803d;
-  --ll-green-800: #166534;
-  --ll-green-900: #14532d;
+  /* Alias: el resto del fichero sigue llamando a --ll-slate-*. Se remapean
+     a la escala cálida para recalibrar todo sin reescribir 900 líneas. */
+  --ll-slate-50: var(--ll-stone-50);
+  --ll-slate-100: var(--ll-stone-100);
+  --ll-slate-200: var(--ll-stone-200);
+  --ll-slate-300: var(--ll-stone-300);
+  --ll-slate-400: var(--ll-stone-400);
+  --ll-slate-500: var(--ll-stone-500);
+  --ll-slate-600: var(--ll-stone-600);
+  --ll-slate-700: var(--ll-stone-700);
+  --ll-slate-800: var(--ll-stone-800);
+  --ll-slate-900: var(--ll-stone-900);
+  --ll-slate-950: var(--ll-stone-950);
 
-  /* Tipografía */
-  --vp-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --vp-font-family-mono: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+  --ll-green-300: #bcd9c6;
+  --ll-green-400: #86b89a;
+  --ll-green-500: #4f9268;
+  --ll-green-600: #166534;
+  --ll-green-700: #14532d;
+  --ll-green-800: #123f24;
+  --ll-green-900: #0d2e1a;
 
-  /* Easing y duraciones — Fase 4 */
+  /* Superficies */
+  --vp-c-bg: #faf9f5;
+  --vp-c-bg-alt: #f3f1ea;
+  --vp-c-bg-soft: #f3f1ea;
+  --vp-c-bg-elv: #ffffff;
+  --vp-c-divider: #e5e1d8;
+  --vp-c-border: #e5e1d8;
+  --vp-c-gutter: #e5e1d8;
+  --vp-c-text-1: #1c1a17;
+  --vp-c-text-2: #57534e;
+  --vp-c-text-3: #a8a29e;
+
+  /* Tipografía — Literata para leer, Public Sans para interfaz */
+  --ll-font-serif: 'Literata', 'Iowan Old Style', Charter, Georgia, serif;
+  --vp-font-family-base: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', monospace;
+
+  /* Easing y duraciones */
   --ll-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ll-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --ll-duration-fast: 150ms;
   --ll-duration-base: 200ms;
   --ll-duration-slow: 300ms;
 
-  /* Sombras consistentes */
-  --ll-shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-  --ll-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.08), 0 2px 4px -1px rgba(15, 23, 42, 0.04);
-  --ll-shadow-md: 0 8px 24px -4px rgba(22, 163, 74, 0.12), 0 4px 8px -2px rgba(15, 23, 42, 0.06);
-  --ll-shadow-lg: 0 16px 40px -8px rgba(22, 163, 74, 0.18), 0 8px 16px -4px rgba(15, 23, 42, 0.08);
-  --ll-glow: 0 0 0 4px rgba(22, 163, 74, 0.18);
+  /* Sombras — el editorial casi no proyecta: se apoya en la línea */
+  --ll-shadow-sm: 0 1px 2px 0 rgba(28, 26, 23, 0.04);
+  --ll-shadow: 0 2px 8px -2px rgba(28, 26, 23, 0.07);
+  --ll-shadow-md: 0 6px 20px -6px rgba(28, 26, 23, 0.10);
+  --ll-shadow-lg: 0 14px 36px -10px rgba(28, 26, 23, 0.14);
+  --ll-glow: 0 0 0 3px rgba(22, 101, 52, 0.14);
 
-  /* Hero */
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient(135deg, #14532d 0%, #16a34a 45%, #22c55e 100%);
-  --vp-home-hero-image-background-image: radial-gradient(
-    circle at 30% 30%,
-    #4ade8030 0%,
-    #16a34a18 30%,
-    #f0fdf4 70%
-  );
-  --vp-home-hero-image-filter: blur(56px);
+  /* Radios: el editorial no redondea */
+  --ll-radius: 2px;
+  --ll-radius-lg: 3px;
 
-  /* Buttons brand */
-  --vp-button-brand-bg: #16a34a;
-  --vp-button-brand-hover-bg: #15803d;
-  --vp-button-brand-active-bg: #166534;
-  --vp-button-brand-border: #16a34a;
-  --vp-button-brand-hover-border: #15803d;
+  /* Hero — sin gradiente de texto */
+  --vp-home-hero-name-color: #1c1a17;
+  --vp-home-hero-name-background: none;
+  --vp-home-hero-image-background-image: none;
+  --vp-home-hero-image-filter: none;
+
+  /* Botones */
+  --vp-button-brand-bg: #1c1a17;
+  --vp-button-brand-hover-bg: #292524;
+  --vp-button-brand-active-bg: #44403c;
+  --vp-button-brand-border: #1c1a17;
+  --vp-button-brand-hover-border: #292524;
+  --vp-button-brand-text: #faf9f5;
 }
 
-/* Dark mode — OLED-inspired (Fase 1) */
+/* Dark mode — papel oscuro cálido, no azulado */
 .dark {
-  --vp-c-bg: #020617;
-  --vp-c-bg-alt: #0f172a;
-  --vp-c-bg-elv: #1e293b;
-  --vp-c-bg-soft: #1e293b;
-  --vp-c-brand-1: #22c55e;
-  --vp-c-brand-2: #4ade80;
-  --vp-c-brand-3: #86efac;
-  --vp-c-brand-soft: rgba(34, 197, 94, 0.12);
+  --ll-stone-50: #1c1a17;
+  --ll-stone-100: #232019;
+  --ll-stone-200: #322d25;
+  --ll-stone-300: #4a443a;
+  --ll-stone-400: #8a8177;
+  --ll-stone-500: #a8a29e;
+  --ll-stone-600: #c4bdb4;
+  --ll-stone-700: #ddd6cc;
+  --ll-stone-800: #ece7df;
+  --ll-stone-900: #f5f2ec;
+  --ll-stone-950: #faf9f5;
 
-  --vp-home-hero-image-background-image: radial-gradient(
-    circle at 30% 30%,
-    #22c55e22 0%,
-    #16a34a12 30%,
-    transparent 70%
-  );
-  --vp-home-hero-name-background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #86efac 100%);
+  --vp-c-bg: #14120f;
+  --vp-c-bg-alt: #1c1a17;
+  --vp-c-bg-elv: #232019;
+  --vp-c-bg-soft: #1c1a17;
+  --vp-c-divider: #322d25;
+  --vp-c-border: #322d25;
+  --vp-c-gutter: #322d25;
+  --vp-c-text-1: #f5f2ec;
+  --vp-c-text-2: #c4bdb4;
+  --vp-c-text-3: #8a8177;
 
-  --ll-shadow: 0 4px 12px -2px rgba(34, 197, 94, 0.18), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
-  --ll-shadow-md: 0 8px 24px -4px rgba(34, 197, 94, 0.22), 0 4px 8px -2px rgba(0, 0, 0, 0.5);
-  --ll-shadow-lg: 0 16px 40px -8px rgba(34, 197, 94, 0.28), 0 8px 16px -4px rgba(0, 0, 0, 0.6);
-  --ll-glow: 0 0 0 4px rgba(34, 197, 94, 0.28);
+  --vp-c-brand-1: #86b89a;
+  --vp-c-brand-2: #a8cdb6;
+  --vp-c-brand-3: #bcd9c6;
+  --vp-c-brand-soft: rgba(134, 184, 154, 0.14);
+
+  --ll-green-300: #cfe3d7;
+  --ll-green-400: #bcd9c6;
+  --ll-green-500: #a8cdb6;
+  --ll-green-600: #86b89a;
+  --ll-green-700: #6da283;
+  --ll-green-800: #4f9268;
+  --ll-green-900: #3d7a54;
+
+  --vp-home-hero-name-color: #f5f2ec;
+  --vp-home-hero-name-background: none;
+  --vp-home-hero-image-background-image: none;
+
+  --ll-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --ll-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.5);
+  --ll-shadow-md: 0 6px 20px -6px rgba(0, 0, 0, 0.55);
+  --ll-shadow-lg: 0 14px 36px -10px rgba(0, 0, 0, 0.6);
+  --ll-glow: 0 0 0 3px rgba(134, 184, 154, 0.22);
+
+  --vp-button-brand-bg: #f5f2ec;
+  --vp-button-brand-hover-bg: #ece7df;
+  --vp-button-brand-active-bg: #ddd6cc;
+  --vp-button-brand-border: #f5f2ec;
+  --vp-button-brand-hover-border: #ece7df;
+  --vp-button-brand-text: #14120f;
 }
 
 /* =============================================
@@ -964,3 +1020,404 @@ div[class*='language-'] .copy:hover {
 @media (min-width: 960px) {
   .manual-hero { grid-template-columns: 1fr 320px; }
 }
+
+
+/* =============================================
+   v3.0 — Capa editorial
+   Literata para todo lo que se lee; Public Sans solo interfaz.
+   ============================================= */
+
+/* --- Tipografía de lectura --- */
+.VPDoc h1, .VPDoc h2, .VPDoc h3, .VPDoc h4,
+.VPHome .name, .VPHome .text,
+.vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc h4 {
+  font-family: var(--ll-font-serif);
+  letter-spacing: -0.022em;
+}
+
+.vp-doc p, .vp-doc li {
+  font-family: var(--ll-font-serif);
+  font-size: 17.5px;
+  line-height: 1.68;
+  color: var(--vp-c-text-1);
+  text-wrap: pretty;
+}
+
+.vp-doc h1 { font-size: 2.6rem; line-height: 1.1; font-weight: 700; }
+.vp-doc h2 { font-size: 1.7rem; line-height: 1.2; font-weight: 700; border-top: 1px solid var(--vp-c-divider); }
+.vp-doc h3 { font-size: 1.3rem; font-weight: 700; }
+
+/* La medida importa: una serif a 17.5px pide 62-72 caracteres */
+.VPDoc:not(.has-aside) .content-container { max-width: 760px; }
+
+/* --- El editorial no redondea --- */
+.vp-doc div[class*='language-'],
+.vp-doc table, .vp-doc img, .vp-doc blockquote,
+.VPFeature, .stat-card, .custom-block,
+.VPButton, .DocSearch-Button, .manual-part {
+  border-radius: var(--ll-radius) !important;
+}
+.manual-hero, .manual-cover { border-radius: var(--ll-radius-lg) !important; }
+
+/* --- Hero de la home --- */
+.VPHome .name .clip {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  color: var(--vp-c-text-1) !important;
+  font-weight: 700;
+}
+.VPHome .tagline {
+  font-family: var(--ll-font-serif);
+  font-size: 19px;
+  line-height: 1.62;
+  color: var(--vp-c-text-2);
+}
+/* Ocultar SOLO la imagen del hero — no los iconos de las features,
+   que también son .VPImage */
+.VPHero .image { display: none; }
+.VPHero .container { max-width: 1104px; }
+.VPHero .main { max-width: 720px; }
+@media (min-width: 960px) {
+  .VPHero .container { flex-direction: column; align-items: flex-start; }
+  .VPHero .main { text-align: left; }
+  .VPHero .actions { justify-content: flex-start; }
+}
+
+/* Un solo botón fuerte: los alt bajan a enlace con línea */
+.VPHome .actions .VPButton.alt {
+  background: transparent;
+  border: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-2);
+  font-weight: 500;
+}
+.VPHome .actions .VPButton.alt:hover {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+  background: transparent;
+}
+
+/* --- Blockquote como cita editorial --- */
+.vp-doc blockquote {
+  border-left: 2px solid var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+  padding: 14px 22px;
+}
+.vp-doc blockquote p { font-style: italic; font-size: 16.5px; }
+
+/* --- Stats del módulo: banda horizontal, no columna lateral --- */
+@media (min-width: 960px) {
+  .module-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .module-sidebar {
+    display: flex;
+    flex-direction: row;      /* la regla base la pone en column */
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    order: -1;
+    position: static;         /* el sticky sobra en una banda */
+    margin: 0 0 30px;
+    padding: 0;
+  }
+  /* el borde vive en las tarjetas: así la banda envuelve solo las stats
+     y no el bloque de código ni el enlace al módulo siguiente */
+  .module-sidebar .stat-card {
+    flex: 0 0 auto;
+    min-width: 116px;
+    background: none !important;
+    border: 0 !important;
+    border-top: 1px solid var(--vp-c-divider) !important;
+    border-bottom: 1px solid var(--vp-c-divider) !important;
+    border-right: 1px solid var(--vp-c-divider) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 14px 24px;
+    text-align: left;
+  }
+  .module-sidebar .stat-card:first-child { padding-left: 0; }
+  .module-sidebar .stat-card:hover { transform: none; }
+
+  /* código y 'siguiente' saltan de línea y quedan bajo la banda */
+  .module-sidebar div[class*='language-'],
+  .module-sidebar .module-next {
+    flex: 0 0 100%;
+    width: 100%;
+    margin: 20px 0 0;
+  }
+  .module-sidebar div[class*='language-'] { max-width: 520px; }
+  .module-main { width: 100%; max-width: 760px; }
+}
+
+.stat-number {
+  font-family: var(--ll-font-serif);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+
+/* --- Interfaz: la sans se queda donde debe --- */
+.VPNavBarMenuLink, .VPSidebarItem .text, .VPButton,
+.stat-label, .vp-doc th, .vp-doc td,
+.VPDocFooter, .VPLocalNav, .aside-container {
+  font-family: var(--vp-font-family-base);
+}
+.vp-doc td, .vp-doc th { font-size: 14px; }
+
+.VPNavBar .title {
+  font-family: var(--ll-font-serif);
+  font-weight: 700;
+  letter-spacing: -0.012em;
+}
+
+/* --- Tablas: reglas finas, sin zebra --- */
+.vp-doc table { border-collapse: collapse; }
+.vp-doc tr { background: transparent !important; }
+.vp-doc th {
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+  font-weight: 600;
+  border-bottom: 1px solid var(--vp-c-text-3);
+}
+.vp-doc td { border-bottom: 1px solid var(--vp-c-divider); border-left: 0; border-right: 0; }
+.vp-doc th { border-left: 0; border-right: 0; border-top: 0; }
+
+
+/* =============================================
+   Índice de módulos — /modulos
+   ============================================= */
+
+.mod-resumen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-top: 1px solid var(--vp-c-divider);
+  border-bottom: 1px solid var(--vp-c-divider);
+  margin: 28px 0 44px;
+}
+.mod-resumen > div {
+  padding: 14px 28px 14px 0;
+  margin-right: 28px;
+  border-right: 1px solid var(--vp-c-divider);
+}
+.mod-resumen > div:last-child { border-right: 0; }
+.mod-resumen strong {
+  display: block;
+  font-family: var(--ll-font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.mod-resumen span {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+
+.mod-indice {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 56px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .mod-indice { grid-template-columns: 1fr; }
+}
+
+.mod-familia { margin-bottom: 36px; }
+
+.mod-familia-cab {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--vp-c-text-3);
+}
+.mod-familia-cab em {
+  font-family: var(--ll-font-serif);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--vp-c-text-3);
+}
+.mod-familia-cab h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  letter-spacing: -0.018em;
+}
+.mod-familia-cab span {
+  margin-left: auto;
+  font-family: var(--vp-font-family-mono);
+  font-size: 11px;
+  color: var(--vp-c-text-3);
+}
+
+.mod-familia ul { list-style: none; padding: 0; margin: 0; }
+.mod-familia li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 11px 0;
+  margin: 0;
+  border-bottom: 1px solid var(--vp-c-divider);
+  font-size: inherit;
+}
+.mod-familia li a {
+  flex-grow: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 400;
+}
+.mod-familia li a b {
+  display: block;
+  font-family: var(--vp-font-family-base);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--vp-c-text-1);
+  transition: color var(--ll-duration-fast) var(--ll-ease-out);
+}
+.mod-familia li a i {
+  display: block;
+  font-family: var(--vp-font-family-base);
+  font-style: normal;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--vp-c-text-2);
+  margin-top: 3px;
+}
+.mod-familia li a:hover b { color: var(--vp-c-brand-1); }
+.mod-familia li a code {
+  font-size: 11.5px;
+  background: var(--vp-c-bg-alt);
+  border: 1px solid var(--vp-c-divider);
+  padding: 0 4px;
+}
+.mod-familia li > em {
+  font-family: var(--vp-font-family-mono);
+  font-style: normal;
+  font-size: 11.5px;
+  color: var(--vp-c-text-3);
+  flex-shrink: 0;
+}
+
+.mod-pie {
+  border-top: 1px solid var(--vp-c-divider);
+  margin-top: 8px;
+  padding-top: 20px;
+}
+.mod-pie p { font-size: 16.5px; }
+
+
+/* --- Home: las cinco familias --- */
+.home-familias {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 22px;
+  margin: 26px 0 8px;
+}
+@media (max-width: 960px) { .home-familias { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .home-familias { grid-template-columns: 1fr; } }
+
+.home-familias a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding-top: 14px;
+  border-top: 1px solid var(--vp-c-text-3);
+  transition: border-color var(--ll-duration-base) var(--ll-ease-out);
+}
+.home-familias a:hover { border-top-color: var(--vp-c-brand-1); }
+.home-familias em {
+  font-family: var(--ll-font-serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--vp-c-text-3);
+}
+.home-familias b {
+  display: block;
+  font-family: var(--ll-font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-top: 4px;
+  line-height: 1.2;
+}
+.home-familias i {
+  display: block;
+  font-style: normal;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--vp-c-text-2);
+  margin-top: 7px;
+}
+.home-familias span {
+  display: block;
+  font-family: var(--vp-font-family-mono);
+  font-size: 11px;
+  color: var(--vp-c-brand-1);
+  margin-top: 10px;
+}
+
+
+/* =============================================
+   Exenciones de /manual
+   El hero replica la portada del PDF (azul y cian): tiene identidad
+   propia y no debe heredar la capa editorial del resto del site.
+   ============================================= */
+
+.manual-page .VPDoc .content-container,
+.manual-page .VPDoc:not(.has-aside) .content-container { max-width: 100%; }
+
+.manual-hero h1 {
+  font-family: var(--vp-font-family-base);
+  font-size: 2.5rem;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #f4f7fe;
+  margin: 0 0 0.75rem;
+  border-top: 0;
+  padding-top: 0;
+}
+.manual-hero h1 em { color: #25cee8; font-style: normal; }
+.manual-hero .manual-eyebrow {
+  font-family: var(--vp-font-family-base);
+  font-size: 0.75rem;
+  color: #25cee8;
+}
+.manual-hero .manual-sub {
+  font-family: var(--vp-font-family-base);
+  font-size: 1.0625rem;
+  color: #a9bacc;
+}
+.manual-hero .manual-meta,
+.manual-hero .manual-meta span { color: #8fa3b8; font-size: 0.875rem; }
+
+/* el cuerpo de la página sí es editorial, pero con la medida del site */
+.manual-page .vp-doc > p,
+.manual-page .vp-doc > ul li { max-width: 760px; }
+.manual-page .manual-parts p,
+.manual-page .manual-parts h4 { max-width: none; }
+.manual-page .manual-part p {
+  font-family: var(--vp-font-family-base);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.manual-page .manual-part h4 { font-family: var(--ll-font-serif); }
